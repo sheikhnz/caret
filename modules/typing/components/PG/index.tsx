@@ -1,6 +1,6 @@
 /**
  * Typing playground UI — test config, live typing, and results.
- * Pair with useTypingPlayground at the page level so siblings can read playground state.
+ * Pair with usePG at the page level so siblings can read playground state.
  */
 
 "use client";

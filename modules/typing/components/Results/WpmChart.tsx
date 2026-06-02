@@ -5,19 +5,6 @@
 "use client";
 
 import type { ChartData as CJSChartData, ChartOptions } from "chart.js";
-
-import {
-  BarController,
-  BarElement,
-  CategoryScale,
-  Chart as ChartJS,
-  Filler,
-  LineController,
-  LineElement,
-  LinearScale,
-  PointElement,
-  Tooltip,
-} from "chart.js";
 import { useMemo } from "react";
 import { Chart } from "react-chartjs-2";
 
@@ -26,17 +13,7 @@ import type { ChartData } from "../../types/result";
 import { prepareChartData } from "../../analytics/chart-data";
 import { useChartTheme } from "../../hooks/use-chart-theme";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  LineController,
-  BarElement,
-  BarController,
-  Tooltip,
-  Filler,
-);
+import "./chart-register";
 
 type Props = { data: ChartData };
 

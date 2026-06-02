@@ -6,6 +6,8 @@ export { Textarea } from "./Textarea";
 export { Kbd } from "./Kbd";
 export { Label } from "./Label";
 export { Modal } from "./Modal";
+export { SegmentedButton } from "./SegmentedButton";
+export { SegmentedGroup, SEGMENTED_GROUP_CLASS } from "./SegmentedGroup";
 export { Separator } from "./Separator";
 
 export const UI_COMPONENTS = [

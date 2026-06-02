@@ -12,17 +12,11 @@ import { Separator } from "@/ui/Separator";
 import { roundTo2 } from "../../calculations/numbers";
 import { useConfigStore } from "../../stores/config-store";
 import { useTestStore } from "../../stores/test-store";
-import type { TestMode } from "../../types/config";
 import { StatCard } from "./StatCard";
+import { getModeLabel } from "./mode-label";
 import { WpmChart } from "./WpmChart";
 
 const MIN_DURATION_S = 1;
-
-const getModeLabel = (mode: TestMode, time: number, words: number): string => {
-  if (mode === "time") return `${time}s`;
-  if (mode === "words") return `${words} words`;
-  return mode.charAt(0).toUpperCase() + mode.slice(1);
-};
 
 export const Results = ({
   onRestart = () => undefined,

@@ -1,6 +1,5 @@
 /**
  * Custom text parsing and cleanup.
- * Source: frontend/src/ts/components/modals/CustomTextModal.tsx
  */
 
 export const cleanUpCustomText = ({
@@ -29,6 +28,4 @@ export const customTextToRaw = ({
 }: {
   text: string[];
   pipeDelimiter: boolean;
-}): string => {
-  return text.join(pipeDelimiter ? "|" : " ");
-};
+}): string => text.join(pipeDelimiter ? "|" : " ");
