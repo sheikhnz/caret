@@ -8,6 +8,19 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 # Typing Playground — agent conventions
 
+## Monkeytype reference (check upstream first)
+
+This codebase is ported from [Monkeytype](https://github.com/monkeytypegame/monkeytype). When behavior, formulas, config semantics, or file formats are unclear, **look at Monkeytype before guessing**.
+
+1. **Search this repo first** — many files have `Source:` / `Adapted from:` comments with the upstream path (e.g. `frontend/src/ts/test/test-stats.ts`). That path exists in the Monkeytype repo under the same relative location.
+2. **Open the upstream repo** — https://github.com/monkeytypegame/monkeytype (default branch). Browse or search there for the matching file or symbol.
+3. **Static assets** — quote and language JSON follow Monkeytype layout:
+   - Quotes: `frontend/static/quotes/{language}.json` (this app serves `/public/quotes/`)
+   - Languages: `frontend/static/languages/{language}.json` (this app serves `/public/languages/`)
+4. **Optional local clone** — if present, prefer reading `MONKEYTYPE_SRC` (e.g. `../monkeytype` next to this project) instead of only GitHub; otherwise use the repo link above.
+
+Match Monkeytype behavior unless this project intentionally diverges (document the divergence in code or here).
+
 ## Import paths
 
 - Use `@/` aliases for cross-folder imports (app, modules, ui, utils).
@@ -21,15 +34,15 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## Module layout (`modules/typing/`)
 
-| Area              | Path                            | Role                                    |
-| ----------------- | ------------------------------- | --------------------------------------- |
+| Area              | Path                            | Role                                          |
+| ----------------- | ------------------------------- | --------------------------------------------- |
 | Engine generation | `engine/generation/`            | Per-mode generators + `word-generator` router |
-| Engine input      | `engine/input/`                 | Keystroke state, handlers, `sync-store` |
-| Engine runtime    | `engine/runtime/`               | Phase, timer, stats                     |
-| Hooks             | `hooks/` + `hooks/typing-test/` | React orchestration                     |
-| Services          | `services/sound/`               | Audio                                   |
-| Stores            | `stores/`                       | Zustand (persisted config/custom text)  |
-| UI shell          | `components/TypingPlayground/`  | Full test experience                    |
+| Engine input      | `engine/input/`                 | Keystroke state, handlers, `sync-store`       |
+| Engine runtime    | `engine/runtime/`               | Phase, timer, stats                           |
+| Hooks             | `hooks/` + `hooks/typing-test/` | React orchestration                           |
+| Services          | `services/sound/`               | Audio                                         |
+| Stores            | `stores/`                       | Zustand (persisted config/custom text)        |
+| UI shell          | `components/TypingPlayground/`  | Full test experience                          |
 
 ## Engine ↔ store sync
 
