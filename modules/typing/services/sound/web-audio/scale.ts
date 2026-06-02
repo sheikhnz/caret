@@ -34,10 +34,7 @@ const extractScaleSounds = (
   Object.fromEntries(
     Object.entries(shortConfig)
       .filter(([, cfg]) => "validNotes" in cfg)
-      .map(([key]) => [
-        key,
-        { meta: { ...defaultScaleData } } as ScaleMeta,
-      ]),
+      .map(([key]) => [key, { meta: { ...defaultScaleData } } as ScaleMeta]),
   );
 
 const scaleConfigurations: ScaleConfigurationType =

@@ -1,7 +1,10 @@
 import type { Howl } from "howler";
 
 import { clickSoundConfig } from "@/modules/typing/constants/sounds";
-import type { PlaySoundOnClick, PlaySoundOnError } from "@/modules/typing/types/config";
+import type {
+  PlaySoundOnClick,
+  PlaySoundOnError,
+} from "@/modules/typing/types/config";
 
 import { getSoundSettings } from "../settings";
 import { randomElementFromArray } from "../utils";
