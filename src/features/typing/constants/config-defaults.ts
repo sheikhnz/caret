@@ -23,7 +23,7 @@ export const DEFAULT_CONFIG: TypingConfig = {
   paceCaret: "off",
   paceCaretCustomSpeed: 100,
   quoteLength: [0, 1, 2, 3],
-  showLiveWpm: true,
+  showLiveWpm: false,
   showLiveAcc: false,
   showLiveBurst: false,
   showTimerProgress: true,

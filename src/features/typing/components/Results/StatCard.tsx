@@ -1,19 +1,22 @@
 /**
- * Single statistics card for the results screen.
- * Source: frontend/src/html/pages/test-result.html (stats groups)
+ * Single stat card — matches the original .group style.
+ * Source: frontend/src/styles/test.scss → .wrapper .group
+ *
+ * Original sizing:
+ *   .top   (label): font-size 1rem, color sub
+ *   .bottom (value): font-size 2rem, color main
+ *   Large variant (wpm/acc): .top = 2rem, .bottom = 4rem
  */
 
 "use client";
 
-import { cn } from "@/src/lib/utils";
-
 type StatCardProps = {
   label: string;
   value: string | number;
-  sub?: string | number;
+  sub?: string;
   subLabel?: string;
+  large?: boolean /* wpm/acc hero stat: 2rem label, 4rem value */;
   className?: string;
-  highlight?: boolean;
 };
 
 export const StatCard = ({
@@ -21,30 +24,51 @@ export const StatCard = ({
   value,
   sub,
   subLabel,
+  large = false,
   className,
-  highlight,
 }: StatCardProps) => (
   <div
-    className={cn(
-      "flex flex-col gap-0.5",
-      highlight && "text-accent",
-      className,
-    )}
+    className={className}
+    style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}
   >
-    <span className="text-xs uppercase tracking-widest text-sub">{label}</span>
-    <span
-      className={cn(
-        "font-bold tabular-nums leading-none",
-        highlight ? "text-5xl text-accent" : "text-3xl text-main",
-      )}
+    {/* .top — label */}
+    <div
+      style={{
+        fontSize: large ? "2rem" : "1rem",
+        lineHeight: large ? "1.5rem" : "1rem",
+        color: "var(--color-sub)",
+      }}
+    >
+      {label}
+    </div>
+
+    {/* .bottom — value */}
+    <div
+      style={
+        {
+          fontSize: large ? "4rem" : "2rem",
+          lineHeight: large ? "4rem" : "2rem",
+          color: "var(--color-main)",
+          fontFamily: "var(--font-mono)",
+          tabularNums: true,
+        } as React.CSSProperties
+      }
     >
       {value}
-    </span>
+    </div>
+
+    {/* optional sub-value (e.g. raw below WPM) */}
     {sub !== undefined && (
-      <span className="text-sm tabular-nums text-sub">
-        {subLabel ? `${subLabel} ` : ""}
+      <div
+        style={{
+          fontSize: "0.75rem",
+          color: "var(--color-sub)",
+          marginTop: "0.25rem",
+        }}
+      >
+        {subLabel && <span style={{ marginRight: "0.25rem" }}>{subLabel}</span>}
         {sub}
-      </span>
+      </div>
     )}
   </div>
 );

@@ -1,39 +1,38 @@
 @import "tailwindcss";
 
-/**
- * Monkeytype-inspired design tokens.
- * Adapted from: frontend/src/styles/themes/*.css
+/*
+ * Design tokens — serika-dark theme.
+ * Source: frontend/src/styles/themes/serika-dark.css
  *
- * Default theme: dark (serika-dark inspired).
- * All semantic color tokens are defined as CSS variables and exposed
- * via @theme so Tailwind utility classes can reference them.
+ * Tailwind v4 reads @theme and auto-generates text-*, bg-*, border-* utilities
+ * for every --color-* token defined here.
  */
 @theme {
-  /* Core palette */
-  --color-bg: #323437;
-  --color-main: #d1d0c5;
-  --color-caret: #e2b714;
-  --color-sub: #646669;
-  --color-sub-alt: #2c2e31;
-  --color-text: #d1d0c5;
-  --color-error: #ca4754;
+  --color-bg:        #323437;
+  --color-bg-alt:    #2c2e31;
+  --color-sub-alt:   #2c2e31;
+  --color-sub:       #646669;
+  --color-main:      #d1d0c5;
+  --color-caret:     #e2b714;
+  --color-accent:    #e2b714;
+  --color-text:      #d1d0c5;
+  --color-error:     #ca4754;
   --color-error-extra: #7e2a33;
-  --color-correct: #d1d0c5;
-  --color-incorrect: #ca4754;
-  --color-extra: #ca4754;
-  --color-missed: #646669;
-  --color-accent: #e2b714;
-  --color-bg-alt: #2c2e31;
 
-  /* Font stacks */
+  /* Semantic aliases used in word coloring */
+  --color-correct:   #d1d0c5;
+  --color-incorrect: #ca4754;
+  --color-extra:     #ca4754;
+  --color-missed:    #646669;
+
+  --roundness: 0.25rem;
+
   --font-mono: "Roboto Mono", "SF Mono", "Fira Code", ui-monospace, monospace;
   --font-sans: "Roboto", "Inter", system-ui, sans-serif;
 }
 
-/* Base reset */
-*, *::before, *::after {
-  box-sizing: border-box;
-}
+/* ─── Reset ──────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
 
 html, body {
   height: 100%;
@@ -48,58 +47,40 @@ body {
   font-size: 16px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-::-webkit-scrollbar-track {
-  background: var(--color-bg);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--color-sub);
-  border-radius: 2px;
-}
+/* ─── Scrollbar ──────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb { background: var(--color-sub); border-radius: 2px; }
 
-/* Caret blink animation */
-@keyframes caret-blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
+/* ─── Caret animations ───────────────────────────────────────────────────── */
+/* Source: frontend/src/styles/animations.scss                               */
+@keyframes caretFlashSmooth {
+  0%, 100% { opacity: 0; }
+  50%       { opacity: 1; }
 }
 
-/* Word / character colors */
-.text-correct  { color: var(--color-correct); }
-.text-incorrect { color: var(--color-incorrect); }
-.text-extra    { color: var(--color-extra); }
-.text-missed   { color: var(--color-missed); }
-.text-main     { color: var(--color-main); }
-.text-sub      { color: var(--color-sub); }
-.text-accent   { color: var(--color-accent); }
-.text-error    { color: var(--color-error); }
-.text-bg       { color: var(--color-bg); }
+@keyframes caretFlashHard {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
 
-/* Background helpers */
-.bg-bg      { background-color: var(--color-bg); }
-.bg-bg-alt  { background-color: var(--color-bg-alt); }
-.bg-accent  { background-color: var(--color-accent); }
-.bg-sub     { background-color: var(--color-sub); }
-.bg-error   { background-color: var(--color-error); }
-
-/* Border helpers */
-.border-main   { border-color: var(--color-main); }
-.border-sub    { border-color: var(--color-sub); }
-.border-accent { border-color: var(--color-accent); }
-
-/* Focus ring */
+/* ─── Focus / selection ──────────────────────────────────────────────────── */
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
-
-/* Selection */
 ::selection {
   background: var(--color-accent);
   color: var(--color-bg);
 }
+
+/* ─── Letter-level color utilities used by WordsDisplay ─────────────────── */
+/* These complement the auto-generated Tailwind utilities above.             */
+.letter-correct   { color: var(--color-correct);   }
+.letter-incorrect { color: var(--color-incorrect);  }
+.letter-extra     { color: var(--color-extra);      }
+.letter-missed    { color: var(--color-missed);     }
+.letter-pending   { color: var(--color-sub);        }

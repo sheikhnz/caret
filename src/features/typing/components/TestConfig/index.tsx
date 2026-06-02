@@ -1,6 +1,10 @@
 /**
- * Test configuration bar — mode, time, word count, options toggles.
+ * Test configuration bar.
  * Source: frontend/src/ts/components/pages/test/TestConfig.tsx
+ *
+ * Exact three-card layout: [@ punctuation  # numbers] [time words quote zen] [15 30 60 120]
+ * Cards use bg-sub-alt (#2c2e31) with rounded corners.
+ * Active buttons are accent-colored; inactive are sub-colored; hover = main-colored.
  */
 
 "use client";
@@ -16,114 +20,184 @@ import {
 import { useConfigStore } from "../../stores/config-store";
 import { useTestStore } from "../../stores/test-store";
 
-const MODES: TestMode[] = ["time", "words", "quote", "zen"];
+/* ─── Shared primitives ─────────────────────────────────────────────────── */
 
-const PillButton = ({
+const Card = ({ children }: { children: React.ReactNode }) => (
+  <div
+    className="flex items-center rounded"
+    style={{ backgroundColor: "var(--color-sub-alt)" }}
+  >
+    {children}
+  </div>
+);
+
+const TCBtn = ({
   active,
+  disabled,
   onClick,
   children,
 }: {
-  active: boolean;
+  active?: boolean;
+  disabled?: boolean;
   onClick: () => void;
   children: React.ReactNode;
 }) => (
   <button
-    className={cn(
-      "rounded px-3 py-1 text-sm transition-colors",
-      active ? "bg-accent text-bg font-semibold" : "text-sub hover:text-main",
-    )}
+    disabled={disabled}
     onClick={onClick}
+    className={cn(
+      "cursor-pointer select-none px-[0.5em] py-[0.65rem] text-[0.875rem] leading-none transition-colors duration-75",
+      active ? "text-accent" : "text-sub hover:text-main",
+      disabled && "pointer-events-none opacity-50",
+    )}
   >
     {children}
   </button>
 );
 
-const Toggle = ({
-  label,
-  active,
-  onClick,
+/* ─── Section: punctuation + numbers ───────────────────────────────────── */
+
+const PuncAndNum = ({
+  punctuation,
+  numbers,
+  disabled,
+  onTogglePunc,
+  onToggleNum,
 }: {
-  label: string;
-  active: boolean;
-  onClick: () => void;
+  punctuation: boolean;
+  numbers: boolean;
+  disabled: boolean;
+  onTogglePunc: () => void;
+  onToggleNum: () => void;
 }) => (
-  <button
-    className={cn(
-      "rounded px-2 py-1 text-xs transition-colors",
-      active ? "text-accent font-semibold" : "text-sub hover:text-main",
-    )}
-    onClick={onClick}
-  >
-    {label}
-  </button>
+  <Card>
+    <TCBtn active={punctuation} disabled={disabled} onClick={onTogglePunc}>
+      @ punctuation
+    </TCBtn>
+    <TCBtn active={numbers} disabled={disabled} onClick={onToggleNum}>
+      # numbers
+    </TCBtn>
+  </Card>
 );
+
+/* ─── Section: mode selector ────────────────────────────────────────────── */
+
+const MODES: { key: TestMode; label: string }[] = [
+  { key: "time", label: "time" },
+  { key: "words", label: "words" },
+  { key: "quote", label: "quote" },
+  { key: "zen", label: "zen" },
+];
+
+const ModeSelector = ({
+  current,
+  disabled,
+  onChange,
+}: {
+  current: TestMode;
+  disabled: boolean;
+  onChange: (m: TestMode) => void;
+}) => (
+  <Card>
+    {MODES.map(({ key, label }) => (
+      <TCBtn
+        key={key}
+        active={current === key}
+        disabled={disabled}
+        onClick={() => onChange(key)}
+      >
+        {label}
+      </TCBtn>
+    ))}
+  </Card>
+);
+
+/* ─── Section: presets (changes based on mode) ──────────────────────────── */
+
+const PresetSelector = ({
+  mode,
+  time,
+  words,
+  disabled,
+  onTimeChange,
+  onWordsChange,
+}: {
+  mode: TestMode;
+  time: number;
+  words: number;
+  disabled: boolean;
+  onTimeChange: (t: number) => void;
+  onWordsChange: (w: number) => void;
+}) => {
+  if (mode === "time") {
+    return (
+      <Card>
+        {TIME_PRESETS.map((t) => (
+          <TCBtn
+            key={t}
+            active={time === t}
+            disabled={disabled}
+            onClick={() => onTimeChange(t)}
+          >
+            {t}
+          </TCBtn>
+        ))}
+      </Card>
+    );
+  }
+  if (mode === "words") {
+    return (
+      <Card>
+        {WORD_COUNT_PRESETS.map((w) => (
+          <TCBtn
+            key={w}
+            active={words === w}
+            disabled={disabled}
+            onClick={() => onWordsChange(w)}
+          >
+            {w}
+          </TCBtn>
+        ))}
+      </Card>
+    );
+  }
+  return null;
+};
+
+/* ─── Root component ────────────────────────────────────────────────────── */
 
 export const TestConfig = () => {
   const { config, setConfig } = useConfigStore();
-  const store = useTestStore();
-
-  const isIdle = store.phase === "idle";
-
-  const handleModeChange = (mode: TestMode) => {
-    if (!isIdle) return;
-    setConfig("mode", mode);
-  };
+  const { phase } = useTestStore();
+  const disabled = phase === "active";
 
   return (
-    <div className="flex flex-col items-center gap-3 text-sm">
-      {/* Mode selector */}
-      <div className="flex items-center gap-1">
-        {MODES.map((mode) => (
-          <PillButton
-            key={mode}
-            active={config.mode === mode}
-            onClick={() => handleModeChange(mode)}
-          >
-            {mode}
-          </PillButton>
-        ))}
+    <nav
+      className="flex items-center justify-center gap-[1em] text-[0.875rem]"
+      aria-label="test configuration"
+    >
+      <PuncAndNum
+        punctuation={config.punctuation}
+        numbers={config.numbers}
+        disabled={disabled || config.mode === "zen"}
+        onTogglePunc={() => setConfig("punctuation", !config.punctuation)}
+        onToggleNum={() => setConfig("numbers", !config.numbers)}
+      />
 
-        <span className="mx-2 text-sub opacity-30">|</span>
+      <ModeSelector
+        current={config.mode}
+        disabled={disabled}
+        onChange={(m) => setConfig("mode", m)}
+      />
 
-        <Toggle
-          label="punctuation"
-          active={config.punctuation}
-          onClick={() => setConfig("punctuation", !config.punctuation)}
-        />
-        <Toggle
-          label="numbers"
-          active={config.numbers}
-          onClick={() => setConfig("numbers", !config.numbers)}
-        />
-      </div>
-
-      {/* Presets for current mode */}
-      {config.mode === "time" && (
-        <div className="flex items-center gap-1">
-          {TIME_PRESETS.map((t) => (
-            <PillButton
-              key={t}
-              active={config.time === t}
-              onClick={() => setConfig("time", t)}
-            >
-              {t}
-            </PillButton>
-          ))}
-        </div>
-      )}
-      {config.mode === "words" && (
-        <div className="flex items-center gap-1">
-          {WORD_COUNT_PRESETS.map((w) => (
-            <PillButton
-              key={w}
-              active={config.words === w}
-              onClick={() => setConfig("words", w)}
-            >
-              {w}
-            </PillButton>
-          ))}
-        </div>
-      )}
-    </div>
+      <PresetSelector
+        mode={config.mode}
+        time={config.time}
+        words={config.words}
+        disabled={disabled}
+        onTimeChange={(t) => setConfig("time", t)}
+        onWordsChange={(w) => setConfig("words", w)}
+      />
+    </nav>
   );
 };

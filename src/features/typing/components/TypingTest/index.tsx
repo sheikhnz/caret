@@ -1,13 +1,14 @@
 /**
  * Main typing test UI.
- * Wires together the hidden input, words display, caret, and live stats.
+ * Source: frontend/src/ts/test/test-ui.ts + elements/caret.ts
+ *
+ * Scroll transform wraps BOTH words and caret so they stay in sync.
+ * Live stats sit above the clip area (original #liveStatsMini placement).
  */
 
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-
-import { cn } from "@/src/lib/utils";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useCaretPosition } from "../../hooks/use-caret-position";
 import { useTypingTest } from "../../hooks/use-typing-test";
@@ -16,7 +17,24 @@ import { useConfigStore } from "../../stores/config-store";
 import { useTestStore } from "../../stores/test-store";
 import { Caret } from "./Caret";
 import { LiveStats } from "./LiveStats";
+import { RestartTestButton } from "./RestartTestButton";
 import { WordsDisplay } from "./WordsDisplay";
+
+const Key = ({ children }: { children: React.ReactNode }) => (
+  <span
+    className="rounded px-1.5 py-0.5 text-xs"
+    style={{
+      backgroundColor: "var(--color-sub-alt)",
+      color: "var(--color-sub)",
+    }}
+  >
+    {children}
+  </span>
+);
+
+const FONT_SIZE_REM = 2;
+const ROW_HEIGHT_PX = 48;
+const CONTAINER_HEIGHT_PX = ROW_HEIGHT_PX * 3;
 
 export const TypingTest = () => {
   const store = useTestStore();
@@ -25,10 +43,14 @@ export const TypingTest = () => {
     inputRef,
     wordsContainerRef,
     handleKeyDown,
-    restart,
     bailOut,
     focusInput,
+    restart,
   } = useTypingTest();
+
+  const scrollWrapperRef = useRef<HTMLDivElement | null>(null);
+  const [isFocused, setIsFocused] = useState(false);
+  const [scrollOffset, setScrollOffset] = useState(0);
 
   const renderedWords = useWordsRenderer({
     words: store.words,
@@ -39,55 +61,143 @@ export const TypingTest = () => {
   });
 
   const caretPosition = useCaretPosition(
-    wordsContainerRef,
+    scrollWrapperRef,
     store.wordIndex,
     store.currentInput.length,
+    isFocused || store.phase === "active",
   );
 
-  const [isFocused, setIsFocused] = useState(false);
-
-  // Auto-focus on mount
+  const prevWordsRef = useRef(store.words);
   useEffect(() => {
-    focusInput();
-  }, [focusInput]);
+    if (store.words !== prevWordsRef.current) {
+      prevWordsRef.current = store.words;
+      setScrollOffset(0);
+    }
+  }, [store.words]);
 
-  // Re-focus on click anywhere
+  useEffect(() => {
+    const container = wordsContainerRef.current;
+    if (!container) return;
+
+    const activeEl = container.querySelector<HTMLElement>(
+      `[data-word-index="${store.wordIndex}"]`,
+    );
+    if (!activeEl) return;
+
+    const containerRect = container.getBoundingClientRect();
+    const wordRect = activeEl.getBoundingClientRect();
+    const relTop = wordRect.top - containerRect.top;
+
+    if (relTop >= ROW_HEIGHT_PX * 2) {
+      setScrollOffset((prev) => prev + ROW_HEIGHT_PX);
+    }
+  }, [store.wordIndex, wordsContainerRef]);
+
   const handleContainerClick = useCallback(() => {
     focusInput();
   }, [focusInput]);
+
+  const handleRestart = useCallback(() => {
+    void restart(false);
+  }, [restart]);
 
   if (store.phase === "finished") return null;
 
   return (
     <div
-      className="flex w-full max-w-4xl flex-col gap-4"
+      className="flex w-full max-w-[870px] flex-col"
       onClick={handleContainerClick}
     >
-      <LiveStats stats={store.liveStats} config={config} phase={store.phase} />
+      <div
+        style={{
+          fontSize: `${FONT_SIZE_REM}rem`,
+          fontFamily: "var(--font-mono)",
+        }}
+      >
+        <LiveStats
+          stats={store.liveStats}
+          config={config}
+          phase={store.phase}
+          wordIndex={store.wordIndex}
+          totalWords={store.words.length}
+        />
 
-      <div className="relative">
-        {store.isLoadingWords ? (
-          <div className="flex h-24 items-center justify-center">
-            <span className="text-sub animate-pulse">Loading words…</span>
+        {store.phase === "idle" && store.language && (
+          <div
+            className="mb-3 flex items-center gap-1 text-sm"
+            style={{ color: "var(--color-sub)" }}
+          >
+            <span>⌨</span>
+            <span>{store.language.name}</span>
           </div>
-        ) : (
+        )}
+
+        <div
+          ref={wordsContainerRef}
+          className="relative cursor-pointer overflow-hidden"
+          style={{ height: `${CONTAINER_HEIGHT_PX}px` }}
+        >
+          {store.isLoadingWords ? (
+            <div
+              className="flex h-full items-center justify-center"
+              style={{ color: "var(--color-sub)" }}
+            >
+              <span>loading…</span>
+            </div>
+          ) : (
+            <div
+              ref={scrollWrapperRef}
+              className="relative"
+              style={{
+                transform: `translateY(-${scrollOffset}px)`,
+                transition: "transform 0.125s ease",
+              }}
+            >
+              <WordsDisplay renderedWords={renderedWords} />
+              <Caret
+                position={caretPosition}
+                style={config.caretStyle}
+                smooth={config.smoothCaret}
+                visible={store.phase === "active" || isFocused}
+              />
+            </div>
+          )}
+        </div>
+
+        <RestartTestButton onRestart={handleRestart} visible={!isFocused} />
+      </div>
+
+      <div
+        className="mt-10 flex items-center justify-center gap-2 text-sm"
+        style={{ color: "var(--color-sub)" }}
+      >
+        <Key>esc</Key>
+        <span>or</span>
+        <Key>tab</Key>
+        <span>→ restart test</span>
+
+        <span className="mx-1 opacity-30">|</span>
+
+        <Key>enter</Key>
+        <span>→ command line</span>
+
+        {store.phase === "active" && (
           <>
-            <WordsDisplay
-              renderedWords={renderedWords}
-              wordIndex={store.wordIndex}
-              containerRef={wordsContainerRef}
-            />
-            <Caret
-              position={caretPosition}
-              style={config.caretStyle}
-              smooth={config.smoothCaret}
-              visible={store.phase !== "idle" || isFocused}
-            />
+            <span className="mx-1 opacity-30">|</span>
+            <button
+              className="transition-colors hover:underline"
+              style={{ color: "var(--color-sub)" }}
+              onClick={(e) => {
+                e.stopPropagation();
+                bailOut();
+              }}
+            >
+              bail out
+            </button>
           </>
         )}
       </div>
 
-      {/* Hidden input captures all keystrokes */}
       <input
         ref={inputRef}
         type="text"
@@ -103,35 +213,6 @@ export const TypingTest = () => {
         autoCapitalize="off"
         spellCheck={false}
       />
-
-      <div className="flex items-center justify-between text-xs text-sub">
-        <span>{store.phase === "idle" ? "Start typing…" : ""}</span>
-        <div className="flex gap-4">
-          <button
-            className={cn(
-              "hover:text-main transition-colors",
-              store.phase === "active" ? "opacity-100" : "opacity-50",
-            )}
-            onClick={(e) => {
-              e.stopPropagation();
-              void restart(false);
-            }}
-          >
-            restart
-          </button>
-          {store.phase === "active" && (
-            <button
-              className="hover:text-main transition-colors"
-              onClick={(e) => {
-                e.stopPropagation();
-                bailOut();
-              }}
-            >
-              bail out
-            </button>
-          )}
-        </div>
-      </div>
     </div>
   );
 };

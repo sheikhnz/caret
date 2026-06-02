@@ -1,14 +1,11 @@
 /**
  * Caret position calculation hook.
- * Source: frontend/src/ts/elements/caret.ts + frontend/src/ts/test/caret.ts
- *
- * Reads the DOM positions of the active word/character element to
- * position the caret overlay precisely.
+ * Source: frontend/src/ts/elements/caret.ts getTargetPositionAndWidth
  */
 
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 
 export type CaretPosition = {
   top: number;
@@ -16,73 +13,67 @@ export type CaretPosition = {
   height: number;
 };
 
-const DEFAULT_POSITION: CaretPosition = { top: 0, left: 0, height: 0 };
+const EMPTY: CaretPosition = { top: 0, left: 0, height: 0 };
 
-/**
- * Returns the pixel position for the caret overlay.
- *
- * The words container ref and the active character index are used
- * to query the DOM for the bounding rect of the current letter.
- *
- * @param wordsContainerRef - ref to the words wrapper element
- * @param wordIndex         - current active word index
- * @param charIndex         - current char index within the active word (= currentInput.length)
- */
 export const useCaretPosition = (
-  wordsContainerRef: React.RefObject<HTMLElement | null>,
+  scrollWrapperRef: React.RefObject<HTMLElement | null>,
   wordIndex: number,
   charIndex: number,
+  isActive: boolean,
 ): CaretPosition => {
-  const [position, setPosition] = useState<CaretPosition>(DEFAULT_POSITION);
-  const frameRef = useRef<number | null>(null);
+  const [position, setPosition] = useState<CaretPosition>(EMPTY);
+  const measuredRef = useRef(false);
 
   const update = useCallback(() => {
-    const container = wordsContainerRef.current;
+    const container = scrollWrapperRef.current;
     if (!container) return;
 
-    const wordEls =
-      container.querySelectorAll<HTMLElement>("[data-word-index]");
-    const wordEl = wordEls[wordIndex];
+    const wordEl = container.querySelector<HTMLElement>(
+      `[data-word-index="${wordIndex}"]`,
+    );
     if (!wordEl) return;
 
     const charEls = wordEl.querySelectorAll<HTMLElement>("[data-char-index]");
-    const charEl = charEls[charIndex] ?? charEls[charEls.length - 1];
-
     const containerRect = container.getBoundingClientRect();
+    const fontSize = parseFloat(getComputedStyle(container).fontSize) || 32;
+    const caretHalfWidth = fontSize * 0.05;
+    const caretHeight = fontSize * 1.2;
 
-    if (charEl) {
-      const charRect = charEl.getBoundingClientRect();
-      // If charIndex is past the last char, place caret after the last char
+    const setFromRect = (targetRect: DOMRect, placeAfter: boolean): void => {
       const left =
-        charIndex >= charEls.length
-          ? charRect.right - containerRect.left
-          : charRect.left - containerRect.left;
-      setPosition({
-        top: charRect.top - containerRect.top,
-        left,
-        height: charRect.height,
-      });
-    } else if (wordEl) {
-      const wordRect = wordEl.getBoundingClientRect();
-      setPosition({
-        top: wordRect.top - containerRect.top,
-        left: wordRect.left - containerRect.left,
-        height: wordRect.height,
-      });
-    }
-  }, [wordsContainerRef, wordIndex, charIndex]);
+        (placeAfter ? targetRect.right : targetRect.left) -
+        containerRect.left -
+        caretHalfWidth;
+      const top =
+        targetRect.top -
+        containerRect.top +
+        (targetRect.height - caretHeight) / 2;
 
-  useEffect(() => {
-    if (frameRef.current !== null) {
-      cancelAnimationFrame(frameRef.current);
-    }
-    frameRef.current = requestAnimationFrame(update);
-    return () => {
-      if (frameRef.current !== null) {
-        cancelAnimationFrame(frameRef.current);
-      }
+      setPosition({ top, left, height: targetRect.height });
+      measuredRef.current = true;
     };
-  }, [update]);
+
+    if (charEls.length === 0) {
+      const wordRect = wordEl.getBoundingClientRect();
+      setFromRect(wordRect, false);
+      return;
+    }
+
+    const targetIndex =
+      charIndex >= charEls.length ? charEls.length - 1 : charIndex;
+    const charEl = charEls[targetIndex]!;
+    const charRect = charEl.getBoundingClientRect();
+    const placeAfter = charIndex >= charEls.length;
+
+    setFromRect(charRect, placeAfter);
+  }, [scrollWrapperRef, wordIndex, charIndex]);
+
+  useLayoutEffect(() => {
+    measuredRef.current = false;
+    update();
+    const id = requestAnimationFrame(update);
+    return () => cancelAnimationFrame(id);
+  }, [update, isActive]);
 
   return position;
 };

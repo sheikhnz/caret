@@ -61,8 +61,6 @@ export const useWordsRenderer = ({
         let status: CharStatus;
         if (ci >= word.length) {
           status = "extra";
-        } else if (isActive && ci === currentInput.length) {
-          status = "current";
         } else {
           status = getCharStatus(
             inputChar,

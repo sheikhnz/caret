@@ -10,7 +10,6 @@ export type CharStatus =
   | "incorrect"
   | "extra"
   | "missed"
-  | "current"
   | "pending";
 
 export type RenderedChar = {

@@ -1,26 +1,28 @@
 /**
- * WPM / Burst / Errors time-series chart for the results screen.
- * Source: frontend/src/ts/test/result.ts (Chart.js setup)
- *         frontend/src/ts/controllers/chart-controller.ts
+ * WPM / raw / errors chart for the results screen.
+ * Source: frontend/src/ts/test/result.ts + chart-controller.ts
  *
- * Uses react-chartjs-2 with the Chart.js line chart.
+ * Layout mirrors the original:
+ *   - Line: WPM    → main-color (#d1d0c5), solid, left y-axis
+ *   - Line: raw    → sub-color  (#646669), dashed, left y-axis
+ *   - Bar:  errors → error-color(#ca4754), right y-axis
+ * No legend, no point dots, smooth tension 0.3.
  */
 
 "use client";
 
+import type { ChartData as CJSChartData, ChartOptions } from "chart.js";
+
 import {
-  Chart as ChartJS,
+  BarController,
+  BarElement,
   CategoryScale,
+  Chart as ChartJS,
+  Filler,
+  LineElement,
   LinearScale,
   PointElement,
-  LineElement,
-  BarElement,
-  BarController,
   Tooltip,
-  Legend,
-  Filler,
-  type ChartData as CJSChartData,
-  type ChartOptions,
 } from "chart.js";
 import { useMemo } from "react";
 import { Chart } from "react-chartjs-2";
@@ -37,15 +39,18 @@ ChartJS.register(
   BarElement,
   BarController,
   Tooltip,
-  Legend,
   Filler,
 );
 
-type WpmChartProps = {
-  data: ChartData;
-};
+/* Exact colors from serika-dark theme */
+const C_MAIN = "#d1d0c5";
+const C_SUB = "#646669";
+const C_ERROR = "#ca4754";
+const C_BG = "#323437";
 
-export const WpmChart = ({ data }: WpmChartProps) => {
+type Props = { data: ChartData };
+
+export const WpmChart = ({ data }: Props) => {
   const prepared = useMemo(() => prepareChartData(data), [data]);
 
   const chartData = useMemo<CJSChartData<"line" | "bar", number[], number>>(
@@ -56,52 +61,59 @@ export const WpmChart = ({ data }: WpmChartProps) => {
           type: "line" as const,
           label: "wpm",
           data: prepared.wpmDataset.map((p) => p.y),
-          borderColor: "hsl(var(--color-accent))",
-          backgroundColor: "hsla(var(--color-accent) / 0.1)",
+          borderColor: C_MAIN,
+          backgroundColor: C_MAIN + "1a" /* 10% opacity fill */,
           borderWidth: 2,
           pointRadius: 0,
           tension: 0.3,
           fill: true,
           yAxisID: "y",
+          order: 2,
         },
         {
           type: "line" as const,
           label: "raw",
           data: prepared.rawDataset.map((p) => p.y),
-          borderColor: "hsl(var(--color-sub))",
+          borderColor: C_SUB,
           borderWidth: 1.5,
           borderDash: [4, 4],
           pointRadius: 0,
           tension: 0.3,
           fill: false,
           yAxisID: "y",
+          order: 3,
         },
         {
           type: "bar" as const,
           label: "errors",
           data: prepared.errDataset.map((p) => p.y),
-          backgroundColor: "hsla(var(--color-incorrect) / 0.6)",
+          backgroundColor: C_ERROR + "99" /* 60% opacity */,
           borderWidth: 0,
           yAxisID: "y1",
+          order: 1,
         },
       ],
     }),
     [prepared],
   );
 
-  const options = useMemo<ChartOptions<"line">>(
+  const options = useMemo<ChartOptions<"line" | "bar">>(
     () => ({
       responsive: true,
       maintainAspectRatio: false,
+      animation: false,
       interaction: {
         intersect: false,
         mode: "index",
       },
       plugins: {
-        legend: {
-          display: false,
-        },
+        legend: { display: false },
         tooltip: {
+          backgroundColor: C_BG,
+          titleColor: C_SUB,
+          bodyColor: C_MAIN,
+          borderColor: C_SUB + "40",
+          borderWidth: 1,
           callbacks: {
             title: (items) => `${items[0]?.label ?? ""}s`,
           },
@@ -109,35 +121,36 @@ export const WpmChart = ({ data }: WpmChartProps) => {
       },
       scales: {
         x: {
-          grid: { color: "hsla(var(--color-sub) / 0.1)" },
-          ticks: {
-            color: "hsl(var(--color-sub))",
-            maxTicksLimit: 12,
-          },
+          border: { color: C_SUB + "40" },
+          grid: { color: C_SUB + "20" },
+          ticks: { color: C_SUB, maxTicksLimit: 12, font: { size: 11 } },
         },
         y: {
           position: "left",
-          grid: { color: "hsla(var(--color-sub) / 0.1)" },
-          ticks: {
-            color: "hsl(var(--color-sub))",
-          },
+          border: { color: C_SUB + "40" },
+          grid: { color: C_SUB + "20" },
+          ticks: { color: C_SUB, font: { size: 11 } },
           title: {
             display: true,
             text: "wpm",
-            color: "hsl(var(--color-sub))",
+            color: C_SUB,
+            font: { size: 11 },
           },
         },
         y1: {
           position: "right",
+          border: { color: "transparent" },
           grid: { drawOnChartArea: false },
           ticks: {
-            color: "hsl(var(--color-incorrect))",
+            color: C_ERROR,
             precision: 0,
+            font: { size: 11 },
           },
           title: {
             display: true,
             text: "errors",
-            color: "hsl(var(--color-incorrect))",
+            color: C_ERROR,
+            font: { size: 11 },
           },
         },
       },
@@ -146,9 +159,12 @@ export const WpmChart = ({ data }: WpmChartProps) => {
   );
 
   return (
-    <div className="h-48 w-full">
-      {/* @ts-expect-error mixed chart type */}
-      <Chart type="line" data={chartData} options={options} />
+    <div style={{ height: "200px", width: "100%" }}>
+      <Chart
+        type="line"
+        data={chartData as CJSChartData<"line", number[], number>}
+        options={options as ChartOptions<"line">}
+      />
     </div>
   );
 };

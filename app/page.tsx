@@ -1,56 +1,103 @@
-"use client";
+/**
+ * Root page — mirrors the original monkeytype.com layout.
+ *
+ * Structure:
+ *   <header>  minimal branding
+ *   <main>    config bar → typing test  (vertically centered)
+ *   <footer>  shortcut hints
+ */
 
-import { useCallback } from "react";
+"use client";
 
 import { Results } from "@/src/features/typing/components/Results";
 import { TestConfig } from "@/src/features/typing/components/TestConfig";
 import { TypingTest } from "@/src/features/typing/components/TypingTest";
-import { useTypingTest } from "@/src/features/typing/hooks/use-typing-test";
 import { useTestStore } from "@/src/features/typing/stores/test-store";
 
-/**
- * Main typing test page.
- * Renders: header → config bar → typing area (or results) → footer.
- */
-function TypingPage() {
-  const store = useTestStore();
-  const { restart } = useTypingTest();
-
-  const handleRestart = useCallback(() => {
-    void restart(false);
-  }, [restart]);
-
-  const handleRepeat = useCallback(() => {
-    void restart(true);
-  }, [restart]);
+export default function Home() {
+  const { phase } = useTestStore();
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-8 px-8 py-16">
-      {/* Logo / header */}
-      <header className="flex w-full max-w-4xl items-center justify-between">
-        <h1 className="text-xl font-bold tracking-wider text-accent">
-          monkeytype
-        </h1>
-        <span className="text-xs text-sub">next.js port</span>
+    <div
+      className="flex min-h-screen flex-col"
+      style={{ backgroundColor: "var(--color-bg)" }}
+    >
+      {/* ── Header ──────────────────────────────────────────────────────── */}
+      <header className="flex items-center justify-between px-8 pt-5 pb-0">
+        {/* Logo — mk badge + wordmark matching original style */}
+        <div
+          className="flex items-center gap-2 font-bold"
+          style={{ color: "var(--color-sub)" }}
+        >
+          <span
+            className="rounded px-2 py-0.5 text-xs font-bold"
+            style={{
+              backgroundColor: "var(--color-sub-alt)",
+              color: "var(--color-sub)",
+            }}
+          >
+            mk
+          </span>
+          <span>monkeytype</span>
+        </div>
+
+        <nav
+          className="flex items-center gap-4 text-base"
+          style={{ color: "var(--color-sub)" }}
+        >
+          <button className="transition-colors duration-75 hover:text-main">
+            ⚙
+          </button>
+          <button className="transition-colors duration-75 hover:text-main">
+            ◯
+          </button>
+        </nav>
       </header>
 
-      {/* Config bar — always visible unless test is in progress */}
-      {store.phase !== "active" && <TestConfig />}
+      {/* ── Main content ────────────────────────────────────────────────── */}
+      <main className="flex flex-1 flex-col items-center justify-center px-8 pb-16">
+        {phase === "finished" ? (
+          /* Results screen */
+          <Results />
+        ) : (
+          /* Typing test */
+          <div className="flex w-full max-w-[870px] flex-col gap-8">
+            {/* Config bar — hidden when test is active (matches original focus mode) */}
+            <div
+              style={{
+                opacity: phase === "active" ? 0 : 1,
+                pointerEvents: phase === "active" ? "none" : "auto",
+                transition: "opacity 0.125s ease",
+              }}
+            >
+              <TestConfig />
+            </div>
 
-      {/* Test area */}
-      {store.phase !== "finished" ? (
-        <TypingTest />
-      ) : (
-        <Results onRestart={handleRestart} onRepeat={handleRepeat} />
-      )}
+            <TypingTest />
+          </div>
+        )}
+      </main>
 
-      {/* Footer */}
-      <footer className="mt-auto flex w-full max-w-4xl items-center justify-between text-xs text-sub opacity-50">
-        <span>esc / tab → restart</span>
-        <span>monkeytype © 2024 · next.js port</span>
+      {/* ── Footer ──────────────────────────────────────────────────────── */}
+      <footer
+        className="flex items-center justify-between px-8 py-3 text-xs"
+        style={{ color: "var(--color-sub)" }}
+      >
+        <div className="flex items-center gap-4">
+          <span>contact</span>
+          <span>support</span>
+          <span>github</span>
+          <span>discord</span>
+        </div>
+        <div
+          className="flex items-center gap-2"
+          style={{ color: "var(--color-sub)" }}
+        >
+          <span>serika dark</span>
+          <span>·</span>
+          <span>v1.0.0</span>
+        </div>
       </footer>
-    </main>
+    </div>
   );
 }
-
-export default TypingPage;

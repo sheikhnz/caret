@@ -1,90 +1,63 @@
 /**
- * Words display component.
- * Source: frontend/src/ts/test/test-ui.ts (addWord, updateWordLetters)
+ * Words display — renders all words with per-character coloring.
+ * Source: frontend/src/ts/test/test-ui.ts
  *
- * Renders all words with per-character status coloring.
- * Maintains a windowed view: scrolls to keep the active word visible.
+ * Does NOT own the outer container — parent (TypingTest) owns the
+ * overflow-clipped div and the caret. This component only renders
+ * the flex-wrap word list.
+ *
+ * Font size, line-height, and word margin exactly match the original:
+ *   .word { font-size: 1em; line-height: 1em; margin: 0.25em 0.3em; }
+ * The parent sets font-size: 1.5rem.
  */
 
 "use client";
 
-import { useEffect, useRef } from "react";
+import type { CharStatus, RenderedWord } from "../../types/engine";
 
-import { cn } from "@/src/lib/utils";
-
-import type { RenderedWord, CharStatus } from "../../types/engine";
-
-const CHAR_STATUS_CLASSES: Record<CharStatus, string> = {
-  correct: "text-correct",
-  incorrect: "text-incorrect",
-  extra: "text-extra",
-  missed: "text-missed",
-  current: "text-main",
-  pending: "text-sub",
+/* Map char status → CSS class defined in globals.css */
+const STATUS_CLASS: Record<CharStatus, string> = {
+  correct: "letter-correct",
+  incorrect: "letter-incorrect",
+  extra: "letter-extra",
+  missed: "letter-missed",
+  pending: "letter-pending",
 };
 
 type WordsDisplayProps = {
   renderedWords: RenderedWord[];
-  wordIndex: number;
-  containerRef: React.RefObject<HTMLDivElement | null>;
 };
 
-export const WordsDisplay = ({
-  renderedWords,
-  wordIndex,
-  containerRef,
-}: WordsDisplayProps) => {
-  const activeWordRef = useRef<HTMLDivElement | null>(null);
-
-  // Scroll active word into view when word index changes
-  useEffect(() => {
-    const activeEl = activeWordRef.current;
-    const container = containerRef.current;
-    if (!activeEl || !container) return;
-
-    const containerTop = container.getBoundingClientRect().top;
-    const wordTop = activeEl.getBoundingClientRect().top;
-    const wordLine = wordTop - containerTop;
-
-    // Keep active word on the second "line" of visible area (~2 line heights)
-    const lineHeight = activeEl.offsetHeight;
-    const targetScroll = container.scrollTop + wordLine - lineHeight * 2;
-
-    container.scrollTo({ top: Math.max(0, targetScroll), behavior: "smooth" });
-  }, [wordIndex, containerRef]);
-
-  return (
-    <div
-      ref={containerRef}
-      className="relative overflow-hidden"
-      style={{ maxHeight: "calc(3 * 2.5rem + 3 * 0.5rem)" }}
-    >
-      <div className="flex flex-wrap gap-x-3 gap-y-2">
-        {renderedWords.map((word, wi) => (
-          <div
-            key={wi}
-            ref={wi === wordIndex ? activeWordRef : null}
-            data-word-index={wi}
-            className={cn(
-              "relative flex shrink-0 items-baseline font-mono text-xl leading-10",
-              word.isActive && "active-word",
-            )}
+export const WordsDisplay = ({ renderedWords }: WordsDisplayProps) => (
+  <div className="flex flex-wrap">
+    {renderedWords.map((word, wi) => (
+      <div
+        key={wi}
+        data-word-index={wi}
+        className="relative"
+        style={{
+          /* Match original: .word { font-size:1em; line-height:1em; margin:0.25em 0.3em } */
+          fontSize: "1em",
+          lineHeight: "1em",
+          margin: "0.25em 0.3em",
+          fontVariant: "no-common-ligatures",
+          borderBottom:
+            word.isActive && word.chars.some((c) => c.status === "incorrect")
+              ? "2px solid var(--color-error)"
+              : "2px solid transparent",
+        }}
+      >
+        {word.chars.map((ch, ci) => (
+          <span
+            key={ci}
+            data-char-index={ci}
+            className={STATUS_CLASS[ch.status]}
+            style={{ display: "inline-block" }}
           >
-            {word.chars.map((ch, ci) => (
-              <span
-                key={ci}
-                data-char-index={ci}
-                className={cn(
-                  "transition-colors duration-75",
-                  CHAR_STATUS_CLASSES[ch.status],
-                )}
-              >
-                {ch.char}
-              </span>
-            ))}
-          </div>
+            {ch.char}
+          </span>
         ))}
       </div>
-    </div>
-  );
-};
+    ))}
+  </div>
+);

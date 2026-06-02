@@ -44,6 +44,21 @@ export const useTypingTest = (): UseTypingTestReturn => {
   const wordsRef = useRef<string[]>([]);
   const isInitializingRef = useRef(false);
 
+  /*
+   * Stable refs for callbacks passed to the imperative timer.
+   * Using refs avoids stale-closure issues: the timer always calls the
+   * latest version of these functions without needing to restart the timer.
+   */
+  const storeRef = useRef(store);
+  useEffect(() => {
+    storeRef.current = store;
+  });
+
+  const configRef = useRef(config);
+  useEffect(() => {
+    configRef.current = config;
+  });
+
   // ─── Init / Restart ─────────────────────────────────────────────────────────
 
   const initTest = useCallback(
@@ -191,8 +206,16 @@ export const useTypingTest = (): UseTypingTestReturn => {
 
   // ─── Timer callbacks ─────────────────────────────────────────────────────────
 
+  /*
+   * onTimerTick is passed ONCE to startTimer. Using storeRef/configRef
+   * ensures we always call the latest store and config without recreating
+   * the timer on every render.
+   */
   const onTimerTick = useCallback(
     (elapsed: number, remaining: number | null) => {
+      const s = storeRef.current;
+      const c = configRef.current;
+
       const liveWpm = TestStats.getLiveWpmAndRaw(wordsRef.current);
       const acc = TestStats.getLiveAccuracy();
       const burst = calculateBurst(
@@ -200,7 +223,7 @@ export const useTypingTest = (): UseTypingTestReturn => {
         (performance.now() - TestInput.currentBurstStart) / 1000,
       );
 
-      store.setLiveStats({
+      s.setLiveStats({
         wpm: liveWpm.wpm,
         raw: liveWpm.raw,
         acc,
@@ -217,9 +240,9 @@ export const useTypingTest = (): UseTypingTestReturn => {
 
       // Append more words for time mode
       if (
-        config.mode === "time" &&
+        c.mode === "time" &&
         languageRef.current &&
-        wordsRef.current.length - store.wordIndex < 30
+        wordsRef.current.length - s.wordIndex < 30
       ) {
         const words = wordsRef.current;
         const lastWord = words[words.length - 1] ?? "";
@@ -228,7 +251,7 @@ export const useTypingTest = (): UseTypingTestReturn => {
 
         getNextWord(
           languageRef.current,
-          config,
+          c,
           lastWord,
           secondLastWord,
           wordIdx,
@@ -236,12 +259,12 @@ export const useTypingTest = (): UseTypingTestReturn => {
         )
           .then((word) => {
             wordsRef.current = [...wordsRef.current, word];
-            store.setWords(wordsRef.current, languageRef.current!);
+            storeRef.current.setWords(wordsRef.current, languageRef.current!);
           })
           .catch(() => {});
       }
     },
-    [config, store],
+    [], // stable — uses refs internally
   );
 
   // ─── Input handling ──────────────────────────────────────────────────────────
