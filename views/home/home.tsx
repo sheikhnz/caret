@@ -79,7 +79,7 @@ export const Home = () => {
             Typing Practice
           </span>
           <Badge tone="accent" className="hidden sm:inline-flex">
-            beta
+            Beta
           </Badge>
         </div>
         <p className="hidden text-sm text-text-muted md:block">

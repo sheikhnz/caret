@@ -76,10 +76,10 @@ const settingsToFormState = (
 };
 
 const MODE_OPTIONS: { value: FormMode; label: string }[] = [
-  { value: "simple", label: "simple" },
-  { value: "repeat", label: "repeat" },
-  { value: "shuffle", label: "shuffle" },
-  { value: "random", label: "random" },
+  { value: "simple", label: "Simple" },
+  { value: "repeat", label: "Repeat" },
+  { value: "shuffle", label: "Shuffle" },
+  { value: "random", label: "Random" },
 ];
 
 const SEGMENT_CLASS =
@@ -276,14 +276,14 @@ const CustomTextModalForm = ({
               id="custom-text-title"
               className="text-base font-medium text-text-primary"
             >
-              custom text
+              Custom Text
             </h2>
             <button
               type="button"
               onClick={onClose}
               className="text-sm text-text-muted transition-colors hover:text-text-primary"
             >
-              esc
+              Esc
             </button>
           </div>
 
@@ -293,11 +293,11 @@ const CustomTextModalForm = ({
                 id="custom-text"
                 value={text}
                 onChange={(e) => setText(e.target.value)}
-                placeholder="paste or type custom text"
+                placeholder="Paste or type custom text"
                 className="min-h-28 px-3 py-3 text-sm"
               />
               <p className="text-xs text-text-muted">
-                {parsedPreview.length} {pipeDelimiter ? "sections" : "words"}
+                {parsedPreview.length} {pipeDelimiter ? "Sections" : "Words"}
               </p>
             </div>
 
@@ -318,13 +318,13 @@ const CustomTextModalForm = ({
                   active={!pipeDelimiter}
                   onClick={() => setPipeDelimiter(false)}
                 >
-                  space
+                  Space
                 </SegBtn>
                 <SegBtn
                   active={pipeDelimiter}
                   onClick={() => setPipeDelimiter(true)}
                 >
-                  pipe
+                  Pipe
                 </SegBtn>
               </div>
             </div>
@@ -337,7 +337,7 @@ const CustomTextModalForm = ({
                 value={limitWord}
                 disabled={limitsDisabled || pipeDelimiter}
                 onChange={(e) => setLimitWord(e.target.value)}
-                placeholder="words"
+                placeholder="Words"
                 aria-label="Word limit"
                 className="h-9 min-h-9 px-3 py-2 text-sm"
               />
@@ -348,7 +348,7 @@ const CustomTextModalForm = ({
                 value={limitTime}
                 disabled={limitsDisabled}
                 onChange={(e) => setLimitTime(e.target.value)}
-                placeholder="seconds"
+                placeholder="Seconds"
                 aria-label="Time limit in seconds"
                 className="h-9 min-h-9 px-3 py-2 text-sm"
               />
@@ -359,7 +359,7 @@ const CustomTextModalForm = ({
                 value={limitSection}
                 disabled={limitsDisabled || !pipeDelimiter}
                 onChange={(e) => setLimitSection(e.target.value)}
-                placeholder="sections"
+                placeholder="Sections"
                 aria-label="Section limit"
                 className="h-9 min-h-9 px-3 py-2 text-sm"
               />
@@ -371,26 +371,26 @@ const CustomTextModalForm = ({
                   id="save-name"
                   value={saveName}
                   onChange={(e) => setSaveName(e.target.value)}
-                  placeholder="save as…"
+                  placeholder="Save as…"
                   aria-label="Save lesson as"
                   className="h-9 min-h-9 flex-1 px-3 py-2 text-sm"
                 />
                 <Button variant="secondary" size="sm" onClick={handleSave}>
-                  save
+                  Save
                 </Button>
                 <button
                   type="button"
                   onClick={() => setShowSaved((prev) => !prev)}
                   className="shrink-0 text-sm text-text-muted transition-colors hover:text-text-primary"
                 >
-                  saved ({savedNames.length})
+                  Saved ({savedNames.length})
                 </button>
               </div>
 
               {showSaved && (
                 <div className="space-y-1">
                   {savedNames.length === 0 ? (
-                    <p className="text-xs text-text-muted">no saved lessons</p>
+                    <p className="text-xs text-text-muted">No saved lessons</p>
                   ) : (
                     savedNames.map((name) => (
                       <div key={name} className="flex items-center gap-2">
@@ -406,7 +406,7 @@ const CustomTextModalForm = ({
                           onClick={() => deleteText(name)}
                           className="text-xs text-text-muted transition-colors hover:text-error"
                         >
-                          delete
+                          Delete
                         </button>
                       </div>
                     ))
@@ -423,7 +423,7 @@ const CustomTextModalForm = ({
           </div>
 
           <Button variant="primary" size="md" className="w-full" onClick={handleSubmit}>
-            start
+            Start
           </Button>
         </Card>
         </div>

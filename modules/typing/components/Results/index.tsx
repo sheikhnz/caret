@@ -36,19 +36,21 @@ export const Results = ({
     config.mode === "time"
       ? `${config.time}s`
       : config.mode === "words"
-        ? `${config.words} words`
-        : config.mode;
+        ? `${config.words} Words`
+        : config.mode.charAt(0).toUpperCase() + config.mode.slice(1);
 
   const timeLabel = `${roundTo2(result.testDuration)}s`;
   const afkLabel =
-    result.afkDuration > 0 ? `-${result.afkDuration}s afk` : undefined;
+    result.afkDuration > 0 ? `-${result.afkDuration}s AFK` : undefined;
 
   const configTags = [
     config.language,
     modeLabel,
-    config.punctuation ? "punctuation" : null,
-    config.numbers ? "numbers" : null,
-    config.difficulty !== "normal" ? config.difficulty : null,
+    config.punctuation ? "Punctuation" : null,
+    config.numbers ? "Numbers" : null,
+    config.difficulty !== "normal"
+      ? config.difficulty.charAt(0).toUpperCase() + config.difficulty.slice(1)
+      : null,
   ].filter(Boolean) as string[];
 
   return (
@@ -57,15 +59,15 @@ export const Results = ({
         <div className="grid gap-6 md:grid-cols-[auto_1fr] md:items-center md:[grid-template-areas:'stats_chart''morestats_morestats']">
           <div className="grid gap-4 md:pr-8 md:[grid-area:stats] md:[grid-template-areas:'wpm''acc']">
             <StatCard
-              label="wpm"
+              label="WPM"
               value={result.wpm}
               sub={result.rawWpm !== undefined ? `${result.rawWpm}` : undefined}
-              subLabel="raw"
+              subLabel="Raw"
               large
               className="wpm"
             />
             <StatCard
-              label="acc"
+              label="Acc"
               value={`${result.acc}%`}
               large
               className="acc"
@@ -77,28 +79,28 @@ export const Results = ({
               <WpmChart data={result.chartData} />
             ) : (
               <div className="flex h-[200px] items-center justify-center text-sm text-text-muted">
-                test too long to display chart
+                Test too long to display chart
               </div>
             )}
           </div>
 
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:auto-cols-fr md:grid-flow-col md:gap-8 md:[grid-area:morestats]">
-            <StatCard label="raw" value={result.rawWpm} />
-            <StatCard label="consistency" value={`${result.consistency}%`} />
-            <StatCard label="time" value={timeLabel} sub={afkLabel} />
+            <StatCard label="Raw" value={result.rawWpm} />
+            <StatCard label="Consistency" value={`${result.consistency}%`} />
+            <StatCard label="Time" value={timeLabel} sub={afkLabel} />
             <StatCard
-              label="chars"
+              label="Chars"
               value={`${correct}/${incorrect}/${extra}/${missed}`}
             />
-            <StatCard label="test type" value={modeLabel} />
+            <StatCard label="Test Type" value={modeLabel} />
           </div>
         </div>
       </Card>
 
       {(testInvalid || result.bailedOut) && (
         <div className="flex flex-wrap gap-2">
-          {testInvalid && <Badge tone="error">invalid — too short</Badge>}
-          {result.bailedOut && <Badge tone="neutral">bailed out</Badge>}
+          {testInvalid && <Badge tone="error">Invalid — too short</Badge>}
+          {result.bailedOut && <Badge tone="neutral">Bailed out</Badge>}
         </div>
       )}
 
@@ -116,10 +118,10 @@ export const Results = ({
 
       <div className="flex flex-wrap justify-center gap-3">
         <Button variant="primary" size="md" onClick={onRestart}>
-          next test
+          Next test
         </Button>
         <Button variant="secondary" size="md" onClick={onRepeat}>
-          repeat
+          Repeat
         </Button>
       </div>
     </div>

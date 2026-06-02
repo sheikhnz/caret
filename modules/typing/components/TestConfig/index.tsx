@@ -53,11 +53,11 @@ const TCBtn = ({
 );
 
 const MODES: { key: TestMode; label: string }[] = [
-  { key: "time", label: "time" },
-  { key: "words", label: "words" },
-  { key: "quote", label: "quote" },
-  { key: "custom", label: "custom" },
-  { key: "zen", label: "zen" },
+  { key: "time", label: "Time" },
+  { key: "words", label: "Words" },
+  { key: "quote", label: "Quote" },
+  { key: "custom", label: "Custom" },
+  { key: "zen", label: "Zen" },
 ];
 
 type TestConfigProps = {
@@ -89,7 +89,7 @@ export const TestConfig = ({
         <motion.nav
           layout
           className="relative mx-auto hidden w-max justify-center text-[0.875rem] md:flex"
-          aria-label="test configuration"
+          aria-label="Test configuration"
           transition={LAYOUT_TRANSITION}
         >
           <motion.div
@@ -130,7 +130,7 @@ export const TestConfig = ({
                   interact(() => setConfig("punctuation", !config.punctuation))
                 }
               >
-                @ punctuation
+                @ Punctuation
               </TCBtn>
               <TCBtn
                 active={config.numbers}
@@ -139,7 +139,7 @@ export const TestConfig = ({
                   interact(() => setConfig("numbers", !config.numbers))
                 }
               >
-                # numbers
+                # Numbers
               </TCBtn>
             </div>
           </motion.div>
@@ -226,7 +226,7 @@ export const TestConfig = ({
                 disabled={disabled}
                 onClick={() => interact(() => setCustomModalOpen(true))}
               >
-                change
+                Change
               </TCBtn>
             </div>
           </motion.div>

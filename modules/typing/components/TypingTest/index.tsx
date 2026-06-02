@@ -128,7 +128,7 @@ export const TypingTest = ({ typing, isTestFocused }: TypingTestProps) => {
           {config.mode === "custom" ? (
             <>
               <span aria-hidden>✎</span>
-              <span>custom lesson</span>
+              <span>Custom lesson</span>
             </>
           ) : (
             language !== null && (
@@ -147,7 +147,7 @@ export const TypingTest = ({ typing, isTestFocused }: TypingTestProps) => {
         >
           {store.isLoadingWords ? (
             <div className="flex h-full items-center justify-center text-text-muted">
-              <span>loading…</span>
+              <span>Loading…</span>
             </div>
           ) : (
             <div
@@ -175,10 +175,10 @@ export const TypingTest = ({ typing, isTestFocused }: TypingTestProps) => {
           pointerEvents: isTestFocused ? "none" : "auto",
         }}
       >
-        <Kbd>esc</Kbd>
+        <Kbd>Esc</Kbd>
         <span>or</span>
-        <Kbd>tab</Kbd>
-        <span>→ restart test</span>
+        <Kbd>Tab</Kbd>
+        <span>→ Restart test</span>
 
         {store.phase === "active" && (
           <>
@@ -191,7 +191,7 @@ export const TypingTest = ({ typing, isTestFocused }: TypingTestProps) => {
                 bailOut();
               }}
             >
-              bail out
+              Bail out
             </button>
           </>
         )}
@@ -200,7 +200,7 @@ export const TypingTest = ({ typing, isTestFocused }: TypingTestProps) => {
       <input
         ref={inputRef}
         type="text"
-        aria-label="typing input"
+        aria-label="Typing input"
         className="sr-only"
         value={store.currentInput}
         onChange={() => {}}

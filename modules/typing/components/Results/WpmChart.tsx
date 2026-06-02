@@ -50,7 +50,7 @@ export const WpmChart = ({ data }: Props) => {
       datasets: [
         {
           type: "line" as const,
-          label: "wpm",
+          label: "WPM",
           data: prepared.wpmDataset.map((p) => p.y),
           borderColor: theme.primary,
           backgroundColor: `${theme.primary}1a`,
@@ -63,7 +63,7 @@ export const WpmChart = ({ data }: Props) => {
         },
         {
           type: "line" as const,
-          label: "raw",
+          label: "Raw",
           data: prepared.rawDataset.map((p) => p.y),
           borderColor: theme.muted,
           borderWidth: 1.5,
@@ -76,7 +76,7 @@ export const WpmChart = ({ data }: Props) => {
         },
         {
           type: "bar" as const,
-          label: "errors",
+          label: "Errors",
           data: prepared.errDataset.map((p) => p.y),
           backgroundColor: `${theme.error}99`,
           borderWidth: 0,
@@ -123,7 +123,7 @@ export const WpmChart = ({ data }: Props) => {
           ticks: { color: theme.muted, font: { size: 11 } },
           title: {
             display: true,
-            text: "wpm",
+            text: "WPM",
             color: theme.muted,
             font: { size: 11 },
           },
@@ -139,7 +139,7 @@ export const WpmChart = ({ data }: Props) => {
           },
           title: {
             display: true,
-            text: "errors",
+            text: "Errors",
             color: theme.error,
             font: { size: 11 },
           },
