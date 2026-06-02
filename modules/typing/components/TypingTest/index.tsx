@@ -6,11 +6,12 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
-import { Kbd } from "@/ui/Kbd";
 import { Separator } from "@/ui/Separator";
 
 import type { UseTypingTestReturn } from "../../hooks/use-typing-test";
 
+import { ShortcutKeys } from "../ShortcutKeys";
+import { KEYBOARD_SHORTCUTS } from "../../constants/keyboard-shortcuts";
 import { useCaretPosition } from "../../hooks/use-caret-position";
 import { useWordsRenderer } from "../../hooks/use-words-renderer";
 import { useConfigStore } from "../../stores/config-store";
@@ -202,23 +203,23 @@ export const TypingTest = ({ typing, isTestFocused }: TypingTestProps) => {
           pointerEvents: isTestFocused ? "none" : "auto",
         }}
       >
-        {config.mode === "zen" ? (
-          <>
-            <Kbd>Esc</Kbd>
-            <span>Restart</span>
-          </>
-        ) : (
-          <>
-            <Kbd>Esc</Kbd>
-            <span>/</span>
-            <Kbd>Tab</Kbd>
-            <span>Restart</span>
-          </>
-        )}
+        <ShortcutKeys
+          shortcut={
+            config.mode === "zen"
+              ? KEYBOARD_SHORTCUTS.restartZen
+              : KEYBOARD_SHORTCUTS.restart
+          }
+        />
+        <span>
+          {config.mode === "zen"
+            ? KEYBOARD_SHORTCUTS.restartZen.label
+            : KEYBOARD_SHORTCUTS.restart.label}
+        </span>
 
         {store.phase === "active" && (
           <>
             <Separator vertical className="mx-1 h-4" />
+            <ShortcutKeys shortcut={KEYBOARD_SHORTCUTS.bailOut} />
             <button
               type="button"
               className="text-text-muted cursor-pointer transition-colors hover:text-text-primary hover:underline"
@@ -227,7 +228,7 @@ export const TypingTest = ({ typing, isTestFocused }: TypingTestProps) => {
                 bailOut();
               }}
             >
-              Bail out
+              {KEYBOARD_SHORTCUTS.bailOut.label}
             </button>
           </>
         )}

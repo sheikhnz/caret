@@ -29,6 +29,12 @@ import { buildCompletedEvent } from "../analytics/result-builder";
 import { calculateBurst } from "../calculations/wpm";
 import { calculateAccuracy } from "../calculations/accuracy";
 import {
+  isBackspaceShortcut,
+  isBailOutShortcut,
+  isRestartShortcut,
+  shouldPreventDefaultInTypingInput,
+} from "../constants/keyboard-shortcuts";
+import {
   clearAllSounds,
   playInputSound,
   playTimeWarning,
@@ -355,16 +361,29 @@ export const useTypingTest = (
 
   // ─── Input handling ──────────────────────────────────────────────────────────
 
+  const bailOut = useCallback(() => {
+    TestState.setBailedOut(true);
+    finishTest();
+  }, [finishTest]);
+
   const processKeyDown = useCallback(
-    (key: string, nativeEvent: KeyboardEvent) => {
+    (keyboardEvent: KeyboardEvent) => {
+      const { key } = keyboardEvent;
       const now = performance.now();
 
-      if (key === "Escape" || (key === "Tab" && config.mode !== "zen")) {
+      if (isRestartShortcut(keyboardEvent, config.mode)) {
         void restart(false);
         return;
       }
 
-      if (key === "Backspace") {
+      if (isBailOutShortcut(keyboardEvent)) {
+        if (store.phase === "active") {
+          bailOut();
+        }
+        return;
+      }
+
+      if (isBackspaceShortcut(keyboardEvent)) {
         if (store.phase === "finished") return;
         onTypingKeyRef.current?.();
         const result = processBackspace(config, store.wordIndex);
@@ -374,7 +393,7 @@ export const useTypingTest = (
           type: "backspace",
           correct: null,
           blindMode: config.blindMode,
-          ...getSoundOptions(nativeEvent),
+          ...getSoundOptions(keyboardEvent),
         });
 
         store.setCurrentInput(TestInput.currentInput);
@@ -383,20 +402,20 @@ export const useTypingTest = (
         return;
       }
 
-      TestInput.recordKeydownTime(now, nativeEvent);
+      TestInput.recordKeydownTime(now, keyboardEvent);
 
       if (key === "Backspace" || key.length > 1) return;
       if (store.phase === "finished") return;
 
       onTypingKeyRef.current?.();
 
-      let event = processChar(key, {
+      let inputEvent = processChar(key, {
         targetWords: wordsRef.current,
         config,
         now,
       });
 
-      if (event.type === "startTest") {
+      if (inputEvent.type === "startTest") {
         TestStats.setStart(now);
         store.setPhase("active");
         TestState.setPhase("active");
@@ -412,19 +431,19 @@ export const useTypingTest = (
           onFinish: () => finishTest(),
           onFail: (reason) => failTest(reason),
         });
-        event = processChar(key, {
+        inputEvent = processChar(key, {
           targetWords: wordsRef.current,
           config,
           now,
         });
       }
 
-      if (event.type !== "startTest" && event.type !== "noOp") {
+      if (inputEvent.type !== "startTest" && inputEvent.type !== "noOp") {
         void playInputSound({
           type: "char",
-          correct: event.correct,
+          correct: inputEvent.correct,
           blindMode: config.blindMode,
-          ...getSoundOptions(nativeEvent),
+          ...getSoundOptions(keyboardEvent),
         });
       }
 
@@ -446,41 +465,31 @@ export const useTypingTest = (
         }
       }
 
-      if (event.type === "finish") {
+      if (inputEvent.type === "finish") {
         finishTest();
-      } else if (event.type === "fail") {
-        failTest(event.reason);
+      } else if (inputEvent.type === "fail") {
+        failTest(inputEvent.reason);
       }
     },
-    [config, store, restart, onTimerTick, finishTest, failTest],
+    [config, store, restart, onTimerTick, finishTest, failTest, bailOut],
   );
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (
-        e.key === "Escape" ||
-        (e.key === "Tab" && config.mode !== "zen") ||
-        e.key === "Backspace" ||
-        e.key.length === 1
-      ) {
+      if (shouldPreventDefaultInTypingInput(e.nativeEvent, config.mode)) {
         e.preventDefault();
       }
-      processKeyDown(e.key, e.nativeEvent);
+      processKeyDown(e.nativeEvent);
     },
     [config.mode, processKeyDown],
   );
 
   const handleGlobalKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      processKeyDown(e.key, e);
+    (event: KeyboardEvent) => {
+      processKeyDown(event);
     },
     [processKeyDown],
   );
-
-  const bailOut = useCallback(() => {
-    TestState.setBailedOut(true);
-    finishTest();
-  }, [finishTest]);
 
   const focusInput = useCallback(() => {
     inputRef.current?.focus();

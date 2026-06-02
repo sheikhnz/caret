@@ -12,11 +12,14 @@ import { TypingTest } from "@/modules/typing/components/TypingTest";
 import { useTestFocus } from "@/modules/typing/hooks/use-test-focus";
 import { useTypingTest } from "@/modules/typing/hooks/use-typing-test";
 import { useTestStore } from "@/modules/typing/stores/test-store";
+import { isGlobalTypingCaptureKey } from "@/modules/typing/constants/keyboard-shortcuts";
+import { useConfigStore } from "@/modules/typing/stores/config-store";
 import { shouldDeferGlobalTypingCapture } from "@/modules/typing/utils/keyboard";
 import { Badge } from "@/ui/Badge";
 
 export const Home = () => {
   const { phase, isLoadingWords } = useTestStore();
+  const { config } = useConfigStore();
 
   const focusInputRef = useRef<() => void>(() => {});
   const { isTestFocused, enterFocus, exitFocus } = useTestFocus({
@@ -41,17 +44,7 @@ export const Home = () => {
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (phase === "finished") return;
-
-      const ignored = ["Enter", " "];
-      if (ignored.includes(e.key) || e.metaKey || e.ctrlKey || e.altKey) return;
-
-      const isTypingKey =
-        e.key === "Backspace" ||
-        e.key === "Escape" ||
-        e.key === "Tab" ||
-        e.key.length === 1;
-
-      if (!isTypingKey) return;
+      if (!isGlobalTypingCaptureKey(e, config.mode)) return;
       if (document.activeElement === typing.inputRef.current) return;
       if (shouldDeferGlobalTypingCapture(document.activeElement)) return;
 
@@ -63,7 +56,7 @@ export const Home = () => {
 
     document.addEventListener("keydown", onKeyDown, true);
     return () => document.removeEventListener("keydown", onKeyDown, true);
-  }, [phase, typing]);
+  }, [phase, typing, config.mode]);
 
   return (
     <div className="flex min-h-dvh flex-col bg-background">

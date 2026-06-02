@@ -21,6 +21,7 @@ import {
   cleanUpCustomText,
   customTextToRaw,
 } from "../../services/custom-text-utils";
+import { isCloseDialogShortcut } from "../../constants/keyboard-shortcuts";
 import { useConfigStore } from "../../stores/config-store";
 import { useCustomTextStore } from "../../stores/custom-text-store";
 
@@ -248,7 +249,7 @@ const CustomTextModalForm = ({
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (isCloseDialogShortcut(event)) {
         onClose();
       }
     };
