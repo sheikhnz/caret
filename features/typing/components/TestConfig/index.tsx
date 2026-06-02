@@ -9,7 +9,7 @@
 import { LayoutGroup, motion } from "framer-motion";
 import { useState } from "react";
 
-import { cn } from "@/src/lib/utils";
+import { cn } from "@/utils";
 
 import type { TestMode } from "../../types/config";
 

@@ -6,12 +6,12 @@
 
 import { useEffect, useRef } from "react";
 
-import { Results } from "@/src/features/typing/components/Results";
-import { TestConfig } from "@/src/features/typing/components/TestConfig";
-import { TypingTest } from "@/src/features/typing/components/TypingTest";
-import { useTestFocus } from "@/src/features/typing/hooks/use-test-focus";
-import { useTypingTest } from "@/src/features/typing/hooks/use-typing-test";
-import { useTestStore } from "@/src/features/typing/stores/test-store";
+import { Results } from "@/features/typing/components/Results";
+import { TestConfig } from "@/features/typing/components/TestConfig";
+import { TypingTest } from "@/features/typing/components/TypingTest";
+import { useTestFocus } from "@/features/typing/hooks/use-test-focus";
+import { useTypingTest } from "@/features/typing/hooks/use-typing-test";
+import { useTestStore } from "@/features/typing/stores/test-store";
 
 export default function Home() {
   const { phase, isLoadingWords } = useTestStore();

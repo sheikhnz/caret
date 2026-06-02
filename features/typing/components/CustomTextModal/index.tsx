@@ -5,9 +5,9 @@
 
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
-import { cn } from "@/src/lib/utils";
+import { cn } from "@/utils";
 
 import type {
   CustomTextMode,
@@ -27,6 +27,49 @@ type CustomTextModalProps = {
   open: boolean;
   onClose: () => void;
   onApplied?: () => void;
+};
+
+type CustomTextFormState = {
+  text: string;
+  formMode: FormMode;
+  pipeDelimiter: boolean;
+  limitWord: string;
+  limitTime: string;
+  limitSection: string;
+};
+
+const settingsToFormState = (
+  settings: CustomTextSettings,
+): CustomTextFormState => {
+  const formMode: FormMode =
+    settings.mode === "repeat" &&
+    ((settings.limit.mode === "word" &&
+      settings.limit.value === settings.text.length) ||
+      (settings.limit.mode === "section" &&
+        settings.limit.value === settings.text.length))
+      ? "simple"
+      : settings.mode;
+
+  return {
+    text: customTextToRaw({
+      text: settings.text,
+      pipeDelimiter: settings.pipeDelimiter,
+    }),
+    formMode,
+    pipeDelimiter: settings.pipeDelimiter,
+    limitWord:
+      settings.limit.mode === "word" &&
+      !(
+        settings.mode === "repeat" &&
+        settings.limit.value === settings.text.length
+      )
+        ? String(settings.limit.value)
+        : "",
+    limitTime:
+      settings.limit.mode === "time" ? String(settings.limit.value) : "",
+    limitSection:
+      settings.limit.mode === "section" ? String(settings.limit.value) : "",
+  };
 };
 
 const MODE_OPTIONS: { value: FormMode; label: string }[] = [
@@ -61,21 +104,31 @@ const OptionBtn = ({
   </button>
 );
 
-export const CustomTextModal = ({
-  open,
+type CustomTextModalFormProps = {
+  onClose: () => void;
+  onApplied?: () => void;
+};
+
+const CustomTextModalForm = ({
   onClose,
   onApplied,
-}: CustomTextModalProps) => {
+}: CustomTextModalFormProps) => {
   const { setConfig } = useConfigStore();
   const { settings, savedTexts, setSettings, saveText, deleteText } =
     useCustomTextStore();
 
-  const [text, setText] = useState("");
-  const [formMode, setFormMode] = useState<FormMode>("simple");
-  const [pipeDelimiter, setPipeDelimiter] = useState(false);
-  const [limitWord, setLimitWord] = useState("");
-  const [limitTime, setLimitTime] = useState("");
-  const [limitSection, setLimitSection] = useState("");
+  const initialFormState = settingsToFormState(settings);
+
+  const [text, setText] = useState(initialFormState.text);
+  const [formMode, setFormMode] = useState(initialFormState.formMode);
+  const [pipeDelimiter, setPipeDelimiter] = useState(
+    initialFormState.pipeDelimiter,
+  );
+  const [limitWord, setLimitWord] = useState(initialFormState.limitWord);
+  const [limitTime, setLimitTime] = useState(initialFormState.limitTime);
+  const [limitSection, setLimitSection] = useState(
+    initialFormState.limitSection,
+  );
   const [saveName, setSaveName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [showSaved, setShowSaved] = useState(false);
@@ -84,44 +137,6 @@ export const CustomTextModal = ({
     () => Object.keys(savedTexts).sort(),
     [savedTexts],
   );
-
-  useEffect(() => {
-    if (!open) return;
-    setText(
-      customTextToRaw({
-        text: settings.text,
-        pipeDelimiter: settings.pipeDelimiter,
-      }),
-    );
-    setFormMode(
-      settings.mode === "repeat" &&
-        ((settings.limit.mode === "word" &&
-          settings.limit.value === settings.text.length) ||
-          (settings.limit.mode === "section" &&
-            settings.limit.value === settings.text.length))
-        ? "simple"
-        : settings.mode,
-    );
-    setPipeDelimiter(settings.pipeDelimiter);
-    setLimitWord(
-      settings.limit.mode === "word" &&
-        !(
-          settings.mode === "repeat" &&
-          settings.limit.value === settings.text.length
-        )
-        ? String(settings.limit.value)
-        : "",
-    );
-    setLimitTime(
-      settings.limit.mode === "time" ? String(settings.limit.value) : "",
-    );
-    setLimitSection(
-      settings.limit.mode === "section" ? String(settings.limit.value) : "",
-    );
-    setError(null);
-    setShowSaved(false);
-    setSaveName("");
-  }, [open, settings]);
 
   const parsedPreview = useMemo(
     () => cleanUpCustomText({ rawText: text, pipeDelimiter }),
@@ -222,8 +237,6 @@ export const CustomTextModal = ({
     setSettings,
     text,
   ]);
-
-  if (!open) return null;
 
   const limitsDisabled = formMode === "simple";
 
@@ -407,4 +420,14 @@ export const CustomTextModal = ({
       </div>
     </div>
   );
+};
+
+export const CustomTextModal = ({
+  open,
+  onClose,
+  onApplied,
+}: CustomTextModalProps) => {
+  if (!open) return null;
+
+  return <CustomTextModalForm onClose={onClose} onApplied={onApplied} />;
 };
