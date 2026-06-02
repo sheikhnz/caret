@@ -30,9 +30,7 @@ const isQuoteInRanges = (
   quote: QuoteEntry,
   ranges: [number, number][],
 ): boolean =>
-  ranges.some(
-    ([min, max]) => quote.length >= min && quote.length <= max,
-  );
+  ranges.some(([min, max]) => quote.length >= min && quote.length <= max);
 
 export const pickRandomQuote = ({
   data,

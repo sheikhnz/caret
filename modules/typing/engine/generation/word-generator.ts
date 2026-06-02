@@ -16,7 +16,11 @@ import type {
   GeneratedWords,
 } from "./types";
 
-export type { AppendWordContext, GenerateWordsParams, GeneratedWords } from "./types";
+export type {
+  AppendWordContext,
+  GenerateWordsParams,
+  GeneratedWords,
+} from "./types";
 
 export { resetCustomGeneration, setActiveCustomWordset } from "./custom-words";
 export {
@@ -60,9 +64,7 @@ export async function generateWords({
   return { words };
 }
 
-export async function getNextWord(
-  context: AppendWordContext,
-): Promise<string> {
+export async function getNextWord(context: AppendWordContext): Promise<string> {
   const { config } = context;
 
   if (config.mode === "quote") {
