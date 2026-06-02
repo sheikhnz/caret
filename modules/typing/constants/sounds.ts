@@ -79,7 +79,7 @@ function extractClickSounds(
 ): ClickSoundConfigType {
   return Object.fromEntries(
     Object.entries(shortConfig)
-      .filter(([_, cfg]) => "numberOfSounds" in cfg)
+      .filter(([, cfg]) => "numberOfSounds" in cfg)
       .map(([key, cfg]) => {
         const config = cfg as ClickSoundConfig;
         const fullConfig = new Array(config.numberOfSounds)

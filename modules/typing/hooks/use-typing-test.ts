@@ -9,7 +9,7 @@
 
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useTestStore } from "../stores/test-store";
 import { useConfigStore } from "../stores/config-store";
 import { useCustomTextStore } from "../stores/custom-text-store";
@@ -196,7 +196,7 @@ export const useTypingTest = (
   // ─── Finish / Fail ──────────────────────────────────────────────────────────
 
   const finishTest = useCallback(
-    (difficultyFailed = false, failReason = "") => {
+    (difficultyFailed = false) => {
       if (!TestState.isActive()) return;
 
       clearTimer(true);
@@ -263,15 +263,12 @@ export const useTypingTest = (
     [config, store],
   );
 
-  const failTest = useCallback(
-    (reason: string) => {
-      TestInput.pushKeypressesToHistory();
-      TestInput.pushErrorToHistory();
-      TestInput.pushAfkToHistory();
-      finishTest(true, reason);
-    },
-    [finishTest],
-  );
+  const failTest = useCallback(() => {
+    TestInput.pushKeypressesToHistory();
+    TestInput.pushErrorToHistory();
+    TestInput.pushAfkToHistory();
+    finishTest(true);
+  }, [finishTest]);
 
   // ─── Timer callbacks ─────────────────────────────────────────────────────────
 
@@ -347,7 +344,6 @@ export const useTypingTest = (
           wordIdx,
           100,
           c.mode === "custom" ? customTextRef.current : undefined,
-          wordsRef.current,
         )
           .then((word) => {
             wordsRef.current = [...wordsRef.current, word];
@@ -429,7 +425,7 @@ export const useTypingTest = (
         startTimer(now, durationSeconds, {
           onTick: onTimerTick,
           onFinish: () => finishTest(),
-          onFail: (reason) => failTest(reason),
+          onFail: () => failTest(),
         });
         inputEvent = processChar(key, {
           targetWords: wordsRef.current,
@@ -468,7 +464,7 @@ export const useTypingTest = (
       if (inputEvent.type === "finish") {
         finishTest();
       } else if (inputEvent.type === "fail") {
-        failTest(inputEvent.reason);
+        failTest();
       }
     },
     [config, store, restart, onTimerTick, finishTest, failTest, bailOut],

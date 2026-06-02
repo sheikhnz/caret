@@ -394,7 +394,7 @@ function extractScaleSounds(
 ): ScaleConfigurationType {
   return Object.fromEntries(
     Object.entries(shortConfig)
-      .filter(([_, cfg]) => "validNotes" in cfg)
+      .filter(([, cfg]) => "validNotes" in cfg)
       .map(([key]) => {
         return [
           key,

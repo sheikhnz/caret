@@ -12,7 +12,6 @@ import { randomIntFromRange } from "../calculations/numbers";
 const NUMBERS_POOL = "0123456789";
 
 let activeWordset: Wordset | null = null;
-let activeCustomText: CustomTextSettings | null = null;
 let currentSection: string[] = [];
 let sectionIndex = 0;
 const sectionHistory: string[] = [];
@@ -143,9 +142,6 @@ function pickCustomSection(
 
 async function getCustomNextWord(
   settings: CustomTextSettings,
-  words: string[],
-  wordIndex: number,
-  wordsBound: number,
 ): Promise<string> {
   if (activeWordset === null) {
     throw new Error("Custom wordset is not initialized");
@@ -172,7 +168,6 @@ async function getCustomNextWord(
     return word;
   }
 
-  const previousWord = words[words.length - 1] ?? "";
   if (!/[A-Z]/.test(word)) {
     word = word.toLowerCase();
   }
@@ -207,12 +202,10 @@ export async function generateWords(
     }
 
     resetCustomGeneration();
-    activeCustomText = settings;
     activeWordset = withWords(settings.text);
 
     const words: string[] = [];
     const limit = getCustomDisplayLimit(settings);
-    let i = 0;
 
     if (limit === 0) {
       return { words };
@@ -220,7 +213,7 @@ export async function generateWords(
 
     let stop = false;
     while (!stop) {
-      const nextWord = await getCustomNextWord(settings, words, i, limit);
+      const nextWord = await getCustomNextWord(settings);
       words.push(nextWord);
 
       if (settings.pipeDelimiter && settings.limit.mode === "section") {
@@ -232,14 +225,11 @@ export async function generateWords(
       } else if (words.length >= limit) {
         stop = true;
       }
-
-      i++;
     }
 
     return { words };
   }
 
-  activeCustomText = null;
   activeWordset = null;
   resetCustomGeneration();
 
@@ -302,14 +292,12 @@ export async function getNextWord(
   wordIndex: number,
   wordsBound: number,
   customText?: CustomTextSettings,
-  existingWords: string[] = [],
 ): Promise<string> {
   if (config.mode === "custom" && customText !== undefined) {
     if (activeWordset === null) {
       activeWordset = withWords(customText.text);
-      activeCustomText = customText;
     }
-    return getCustomNextWord(customText, existingWords, wordIndex, wordsBound);
+    return getCustomNextWord(customText);
   }
 
   const wordset = withWords(language.words);
