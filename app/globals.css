@@ -8,22 +8,22 @@
  * for every --color-* token defined here.
  */
 @theme {
-  --color-bg:        #323437;
-  --color-bg-alt:    #2c2e31;
-  --color-sub-alt:   #2c2e31;
-  --color-sub:       #646669;
-  --color-main:      #d1d0c5;
-  --color-caret:     #e2b714;
-  --color-accent:    #e2b714;
-  --color-text:      #d1d0c5;
-  --color-error:     #ca4754;
+  --color-bg: #323437;
+  --color-bg-alt: #2c2e31;
+  --color-sub-alt: #2c2e31;
+  --color-sub: #646669;
+  --color-main: #d1d0c5;
+  --color-caret: #e2b714;
+  --color-accent: #e2b714;
+  --color-text: #d1d0c5;
+  --color-error: #ca4754;
   --color-error-extra: #7e2a33;
 
   /* Semantic aliases used in word coloring */
-  --color-correct:   #d1d0c5;
+  --color-correct: #d1d0c5;
   --color-incorrect: #ca4754;
-  --color-extra:     #ca4754;
-  --color-missed:    #646669;
+  --color-extra: #ca4754;
+  --color-missed: #646669;
 
   --roundness: 0.25rem;
 
@@ -32,9 +32,14 @@
 }
 
 /* ─── Reset ──────────────────────────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -51,20 +56,39 @@ body {
 }
 
 /* ─── Scrollbar ──────────────────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-track { background: var(--color-bg); }
-::-webkit-scrollbar-thumb { background: var(--color-sub); border-radius: 2px; }
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-sub);
+  border-radius: 2px;
+}
 
 /* ─── Caret animations ───────────────────────────────────────────────────── */
 /* Source: frontend/src/styles/animations.scss                               */
 @keyframes caretFlashSmooth {
-  0%, 100% { opacity: 0; }
-  50%       { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 @keyframes caretFlashHard {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
 }
 
 /* ─── Focus / selection ──────────────────────────────────────────────────── */
@@ -79,8 +103,18 @@ body {
 
 /* ─── Letter-level color utilities used by WordsDisplay ─────────────────── */
 /* These complement the auto-generated Tailwind utilities above.             */
-.letter-correct   { color: var(--color-correct);   }
-.letter-incorrect { color: var(--color-incorrect);  }
-.letter-extra     { color: var(--color-extra);      }
-.letter-missed    { color: var(--color-missed);     }
-.letter-pending   { color: var(--color-sub);        }
+.letter-correct {
+  color: var(--color-correct);
+}
+.letter-incorrect {
+  color: var(--color-incorrect);
+}
+.letter-extra {
+  color: var(--color-extra);
+}
+.letter-missed {
+  color: var(--color-missed);
+}
+.letter-pending {
+  color: var(--color-sub);
+}
