@@ -11,7 +11,6 @@ import type {
 } from "../types/config";
 import {
   clickSoundConfig,
-  ScaleSoundConfig,
   SoundConfigType,
   soundsConfig,
   SupportedOscillatorTypes,
