@@ -64,8 +64,6 @@ export const LiveStats = (props: Props) => {
 
   const showAcc = config.showLiveAcc && props.phase === "active";
 
-  if (timerLabel === null && !showAcc) return null;
-
   return (
     <div
       className="timerMain"
@@ -73,8 +71,6 @@ export const LiveStats = (props: Props) => {
         display: "flex",
         alignItems: "flex-end",
         marginLeft: "0.25em",
-        marginTop: "-1.25em",
-        marginBottom: "0.25em",
         minHeight: "1.25em",
         color: "var(--color-caret)",
         fontFamily: "var(--font-mono)",
@@ -82,6 +78,7 @@ export const LiveStats = (props: Props) => {
         lineHeight: "1em",
         pointerEvents: "none",
         userSelect: "none",
+        visibility: timerLabel === null && !showAcc ? "hidden" : "visible",
       }}
     >
       {timerLabel !== null && (

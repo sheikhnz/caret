@@ -1,13 +1,12 @@
 /**
  * Test configuration bar.
- * Source: frontend/src/ts/components/pages/test/TestConfig.tsx
- *
- * Exact three-card layout: [@ punctuation  # numbers] [time words quote zen] [15 30 60 120]
- * Cards use bg-sub-alt (#2c2e31) with rounded corners.
- * Active buttons are accent-colored; inactive are sub-colored; hover = main-colored.
+ * Center chip is flex-centered; side chips are absolute so zen never shifts it.
+ * Source: frontend TestConfig.tsx
  */
 
 "use client";
+
+import { LayoutGroup, motion } from "framer-motion";
 
 import { cn } from "@/src/lib/utils";
 
@@ -18,18 +17,12 @@ import {
   WORD_COUNT_PRESETS,
 } from "../../constants/config-defaults";
 import { useConfigStore } from "../../stores/config-store";
-import { useTestStore } from "../../stores/test-store";
 
-/* ─── Shared primitives ─────────────────────────────────────────────────── */
+const CONFIG_TRANSITION = { duration: 0.25, ease: "easeInOut" as const };
+const LAYOUT_TRANSITION = { layout: CONFIG_TRANSITION };
 
-const Card = ({ children }: { children: React.ReactNode }) => (
-  <div
-    className="flex items-center rounded"
-    style={{ backgroundColor: "var(--color-sub-alt)" }}
-  >
-    {children}
-  </div>
-);
+const CARD_CLASS = "flex items-center rounded bg-sub-alt";
+const SIDE_GAP = "1em";
 
 const TCBtn = ({
   active,
@@ -43,6 +36,7 @@ const TCBtn = ({
   children: React.ReactNode;
 }) => (
   <button
+    type="button"
     disabled={disabled}
     onClick={onClick}
     className={cn(
@@ -55,33 +49,6 @@ const TCBtn = ({
   </button>
 );
 
-/* ─── Section: punctuation + numbers ───────────────────────────────────── */
-
-const PuncAndNum = ({
-  punctuation,
-  numbers,
-  disabled,
-  onTogglePunc,
-  onToggleNum,
-}: {
-  punctuation: boolean;
-  numbers: boolean;
-  disabled: boolean;
-  onTogglePunc: () => void;
-  onToggleNum: () => void;
-}) => (
-  <Card>
-    <TCBtn active={punctuation} disabled={disabled} onClick={onTogglePunc}>
-      @ punctuation
-    </TCBtn>
-    <TCBtn active={numbers} disabled={disabled} onClick={onToggleNum}>
-      # numbers
-    </TCBtn>
-  </Card>
-);
-
-/* ─── Section: mode selector ────────────────────────────────────────────── */
-
 const MODES: { key: TestMode; label: string }[] = [
   { key: "time", label: "time" },
   { key: "words", label: "words" },
@@ -89,115 +56,149 @@ const MODES: { key: TestMode; label: string }[] = [
   { key: "zen", label: "zen" },
 ];
 
-const ModeSelector = ({
-  current,
-  disabled,
-  onChange,
-}: {
-  current: TestMode;
-  disabled: boolean;
-  onChange: (m: TestMode) => void;
-}) => (
-  <Card>
-    {MODES.map(({ key, label }) => (
-      <TCBtn
-        key={key}
-        active={current === key}
-        disabled={disabled}
-        onClick={() => onChange(key)}
-      >
-        {label}
-      </TCBtn>
-    ))}
-  </Card>
-);
-
-/* ─── Section: presets (changes based on mode) ──────────────────────────── */
-
-const PresetSelector = ({
-  mode,
-  time,
-  words,
-  disabled,
-  onTimeChange,
-  onWordsChange,
-}: {
-  mode: TestMode;
-  time: number;
-  words: number;
-  disabled: boolean;
-  onTimeChange: (t: number) => void;
-  onWordsChange: (w: number) => void;
-}) => {
-  if (mode === "time") {
-    return (
-      <Card>
-        {TIME_PRESETS.map((t) => (
-          <TCBtn
-            key={t}
-            active={time === t}
-            disabled={disabled}
-            onClick={() => onTimeChange(t)}
-          >
-            {t}
-          </TCBtn>
-        ))}
-      </Card>
-    );
-  }
-  if (mode === "words") {
-    return (
-      <Card>
-        {WORD_COUNT_PRESETS.map((w) => (
-          <TCBtn
-            key={w}
-            active={words === w}
-            disabled={disabled}
-            onClick={() => onWordsChange(w)}
-          >
-            {w}
-          </TCBtn>
-        ))}
-      </Card>
-    );
-  }
-  return null;
+type TestConfigProps = {
+  disabled?: boolean;
+  onInteract?: () => void;
 };
 
-/* ─── Root component ────────────────────────────────────────────────────── */
-
-export const TestConfig = () => {
+export const TestConfig = ({
+  disabled: disabledProp = false,
+  onInteract,
+}: TestConfigProps = {}) => {
   const { config, setConfig } = useConfigStore();
-  const { phase } = useTestStore();
-  const disabled = phase === "active";
+  const disabled = disabledProp;
+  const showPuncNum = config.mode !== "zen";
+  const showPresets = config.mode === "time" || config.mode === "words";
+
+  const interact = (action: () => void) => {
+    action();
+    onInteract?.();
+  };
 
   return (
-    <nav
-      className="flex items-center justify-center gap-[1em] text-[0.875rem]"
-      aria-label="test configuration"
-    >
-      <PuncAndNum
-        punctuation={config.punctuation}
-        numbers={config.numbers}
-        disabled={disabled || config.mode === "zen"}
-        onTogglePunc={() => setConfig("punctuation", !config.punctuation)}
-        onToggleNum={() => setConfig("numbers", !config.numbers)}
-      />
+    <LayoutGroup id="test-config">
+      <motion.nav
+        layout
+        className="relative mx-auto hidden w-max justify-center text-[0.875rem] md:flex"
+        aria-label="test configuration"
+        transition={LAYOUT_TRANSITION}
+      >
+        <motion.div
+          layout
+          className={cn("z-2 shrink-0", CARD_CLASS)}
+          transition={LAYOUT_TRANSITION}
+        >
+          {MODES.map(({ key, label }) => (
+            <TCBtn
+              key={key}
+              active={config.mode === key}
+              disabled={disabled}
+              onClick={() => interact(() => setConfig("mode", key))}
+            >
+              {label}
+            </TCBtn>
+          ))}
+        </motion.div>
 
-      <ModeSelector
-        current={config.mode}
-        disabled={disabled}
-        onChange={(m) => setConfig("mode", m)}
-      />
+        <motion.div
+          layout
+          className="absolute top-1/2 right-full flex -translate-y-1/2 items-center overflow-hidden"
+          initial={false}
+          animate={{
+            opacity: showPuncNum ? 1 : 0,
+            width: showPuncNum ? "auto" : 0,
+            marginRight: showPuncNum ? SIDE_GAP : 0,
+          }}
+          transition={CONFIG_TRANSITION}
+          style={{ pointerEvents: showPuncNum ? "auto" : "none" }}
+          aria-hidden={!showPuncNum}
+        >
+          <div className={cn(CARD_CLASS, "whitespace-nowrap")}>
+            <TCBtn
+              active={config.punctuation}
+              disabled={disabled || config.mode === "quote"}
+              onClick={() =>
+                interact(() => setConfig("punctuation", !config.punctuation))
+              }
+            >
+              @ punctuation
+            </TCBtn>
+            <TCBtn
+              active={config.numbers}
+              disabled={disabled || config.mode === "quote"}
+              onClick={() =>
+                interact(() => setConfig("numbers", !config.numbers))
+              }
+            >
+              # numbers
+            </TCBtn>
+          </div>
+        </motion.div>
 
-      <PresetSelector
-        mode={config.mode}
-        time={config.time}
-        words={config.words}
-        disabled={disabled}
-        onTimeChange={(t) => setConfig("time", t)}
-        onWordsChange={(w) => setConfig("words", w)}
-      />
-    </nav>
+        <motion.div
+          layout
+          className="absolute top-1/2 left-full flex -translate-y-1/2 items-center overflow-hidden"
+          initial={false}
+          animate={{
+            opacity: showPresets ? 1 : 0,
+            width: showPresets ? "auto" : 0,
+            marginLeft: showPresets ? SIDE_GAP : 0,
+          }}
+          transition={CONFIG_TRANSITION}
+          style={{ pointerEvents: showPresets ? "auto" : "none" }}
+          aria-hidden={!showPresets}
+        >
+          <div className="relative grid w-max *:col-start-1 *:row-start-1">
+            <motion.div
+              layout
+              className={CARD_CLASS}
+              initial={false}
+              animate={{ opacity: config.mode === "time" ? 1 : 0 }}
+              transition={CONFIG_TRANSITION}
+              style={{
+                position: config.mode === "time" ? "relative" : "absolute",
+                inset: config.mode === "time" ? undefined : 0,
+                pointerEvents: config.mode === "time" ? "auto" : "none",
+              }}
+            >
+              {TIME_PRESETS.map((t) => (
+                <TCBtn
+                  key={t}
+                  active={config.time === t}
+                  disabled={disabled}
+                  onClick={() => interact(() => setConfig("time", t))}
+                >
+                  {t}
+                </TCBtn>
+              ))}
+            </motion.div>
+
+            <motion.div
+              layout
+              className={CARD_CLASS}
+              initial={false}
+              animate={{ opacity: config.mode === "words" ? 1 : 0 }}
+              transition={CONFIG_TRANSITION}
+              style={{
+                position: config.mode === "words" ? "relative" : "absolute",
+                inset: config.mode === "words" ? undefined : 0,
+                pointerEvents: config.mode === "words" ? "auto" : "none",
+              }}
+            >
+              {WORD_COUNT_PRESETS.map((w) => (
+                <TCBtn
+                  key={w}
+                  active={config.words === w}
+                  disabled={disabled}
+                  onClick={() => interact(() => setConfig("words", w))}
+                >
+                  {w}
+                </TCBtn>
+              ))}
+            </motion.div>
+          </div>
+        </motion.div>
+      </motion.nav>
+    </LayoutGroup>
   );
 };

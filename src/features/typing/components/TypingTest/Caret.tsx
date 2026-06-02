@@ -23,9 +23,17 @@ type CaretProps = {
   style: CaretStyle;
   smooth: boolean;
   visible: boolean;
+  /** Blink in idle; original stops animation when focused (typing) */
+  blink?: boolean;
 };
 
-export const Caret = ({ position, style, smooth, visible }: CaretProps) => {
+export const Caret = ({
+  position,
+  style,
+  smooth,
+  visible,
+  blink = true,
+}: CaretProps) => {
   if (style === "off" || !visible || position.height === 0) return null;
 
   const isUnderline = style === "underline";
@@ -67,12 +75,9 @@ export const Caret = ({ position, style, smooth, visible }: CaretProps) => {
          * transition-all would conflict with the blink animation.
          */
         transition: canAnimate ? "left 0.1s ease, top 0.1s ease" : undefined,
-        /*
-         * Start animation at -0.5 s so the caret is at opacity:1 immediately
-         * (caretFlashSmooth peaks at 50% = 0.5 s, so -0.5 s offset = start visible).
-         */
-        animation: "caretFlashSmooth 1s infinite",
-        animationDelay: "-0.5s",
+        animation: blink ? "caretFlashSmooth 1s infinite" : undefined,
+        animationDelay: blink ? "-0.5s" : undefined,
+        opacity: blink ? undefined : 1,
       }}
     />
   );

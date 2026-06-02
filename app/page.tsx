@@ -1,103 +1,106 @@
 /**
  * Root page — mirrors the original monkeytype.com layout.
- *
- * Structure:
- *   <header>  minimal branding
- *   <main>    config bar → typing test  (vertically centered)
- *   <footer>  shortcut hints
  */
 
 "use client";
 
+import { useEffect, useRef } from "react";
+
 import { Results } from "@/src/features/typing/components/Results";
 import { TestConfig } from "@/src/features/typing/components/TestConfig";
 import { TypingTest } from "@/src/features/typing/components/TypingTest";
+import { useTestFocus } from "@/src/features/typing/hooks/use-test-focus";
+import { useTypingTest } from "@/src/features/typing/hooks/use-typing-test";
 import { useTestStore } from "@/src/features/typing/stores/test-store";
 
 export default function Home() {
-  const { phase } = useTestStore();
+  const { phase, isLoadingWords } = useTestStore();
+
+  const focusInputRef = useRef<() => void>(() => {});
+  const { isTestFocused, enterFocus, exitFocus } = useTestFocus({
+    focusInput: () => focusInputRef.current(),
+  });
+
+  const typing = useTypingTest({
+    onTypingKey: enterFocus,
+    onRestart: exitFocus,
+  });
+
+  useEffect(() => {
+    focusInputRef.current = typing.focusInput;
+  }, [typing.focusInput]);
+
+  /* Refocus input after words reload while in focus mode */
+  useEffect(() => {
+    if (isTestFocused && !isLoadingWords && phase !== "finished") {
+      typing.focusInput();
+    }
+  }, [isTestFocused, isLoadingWords, phase, typing.focusInput, typing]);
+
+  /*
+   * When input not focused, first typing key must still register (original: focusWords).
+   * Focus + process the same key — do not only enterFocus (that drops the character).
+   */
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (phase === "finished") return;
+
+      const ignored = ["Enter", " "];
+      if (ignored.includes(e.key) || e.metaKey || e.ctrlKey || e.altKey) return;
+
+      const isTypingKey =
+        e.key === "Backspace" ||
+        e.key === "Escape" ||
+        e.key === "Tab" ||
+        e.key.length === 1;
+
+      if (!isTypingKey) return;
+      if (document.activeElement === typing.inputRef.current) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+      typing.focusInput();
+      typing.handleGlobalKeyDown(e);
+    };
+
+    document.addEventListener("keydown", onKeyDown, true);
+    return () => document.removeEventListener("keydown", onKeyDown, true);
+  }, [phase, typing]);
 
   return (
     <div
       className="flex min-h-screen flex-col"
       style={{ backgroundColor: "var(--color-bg)" }}
     >
-      {/* ── Header ──────────────────────────────────────────────────────── */}
-      <header className="flex items-center justify-between px-8 pt-5 pb-0">
-        {/* Logo — mk badge + wordmark matching original style */}
-        <div
-          className="flex items-center gap-2 font-bold"
-          style={{ color: "var(--color-sub)" }}
-        >
-          <span
-            className="rounded px-2 py-0.5 text-xs font-bold"
-            style={{
-              backgroundColor: "var(--color-sub-alt)",
-              color: "var(--color-sub)",
-            }}
-          >
-            mk
-          </span>
-          <span>monkeytype</span>
-        </div>
-
-        <nav
-          className="flex items-center gap-4 text-base"
-          style={{ color: "var(--color-sub)" }}
-        >
-          <button className="transition-colors duration-75 hover:text-main">
-            ⚙
-          </button>
-          <button className="transition-colors duration-75 hover:text-main">
-            ◯
-          </button>
-        </nav>
-      </header>
-
-      {/* ── Main content ────────────────────────────────────────────────── */}
       <main className="flex flex-1 flex-col items-center justify-center px-8 pb-16">
         {phase === "finished" ? (
-          /* Results screen */
-          <Results />
+          <Results
+            onRestart={() => {
+              void typing.restart(false);
+            }}
+            onRepeat={() => {
+              void typing.restart(true);
+            }}
+          />
         ) : (
-          /* Typing test */
-          <div className="flex w-full max-w-[870px] flex-col gap-8">
-            {/* Config bar — hidden when test is active (matches original focus mode) */}
-            <div
-              style={{
-                opacity: phase === "active" ? 0 : 1,
-                pointerEvents: phase === "active" ? "none" : "auto",
-                transition: "opacity 0.125s ease",
-              }}
-            >
-              <TestConfig />
+          <div className="flex w-full max-w-[870px] flex-col">
+            {/* Reserved slot — opacity only, no mount/unmount (avoids layout shift) */}
+            <div className="mb-8 flex min-h-11 w-full items-center justify-center overflow-hidden">
+              <div
+                className="transition-opacity duration-125"
+                style={{
+                  opacity: isTestFocused ? 0 : 1,
+                  pointerEvents: isTestFocused ? "none" : "auto",
+                }}
+              >
+                <TestConfig disabled={isTestFocused} />
+              </div>
             </div>
 
-            <TypingTest />
+            <TypingTest typing={typing} isTestFocused={isTestFocused} />
           </div>
         )}
       </main>
-
-      {/* ── Footer ──────────────────────────────────────────────────────── */}
-      <footer
-        className="flex items-center justify-between px-8 py-3 text-xs"
-        style={{ color: "var(--color-sub)" }}
-      >
-        <div className="flex items-center gap-4">
-          <span>contact</span>
-          <span>support</span>
-          <span>github</span>
-          <span>discord</span>
-        </div>
-        <div
-          className="flex items-center gap-2"
-          style={{ color: "var(--color-sub)" }}
-        >
-          <span>serika dark</span>
-          <span>·</span>
-          <span>v1.0.0</span>
-        </div>
-      </footer>
     </div>
   );
 }

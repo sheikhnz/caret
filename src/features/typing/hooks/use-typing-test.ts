@@ -28,12 +28,32 @@ export type UseTypingTestReturn = {
   inputRef: React.RefObject<HTMLInputElement | null>;
   wordsContainerRef: React.RefObject<HTMLDivElement | null>;
   handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  /** Process key when input was not focused (first key after unfocus) */
+  handleGlobalKeyDown: (e: KeyboardEvent) => void;
   restart: (withSameWords?: boolean) => Promise<void>;
   bailOut: () => void;
   focusInput: () => void;
 };
 
-export const useTypingTest = (): UseTypingTestReturn => {
+type UseTypingTestOptions = {
+  /**
+   * Called on any typing key (char/backspace).
+   * Hides config/restart — also re-runs after mouse unfocus mid-test.
+   */
+  onTypingKey?: () => void;
+  /** Called on restart — show config/restart again until next keypress */
+  onRestart?: () => void;
+};
+
+export const useTypingTest = (
+  options?: UseTypingTestOptions,
+): UseTypingTestReturn => {
+  const onTypingKeyRef = useRef(options?.onTypingKey);
+  const onRestartRef = useRef(options?.onRestart);
+  useEffect(() => {
+    onTypingKeyRef.current = options?.onTypingKey;
+    onRestartRef.current = options?.onRestart;
+  }, [options?.onTypingKey, options?.onRestart]);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const wordsContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -124,6 +144,7 @@ export const useTypingTest = (): UseTypingTestReturn => {
         }
       }
       await initTest(withSameWords);
+      onRestartRef.current?.();
     },
     [config.mode, initTest, store],
   );
@@ -269,21 +290,18 @@ export const useTypingTest = (): UseTypingTestReturn => {
 
   // ─── Input handling ──────────────────────────────────────────────────────────
 
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const processKeyDown = useCallback(
+    (key: string, nativeEvent: KeyboardEvent) => {
       const now = performance.now();
 
-      // restart shortcuts
-      if (e.key === "Escape" || (e.key === "Tab" && config.mode !== "zen")) {
-        e.preventDefault();
+      if (key === "Escape" || (key === "Tab" && config.mode !== "zen")) {
         void restart(false);
         return;
       }
 
-      // backspace
-      if (e.key === "Backspace") {
-        e.preventDefault();
+      if (key === "Backspace") {
         if (store.phase === "finished") return;
+        onTypingKeyRef.current?.();
         const result = processBackspace(config, store.wordIndex);
         if (result === "blocked") return;
 
@@ -293,22 +311,19 @@ export const useTypingTest = (): UseTypingTestReturn => {
         return;
       }
 
-      // record keydown timing
-      TestInput.recordKeydownTime(now, e.nativeEvent);
+      TestInput.recordKeydownTime(now, nativeEvent);
 
-      if (e.key === "Backspace" || e.key.length > 1) return;
+      if (key === "Backspace" || key.length > 1) return;
       if (store.phase === "finished") return;
 
-      e.preventDefault();
+      onTypingKeyRef.current?.();
 
-      const char = e.key;
-      const event = processChar(char, {
+      const event = processChar(key, {
         targetWords: wordsRef.current,
         config,
         now,
       });
 
-      // handle start
       if (event.type === "startTest") {
         TestStats.setStart(now);
         store.setPhase("active");
@@ -320,11 +335,9 @@ export const useTypingTest = (): UseTypingTestReturn => {
           onFinish: () => finishTest(),
           onFail: (reason) => failTest(reason),
         });
-        // re-process the char now that test started
-        processChar(char, { targetWords: wordsRef.current, config, now });
+        processChar(key, { targetWords: wordsRef.current, config, now });
       }
 
-      // sync store from engine state
       store.setCurrentInput(TestInput.currentInput);
       store.setWordIndex(TestState.getActiveWordIndex());
       store.setInputHistory([...TestInput.inputHistory]);
@@ -336,6 +349,28 @@ export const useTypingTest = (): UseTypingTestReturn => {
       }
     },
     [config, store, restart, onTimerTick, finishTest, failTest],
+  );
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (
+        e.key === "Escape" ||
+        (e.key === "Tab" && config.mode !== "zen") ||
+        e.key === "Backspace" ||
+        e.key.length === 1
+      ) {
+        e.preventDefault();
+      }
+      processKeyDown(e.key, e.nativeEvent);
+    },
+    [config.mode, processKeyDown],
+  );
+
+  const handleGlobalKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      processKeyDown(e.key, e);
+    },
+    [processKeyDown],
   );
 
   const bailOut = useCallback(() => {
@@ -375,6 +410,7 @@ export const useTypingTest = (): UseTypingTestReturn => {
     inputRef,
     wordsContainerRef,
     handleKeyDown,
+    handleGlobalKeyDown,
     restart,
     bailOut,
     focusInput,

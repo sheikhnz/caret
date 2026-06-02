@@ -1,23 +1,20 @@
 /**
  * Main typing test UI.
  * Source: frontend/src/ts/test/test-ui.ts + elements/caret.ts
- *
- * Scroll transform wraps BOTH words and caret so they stay in sync.
- * Live stats sit above the clip area (original #liveStatsMini placement).
  */
 
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import type { UseTypingTestReturn } from "../../hooks/use-typing-test";
+
 import { useCaretPosition } from "../../hooks/use-caret-position";
-import { useTypingTest } from "../../hooks/use-typing-test";
 import { useWordsRenderer } from "../../hooks/use-words-renderer";
 import { useConfigStore } from "../../stores/config-store";
 import { useTestStore } from "../../stores/test-store";
 import { Caret } from "./Caret";
 import { LiveStats } from "./LiveStats";
-import { RestartTestButton } from "./RestartTestButton";
 import { WordsDisplay } from "./WordsDisplay";
 
 const Key = ({ children }: { children: React.ReactNode }) => (
@@ -36,22 +33,19 @@ const FONT_SIZE_REM = 2;
 const ROW_HEIGHT_PX = 48;
 const CONTAINER_HEIGHT_PX = ROW_HEIGHT_PX * 3;
 
-export const TypingTest = () => {
+type TypingTestProps = {
+  typing: UseTypingTestReturn;
+  isTestFocused: boolean;
+};
+
+export const TypingTest = ({ typing, isTestFocused }: TypingTestProps) => {
   const store = useTestStore();
   const { config } = useConfigStore();
-  const {
-    inputRef,
-    wordsContainerRef,
-    handleKeyDown,
-    bailOut,
-    focusInput,
-    restart,
-  } = useTypingTest();
+  const { inputRef, wordsContainerRef, handleKeyDown, bailOut, focusInput } =
+    typing;
 
   const scrollWrapperRef = useRef<HTMLDivElement | null>(null);
-  const [isFocused, setIsFocused] = useState(false);
   const [scrollOffset, setScrollOffset] = useState(0);
-
   const renderedWords = useWordsRenderer({
     words: store.words,
     wordIndex: store.wordIndex,
@@ -60,11 +54,16 @@ export const TypingTest = () => {
     blindMode: config.blindMode,
   });
 
+  const showCaret =
+    !store.isLoadingWords &&
+    store.words.length > 0 &&
+    store.phase !== "finished";
+
   const caretPosition = useCaretPosition(
     scrollWrapperRef,
     store.wordIndex,
     store.currentInput.length,
-    isFocused || store.phase === "active",
+    showCaret,
   );
 
   const prevWordsRef = useRef(store.words);
@@ -97,11 +96,12 @@ export const TypingTest = () => {
     focusInput();
   }, [focusInput]);
 
-  const handleRestart = useCallback(() => {
-    void restart(false);
-  }, [restart]);
-
   if (store.phase === "finished") return null;
+
+  const showLiveStats = isTestFocused && config.showTimerProgress;
+  const language = store.language;
+  const showLanguage =
+    !isTestFocused && store.phase === "idle" && language !== null;
 
   return (
     <div
@@ -114,23 +114,42 @@ export const TypingTest = () => {
           fontFamily: "var(--font-mono)",
         }}
       >
-        <LiveStats
-          stats={store.liveStats}
-          config={config}
-          phase={store.phase}
-          wordIndex={store.wordIndex}
-          totalWords={store.words.length}
-        />
+        <div
+          aria-hidden={!showLiveStats}
+          style={{
+            minHeight: "1.25em",
+            marginTop: "-1.25em",
+            marginBottom: "0.25em",
+            opacity: showLiveStats ? 1 : 0,
+            transition: "opacity 0.125s ease",
+            pointerEvents: "none",
+          }}
+        >
+          <LiveStats
+            stats={store.liveStats}
+            config={config}
+            phase={store.phase}
+            wordIndex={store.wordIndex}
+            totalWords={store.words.length}
+          />
+        </div>
 
-        {store.phase === "idle" && store.language && (
-          <div
-            className="mb-3 flex items-center gap-1 text-sm"
-            style={{ color: "var(--color-sub)" }}
-          >
-            <span>⌨</span>
-            <span>{store.language.name}</span>
-          </div>
-        )}
+        <div
+          className="mb-3 flex min-h-5 items-center gap-1 text-sm"
+          aria-hidden={!showLanguage}
+          style={{
+            color: "var(--color-sub)",
+            opacity: showLanguage ? 1 : 0,
+            transition: "opacity 0.125s ease",
+          }}
+        >
+          {language !== null && (
+            <>
+              <span>⌨</span>
+              <span>{language.name}</span>
+            </>
+          )}
+        </div>
 
         <div
           ref={wordsContainerRef}
@@ -158,18 +177,22 @@ export const TypingTest = () => {
                 position={caretPosition}
                 style={config.caretStyle}
                 smooth={config.smoothCaret}
-                visible={store.phase === "active" || isFocused}
+                blink={!isTestFocused}
+                visible={showCaret}
               />
             </div>
           )}
         </div>
-
-        <RestartTestButton onRestart={handleRestart} visible={!isFocused} />
       </div>
 
       <div
-        className="mt-10 flex items-center justify-center gap-2 text-sm"
-        style={{ color: "var(--color-sub)" }}
+        className="mt-10 flex min-h-5 items-center justify-center gap-2 text-sm"
+        style={{
+          color: "var(--color-sub)",
+          opacity: isTestFocused ? 0 : 1,
+          pointerEvents: isTestFocused ? "none" : "auto",
+          transition: "opacity 0.125s ease",
+        }}
       >
         <Key>esc</Key>
         <span>or</span>
@@ -206,8 +229,6 @@ export const TypingTest = () => {
         value={store.currentInput}
         onChange={() => {}}
         onKeyDown={handleKeyDown}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
         autoComplete="off"
         autoCorrect="off"
         autoCapitalize="off"
