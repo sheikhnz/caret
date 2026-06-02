@@ -5,7 +5,6 @@ import {
   ListOrdered,
   PenLine,
   Pencil,
-  Quote,
   Sparkles,
   Timer,
   Type,
@@ -29,7 +28,6 @@ export const TEST_CONFIG_MODES: {
 }[] = [
   { key: "time", label: "Time", icon: Timer },
   { key: "words", label: "Words", icon: Type },
-  { key: "quote", label: "Quote", icon: Quote },
   { key: "custom", label: "Custom", icon: PenLine },
   { key: "zen", label: "Zen", icon: Sparkles },
 ];

@@ -4,16 +4,16 @@
 
 "use client";
 
-import { PG } from "@/modules/typing/components/PG";
-import { usePG } from "@/modules/typing/hooks/use-pg";
+import { TypingPlayground } from "@/modules/typing/components/TypingPlayground";
+import { useTypingPlayground } from "@/modules/typing/hooks/use-typing-playground";
 
 export const Home = () => {
-  const playground = usePG();
+  const playground = useTypingPlayground();
 
   return (
     <div className="flex min-h-dvh flex-col bg-background">
       <main className="flex flex-1 flex-col items-center justify-center px-6 pb-20 md:px-10">
-        <PG playground={playground} />
+        <TypingPlayground playground={playground} />
       </main>
 
       <footer

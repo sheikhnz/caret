@@ -4,14 +4,11 @@
 
 "use client";
 
-import { Badge } from "@/ui/Badge";
-import { Button } from "@/ui/Button";
-import { Card } from "@/ui/Card";
-import { Separator } from "@/ui/Separator";
+import { Badge, Button, Card, Separator } from "@/ui";
 
-import { roundTo2 } from "../../calculations/numbers";
-import { useConfigStore } from "../../stores/config-store";
-import { useTestStore } from "../../stores/test-store";
+import { roundTo2 } from "@/modules/typing/calculations/numbers";
+import { useConfigStore } from "@/modules/typing/stores/config-store";
+import { useTestStore } from "@/modules/typing/stores/test-store";
 import { StatCard } from "./StatCard";
 import { getModeLabel } from "./mode-label";
 import { WpmChart } from "./WpmChart";

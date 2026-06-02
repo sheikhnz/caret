@@ -1,18 +1,13 @@
 /**
- * Main typing test Zustand store.
- * Drives all reactive UI updates during and after a test.
- *
- * The engine modules (test-input, test-state, etc.) hold mutable state
- * and compute values. This store holds the reactive snapshot of that state
- * that React components subscribe to.
+ * Main typing test Zustand store — reactive snapshot of engine state for React UI.
  */
 
 "use client";
 
 import { create } from "zustand";
-import type { TestPhase, RenderedWord } from "../types/engine";
-import type { CompletedEvent } from "../types/result";
-import type { LanguageObject } from "../types/language";
+import type { TestPhase } from "@/modules/typing/types/engine";
+import type { CompletedEvent } from "@/modules/typing/types/result";
+import type { LanguageObject } from "@/modules/typing/types/language";
 
 export type LiveStats = {
   wpm: number;
@@ -29,7 +24,6 @@ type TestStore = {
   wordIndex: number;
   currentInput: string;
   inputHistory: string[];
-  renderedWords: RenderedWord[];
   liveStats: LiveStats;
   result: CompletedEvent | null;
   language: LanguageObject | null;
@@ -43,7 +37,6 @@ type TestStore = {
   setWordIndex: (i: number) => void;
   setCurrentInput: (v: string) => void;
   setInputHistory: (h: string[]) => void;
-  setRenderedWords: (words: RenderedWord[]) => void;
   setLiveStats: (stats: Partial<LiveStats>) => void;
   setResult: (result: CompletedEvent) => void;
   setIsLoadingWords: (v: boolean) => void;
@@ -67,7 +60,6 @@ export const useTestStore = create<TestStore>()((set) => ({
   wordIndex: 0,
   currentInput: "",
   inputHistory: [],
-  renderedWords: [],
   liveStats: INITIAL_LIVE_STATS,
   result: null,
   language: null,
@@ -81,7 +73,6 @@ export const useTestStore = create<TestStore>()((set) => ({
   setWordIndex: (wordIndex) => set({ wordIndex }),
   setCurrentInput: (currentInput) => set({ currentInput }),
   setInputHistory: (inputHistory) => set({ inputHistory }),
-  setRenderedWords: (renderedWords) => set({ renderedWords }),
   setLiveStats: (stats) =>
     set((state) => ({ liveStats: { ...state.liveStats, ...stats } })),
   setResult: (result) => set({ result }),
@@ -99,7 +90,6 @@ export const useTestStore = create<TestStore>()((set) => ({
       wordIndex: 0,
       currentInput: "",
       inputHistory: [],
-      renderedWords: [],
       liveStats: INITIAL_LIVE_STATS,
       result: null,
     }),

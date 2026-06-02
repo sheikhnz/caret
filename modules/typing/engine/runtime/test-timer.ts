@@ -1,10 +1,5 @@
 /**
  * Timer management for the typing test.
- * Source: frontend/src/ts/test/test-timer.ts
- *
- * Uses a self-adjusting interval to avoid time drift.
- * On each tick: updates live stats, pushes keypress/error/afk histories.
- * For time-mode: counts down and fires a "finish" or "fail" callback when done.
  */
 
 import { isActive } from "./test-state";
@@ -12,7 +7,6 @@ import { isActive } from "./test-state";
 export type TimerCallbacks = {
   onTick: (elapsed: number, remaining: number | null) => void;
   onFinish: () => void;
-  onFail: (reason: string) => void;
 };
 
 type TimerState = {
@@ -55,7 +49,6 @@ function tick(): void {
     return;
   }
 
-  // self-adjusting interval: aim for each tick exactly at 1-second boundaries
   nextTick = state.startTime + tickCount * 1000;
   const delay = Math.max(0, nextTick - performance.now());
   state.timerId = setTimeout(tick, delay);

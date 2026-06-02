@@ -1,8 +1,13 @@
+import type { useConfigStore } from "@/modules/typing/stores/config-store";
+import type { useTestStore } from "@/modules/typing/stores/test-store";
+
+export type TypingConfig = ReturnType<typeof useConfigStore.getState>["config"];
+export type TestStoreState = ReturnType<typeof useTestStore.getState>;
+
 export type UseTypingTestReturn = {
   inputRef: React.RefObject<HTMLInputElement | null>;
   wordsContainerRef: React.RefObject<HTMLDivElement | null>;
   handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-  /** Process key when input was not focused (first key after unfocus) */
   handleGlobalKeyDown: (e: KeyboardEvent) => void;
   restart: (withSameWords?: boolean) => Promise<void>;
   bailOut: () => void;
@@ -10,11 +15,6 @@ export type UseTypingTestReturn = {
 };
 
 export type UseTypingTestOptions = {
-  /**
-   * Called on any typing key (char/backspace).
-   * Hides config/restart — also re-runs after mouse unfocus mid-test.
-   */
   onTypingKey?: () => void;
-  /** Called on restart — show config/restart again until next keypress */
   onRestart?: () => void;
 };

@@ -1,6 +1,6 @@
 /**
- * Orchestrates the full typing playground: focus management, global key capture,
- * and the typing test lifecycle. Use once per page, then pass the return value to PG.
+ * Orchestrates the full typing playground: focus, global keys, and test lifecycle.
+ * Use once per page, then pass the return value to TypingPlayground.
  */
 
 "use client";
@@ -14,13 +14,13 @@ import type { UseTypingTestReturn } from "@/modules/typing/hooks/use-typing-test
 import { useTestStore } from "@/modules/typing/stores/test-store";
 import type { TestPhase } from "@/modules/typing/types/engine";
 
-export type PG = {
+export type TypingPlaygroundState = {
   phase: TestPhase;
   isTestFocused: boolean;
   typing: UseTypingTestReturn;
 };
 
-export const usePG = (): PG => {
+export const useTypingPlayground = (): TypingPlaygroundState => {
   const { phase, isLoadingWords } = useTestStore();
 
   const focusInputRef = useRef<() => void>(() => {});

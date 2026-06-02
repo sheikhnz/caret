@@ -1,6 +1,6 @@
 "use client";
 
-import { Separator } from "@/ui/Separator";
+import { Separator } from "@/ui";
 
 import { KEYBOARD_SHORTCUTS } from "@/modules/typing/constants/keyboard-shortcuts";
 import type { TestMode } from "@/modules/typing/types/config";

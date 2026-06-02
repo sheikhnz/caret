@@ -16,7 +16,9 @@
     "lint:fix": "eslint --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "pr-preflight": "pnpm type-check && pnpm format && pnpm lint:fix"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "pr-preflight": "pnpm type-check && pnpm format && pnpm lint:fix && pnpm test"
   },
   "dependencies": {
     "chart.js": "4.5.1",
@@ -43,6 +45,7 @@
     "eslint-config-prettier": "10.1.8",
     "prettier": "3.8.3",
     "tailwindcss": "4.3.0",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vitest": "3.2.4"
   }
 }

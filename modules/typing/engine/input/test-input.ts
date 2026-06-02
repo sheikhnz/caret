@@ -298,7 +298,7 @@ export const forceKeyup = (now: number): void => {
 
 // ─── Reset ───────────────────────────────────────────────────────────────────
 
-export const restart = (): void => {
+export const resetInput = (): void => {
   currentInput = "";
   inputHistory = [];
   correctedCurrent = "";

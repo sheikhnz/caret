@@ -1,7 +1,6 @@
 "use client";
 
-import { SegmentedButton } from "@/ui/SegmentedButton";
-import { SegmentedGroup } from "@/ui/SegmentedGroup";
+import { SegmentedButton, SegmentedGroup } from "@/ui";
 
 import { CUSTOM_TEXT_MODE_OPTIONS } from "@/modules/typing/custom-text/constants";
 import type { CustomTextFormMode } from "@/modules/typing/custom-text/form-state";

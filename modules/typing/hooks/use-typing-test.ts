@@ -1,6 +1,5 @@
 /**
  * Main typing test orchestration hook.
- * Composes lifecycle, timer, and keyboard modules under hooks/typing-test/.
  */
 
 "use client";
@@ -19,13 +18,16 @@ import type { LanguageObject } from "@/modules/typing/types/language";
 import { runFailTest, runFinishTest } from "./typing-test/finish-test";
 import { runInitTest, runRestartTest } from "./typing-test/init-test";
 import { processKeyDown } from "./typing-test/process-keydown";
-import { handleTimerTick } from "./typing-test/timer-tick";
+import { handleTimerTick, type TimerTickRefs } from "./typing-test/timer-tick";
 import type {
   UseTypingTestOptions,
   UseTypingTestReturn,
 } from "./typing-test/types";
 
-export type { UseTypingTestReturn } from "./typing-test/types";
+export type {
+  UseTypingTestOptions,
+  UseTypingTestReturn,
+} from "./typing-test/types";
 
 export const useTypingTest = (
   options?: UseTypingTestOptions,
@@ -115,7 +117,7 @@ export const useTypingTest = (
         customTextRef,
         wordsRef,
         languageRef,
-      });
+      } satisfies TimerTickRefs);
     },
     [],
   );

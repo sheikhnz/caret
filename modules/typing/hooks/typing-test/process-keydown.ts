@@ -2,8 +2,12 @@ import {
   processBackspace,
   processChar,
 } from "@/modules/typing/engine/input/input-handler";
+import {
+  syncInputSnapshot,
+  syncStoreFromEngine,
+} from "@/modules/typing/engine/input/sync-store";
+import { getTimedDurationSeconds } from "@/modules/typing/engine/generation/mode-helpers";
 import * as TestInput from "@/modules/typing/engine/input/test-input";
-import { isCustomTimedMode } from "@/modules/typing/engine/generation/word-generator";
 import * as TestState from "@/modules/typing/engine/runtime/test-state";
 import * as TestStats from "@/modules/typing/engine/runtime/test-stats";
 import { startTimer } from "@/modules/typing/engine/runtime/test-timer";
@@ -13,19 +17,15 @@ import {
   isRestartShortcut,
 } from "@/modules/typing/constants/keyboard-shortcuts";
 import { playInputSound } from "@/modules/typing/services/sound";
-import type { useConfigStore } from "@/modules/typing/stores/config-store";
-import type { useTestStore } from "@/modules/typing/stores/test-store";
 import type { CustomTextSettings } from "@/modules/typing/types/custom-text";
 import type { LanguageObject } from "@/modules/typing/types/language";
 
 import { getSoundOptions } from "./sound-options";
-
-type Config = ReturnType<typeof useConfigStore.getState>["config"];
-type TestStore = ReturnType<typeof useTestStore.getState>;
+import type { TestStoreState, TypingConfig } from "./types";
 
 export type ProcessKeyDownDeps = {
-  config: Config;
-  store: TestStore;
+  config: TypingConfig;
+  store: TestStoreState;
   wordsRef: React.MutableRefObject<string[]>;
   languageRef: React.MutableRefObject<LanguageObject | null>;
   customTextRef: React.MutableRefObject<CustomTextSettings>;
@@ -82,9 +82,7 @@ export const processKeyDown = (
       ...getSoundOptions(keyboardEvent),
     });
 
-    store.setCurrentInput(TestInput.currentInput);
-    store.setWordIndex(TestState.getActiveWordIndex());
-    store.setInputHistory([...TestInput.inputHistory]);
+    syncInputSnapshot(store);
     return;
   }
 
@@ -103,19 +101,16 @@ export const processKeyDown = (
 
   if (inputEvent.type === "startTest") {
     TestStats.setStart(now);
-    store.setPhase("active");
     TestState.setPhase("active");
+    syncStoreFromEngine(store, { phase: "active" });
 
-    const durationSeconds =
-      config.mode === "time"
-        ? config.time
-        : isCustomTimedMode({ config, customText: customTextRef.current })
-          ? customTextRef.current.limit.value
-          : null;
+    const durationSeconds = getTimedDurationSeconds({
+      config,
+      customText: customTextRef.current,
+    });
     startTimer(now, durationSeconds, {
       onTick: onTimerTick,
       onFinish: () => finishTest(),
-      onFail: () => failTest(),
     });
     inputEvent = processChar(key, {
       targetWords: wordsRef.current,
@@ -133,9 +128,7 @@ export const processKeyDown = (
     });
   }
 
-  store.setCurrentInput(TestInput.currentInput);
-  store.setWordIndex(TestState.getActiveWordIndex());
-  store.setInputHistory([...TestInput.inputHistory]);
+  syncInputSnapshot(store);
 
   if (config.mode === "zen") {
     const requiredSlots = TestState.getActiveWordIndex() + 1;
@@ -145,8 +138,9 @@ export const processKeyDown = (
         padded.push("");
       }
       wordsRef.current = padded;
-      if (languageRef.current) {
-        store.setWords(padded, languageRef.current);
+      const language = languageRef.current;
+      if (language) {
+        store.setWords(padded, language);
       }
     }
   }

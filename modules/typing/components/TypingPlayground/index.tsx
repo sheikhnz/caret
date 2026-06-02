@@ -1,6 +1,6 @@
 /**
  * Typing playground UI — test config, live typing, and results.
- * Pair with usePG at the page level so siblings can read playground state.
+ * Pair with useTypingPlayground at the page level.
  */
 
 "use client";
@@ -8,13 +8,13 @@
 import { Results } from "@/modules/typing/components/Results";
 import { TestConfig } from "@/modules/typing/components/TestConfig";
 import { TypingTest } from "@/modules/typing/components/TypingTest";
-import type { PG as PGType } from "@/modules/typing/hooks/use-pg";
+import type { TypingPlaygroundState } from "@/modules/typing/hooks/use-typing-playground";
 
-type PGProps = {
-  playground: PGType;
+type TypingPlaygroundProps = {
+  playground: TypingPlaygroundState;
 };
 
-export const PG = ({ playground }: PGProps) => {
+export const TypingPlayground = ({ playground }: TypingPlaygroundProps) => {
   const { phase, isTestFocused, typing } = playground;
 
   return (

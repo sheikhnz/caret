@@ -4,7 +4,7 @@
 
 import { Fragment } from "react";
 
-import { Kbd } from "@/ui/Kbd";
+import { Kbd } from "@/ui";
 
 import type { ShortcutDefinition } from "../constants/keyboard-shortcuts";
 

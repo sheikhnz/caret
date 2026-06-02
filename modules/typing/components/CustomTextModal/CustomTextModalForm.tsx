@@ -6,10 +6,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 
-import { Button } from "@/ui/Button";
-import { Input } from "@/ui/Input";
-import { Modal } from "@/ui/Modal";
-import { Textarea } from "@/ui/Textarea";
+import { Button, Input, Modal, Textarea } from "@/ui";
 
 import {
   buildSettingsFromForm,

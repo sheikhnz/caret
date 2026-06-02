@@ -5,15 +5,13 @@ import * as TestState from "@/modules/typing/engine/runtime/test-state";
 import * as TestStats from "@/modules/typing/engine/runtime/test-stats";
 import { clearTimer } from "@/modules/typing/engine/runtime/test-timer";
 import { loadLanguage } from "@/modules/typing/services/language-loader";
-import type { useConfigStore } from "@/modules/typing/stores/config-store";
-import type { useTestStore } from "@/modules/typing/stores/test-store";
+import { clearAllSounds } from "@/modules/typing/services/sound";
 import type { CustomTextSettings } from "@/modules/typing/types/custom-text";
 import type { LanguageObject } from "@/modules/typing/types/language";
 
-import { clearAllSounds } from "@/modules/typing/services/sound";
+import type { TestStoreState, TypingConfig } from "./types";
 
-type Config = ReturnType<typeof useConfigStore.getState>["config"];
-type TestStore = ReturnType<typeof useTestStore.getState>;
+const EMPTY_CUSTOM_TEXT_ERROR = "Custom text cannot be empty";
 
 export type InitTestRefs = {
   languageRef: React.MutableRefObject<LanguageObject | null>;
@@ -28,8 +26,8 @@ export const runInitTest = async ({
   refs,
   withSameWords = false,
 }: {
-  config: Config;
-  store: TestStore;
+  config: TypingConfig;
+  store: TestStoreState;
   customText: CustomTextSettings;
   refs: InitTestRefs;
   withSameWords?: boolean;
@@ -38,6 +36,10 @@ export const runInitTest = async ({
   refs.isInitializingRef.current = true;
 
   try {
+    if (config.mode === "custom" && customText.text.length === 0) {
+      throw new Error(EMPTY_CUSTOM_TEXT_ERROR);
+    }
+
     store.setIsLoadingWords(true);
 
     const language = await loadLanguage(config.language);
@@ -51,12 +53,16 @@ export const runInitTest = async ({
         customText: config.mode === "custom" ? customText : undefined,
       });
       words = result.words;
+
+      if (config.mode === "custom" && words.length === 0) {
+        throw new Error(EMPTY_CUSTOM_TEXT_ERROR);
+      }
     }
 
     refs.wordsRef.current = words;
 
-    TestInput.restart();
-    TestStats.restart();
+    TestInput.resetInput();
+    TestStats.resetStats();
     TestState.resetState();
 
     store.reset();
@@ -77,8 +83,8 @@ export const runRestartTest = async ({
   onRestart,
   initTest,
 }: {
-  config: Config;
-  store: TestStore;
+  config: TypingConfig;
+  store: TestStoreState;
   withSameWords?: boolean;
   onRestart?: () => void;
   initTest: (withSameWords?: boolean) => Promise<void>;

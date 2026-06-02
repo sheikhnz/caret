@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 
 import { cn } from "@/utils";
-import { SegmentedButton } from "@/ui/SegmentedButton";
+import { SegmentedButton } from "@/ui";
 
 import type { TestMode } from "@/modules/typing/types/config";
 

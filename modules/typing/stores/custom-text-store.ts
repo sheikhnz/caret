@@ -1,6 +1,5 @@
 /**
  * Custom text settings and saved lessons.
- * Source: frontend/src/ts/test/custom-text.ts
  */
 
 "use client";
@@ -8,8 +7,12 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-import { DEFAULT_CUSTOM_TEXT } from "../constants/custom-text-defaults";
-import type { CustomTextSettings, SavedCustomText } from "../types/custom-text";
+import { DEFAULT_CUSTOM_TEXT } from "@/modules/typing/constants/custom-text-defaults";
+import type {
+  CustomTextSettings,
+  SavedCustomText,
+} from "@/modules/typing/types/custom-text";
+import { createPersistStorage } from "@/modules/typing/utils/persist-storage";
 
 type CustomTextStore = {
   settings: CustomTextSettings;
@@ -45,7 +48,8 @@ export const useCustomTextStore = create<CustomTextStore>()(
       getSavedNames: () => Object.keys(get().savedTexts).sort(),
     }),
     {
-      name: "monkeytype-custom-text",
+      name: "typing-playground-custom-text",
+      storage: createPersistStorage(),
       merge: (persisted, current) => {
         const persistedState = persisted as
           | Partial<CustomTextStore>

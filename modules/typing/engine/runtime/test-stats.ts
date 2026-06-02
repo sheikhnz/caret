@@ -135,7 +135,7 @@ export const removeAfkData = (): void => {
   TestInput.rawHistory.splice(testSeconds);
 };
 
-export const restart = (): void => {
+export const resetStats = (): void => {
   start = 0;
   end = 0;
   lastSecondNotRound = false;

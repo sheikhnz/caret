@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-import { SegmentedButton } from "@/ui/SegmentedButton";
+import { SegmentedButton } from "@/ui";
 
 import {
   CONFIG_TRANSITION,
