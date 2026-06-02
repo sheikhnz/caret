@@ -49,8 +49,12 @@ export const runInitTest = async ({
     if (withSameWords && refs.wordsRef.current.length > 0) {
       words = [...refs.wordsRef.current];
     } else {
-      const result = await generateWords(language, config, {
-        customText: config.mode === "custom" ? customText : undefined,
+      const result = await generateWords({
+        language,
+        config,
+        options: {
+          customText: config.mode === "custom" ? customText : undefined,
+        },
       });
       words = result.words;
 

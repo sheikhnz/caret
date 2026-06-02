@@ -23,7 +23,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 | Area              | Path                            | Role                                    |
 | ----------------- | ------------------------------- | --------------------------------------- |
-| Engine generation | `engine/generation/`            | Words, custom text, mode helpers        |
+| Engine generation | `engine/generation/`            | Per-mode generators + `word-generator` router |
 | Engine input      | `engine/input/`                 | Keystroke state, handlers, `sync-store` |
 | Engine runtime    | `engine/runtime/`               | Phase, timer, stats                     |
 | Hooks             | `hooks/` + `hooks/typing-test/` | React orchestration                     |
@@ -42,7 +42,15 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 - Config: `typing-playground-config` (migrates from `monkeytype-config`)
 - Custom text: `typing-playground-custom-text` (migrates from `monkeytype-custom-text`)
-- Quote mode is hidden in UI; persisted `quote` mode maps to `words`.
+- Quote mode loads `/public/quotes/{language}.json` (Monkeytype format) via `quote-loader`.
+
+## Word generation
+
+- `word-generator.ts` only routes; it does not pick or format words.
+- Each mode module exposes a pair:
+  - Initial list: `generateCustomWords` / `generateQuoteWords` / `generateStandardWords`
+  - Mid-test append: `getCustomNextWordDuringTest` / `getQuoteNextWord` / `getStandardNextWord`
+- Shared call shapes: `GenerateWordsParams`, `AppendWordContext` in `engine/generation/types.ts`.
 
 ## Tests
 

@@ -1,5 +1,12 @@
+/**
+ * Custom mode word generation — initial word list and mid-test word append.
+ */
+
 import type { CustomTextSettings } from "../../types/custom-text";
+import type { AppendWordContext } from "./types";
 import { Wordset, withWords } from "./wordset";
+
+const CUSTOM_TEXT_REQUIRED_ERROR = "Custom text settings are required";
 
 let activeWordset: Wordset | null = null;
 let currentSection: string[] = [];
@@ -85,7 +92,7 @@ export const getCustomNextWord = async (
   settings: CustomTextSettings,
 ): Promise<string> => {
   if (activeWordset === null) {
-    throw new Error("Custom wordset is not initialized");
+    activeWordset = withWords(settings.text);
   }
 
   if (currentSection.length === 0) {
@@ -146,4 +153,14 @@ export const generateCustomWords = async (
   }
 
   return words;
+};
+
+export const getCustomNextWordDuringTest = async ({
+  customText,
+}: AppendWordContext): Promise<string> => {
+  if (customText === undefined) {
+    throw new Error(CUSTOM_TEXT_REQUIRED_ERROR);
+  }
+
+  return getCustomNextWord(customText);
 };

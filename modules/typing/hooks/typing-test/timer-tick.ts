@@ -86,15 +86,15 @@ export const handleTimerTick = (
   const secondLastWord = words[words.length - 2] ?? "";
   const wordIdx = words.length;
 
-  getNextWord(
+  getNextWord({
     language,
-    c,
-    lastWord,
-    secondLastWord,
-    wordIdx,
-    100,
-    c.mode === "custom" ? refs.customTextRef.current : undefined,
-  )
+    config: c,
+    previousWord: lastWord,
+    previousWord2: secondLastWord,
+    wordIndex: wordIdx,
+    wordsBound: 100,
+    customText: c.mode === "custom" ? refs.customTextRef.current : undefined,
+  })
     .then((word) => {
       refs.wordsRef.current = [...refs.wordsRef.current, word];
       const lang = refs.languageRef.current;

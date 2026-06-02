@@ -22,7 +22,7 @@ type ConfigStore = {
 
 const normalizeConfig = (config: TypingConfig): TypingConfig => {
   if (config.mode === "quote") {
-    return { ...config, mode: "words" };
+    return { ...config, punctuation: false, numbers: false };
   }
   return config;
 };
