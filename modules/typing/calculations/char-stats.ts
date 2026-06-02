@@ -34,6 +34,30 @@ export const countChars = (
   isZenMode = false,
   zenAccIncorrect = 0,
 ): CharCount => {
+  if (isZenMode) {
+    let correctWordChars = 0;
+    let spaces = 0;
+    let correctspaces = 0;
+
+    for (let i = 0; i < inputWords.length; i++) {
+      correctWordChars += (inputWords[i] ?? "").length;
+      if (i < inputWords.length - 1) {
+        spaces++;
+        correctspaces++;
+      }
+    }
+
+    return {
+      spaces,
+      correctWordChars,
+      allCorrectChars: correctWordChars,
+      incorrectChars: zenAccIncorrect,
+      extraChars: 0,
+      missedChars: 0,
+      correctSpaces: correctspaces,
+    };
+  }
+
   let correctWordChars = 0;
   let correctChars = 0;
   let incorrectChars = 0;

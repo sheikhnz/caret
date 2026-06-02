@@ -41,6 +41,7 @@ export const calculateTestSeconds = (now?: number): number => {
 export const calculateFinalStats = (
   targetWords: string[],
   isTimedTest: boolean,
+  isZenMode = false,
 ): FinalStats => {
   const testSeconds = roundTo2(calculateTestSeconds());
   const inputWords = [...TestInput.inputHistory];
@@ -50,7 +51,7 @@ export const calculateFinalStats = (
     targetWords,
     isTimedTest,
     true,
-    false,
+    isZenMode,
     TestInput.accuracy.incorrect,
   );
 
@@ -91,6 +92,7 @@ export const calculateFinalStats = (
 
 export const getLiveWpmAndRaw = (
   targetWords: string[],
+  isZenMode = false,
 ): { wpm: number; raw: number } => {
   const testSeconds = calculateTestSeconds();
   if (testSeconds <= 0) return { wpm: 0, raw: 0 };
@@ -101,7 +103,7 @@ export const getLiveWpmAndRaw = (
     targetWords,
     false,
     false,
-    false,
+    isZenMode,
     TestInput.accuracy.incorrect,
   );
 

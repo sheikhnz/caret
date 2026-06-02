@@ -4,7 +4,7 @@
 
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { Kbd } from "@/ui/Kbd";
 import { Separator } from "@/ui/Separator";
@@ -22,6 +22,44 @@ import { WordsDisplay } from "./WordsDisplay";
 const FONT_SIZE_REM = 2;
 const ROW_HEIGHT_PX = 48;
 const CONTAINER_HEIGHT_PX = ROW_HEIGHT_PX * 3;
+const SCROLL_ANCHOR_ROW = 1;
+
+/** True when zen mode grows the word list without replacing earlier entries. */
+const isZenWordAppend = (prev: string[], next: string[]): boolean =>
+  next.length > prev.length &&
+  prev.every((word, index) => word === next[index]);
+
+/** Keep the active word within the visible typing window. */
+const getScrollOffsetForActiveWord = ({
+  scrollWrapper,
+  wordIndex,
+  currentOffset,
+}: {
+  scrollWrapper: HTMLElement;
+  wordIndex: number;
+  currentOffset: number;
+}): number => {
+  const activeEl = scrollWrapper.querySelector<HTMLElement>(
+    `[data-word-index="${wordIndex}"]`,
+  );
+  if (!activeEl) return currentOffset;
+
+  const activeTop = activeEl.offsetTop;
+  const activeBottom = activeTop + activeEl.offsetHeight;
+  const visibleTop = currentOffset;
+  const visibleBottom = currentOffset + CONTAINER_HEIGHT_PX;
+  const anchorTop = ROW_HEIGHT_PX * SCROLL_ANCHOR_ROW;
+
+  if (activeBottom > visibleBottom - ROW_HEIGHT_PX * 0.5) {
+    return Math.max(0, activeTop - anchorTop);
+  }
+
+  if (activeTop < visibleTop + ROW_HEIGHT_PX * 0.25) {
+    return Math.max(0, activeTop - anchorTop);
+  }
+
+  return currentOffset;
+};
 
 type TypingTestProps = {
   typing: UseTypingTestReturn;
@@ -36,17 +74,19 @@ export const TypingTest = ({ typing, isTestFocused }: TypingTestProps) => {
 
   const scrollWrapperRef = useRef<HTMLDivElement | null>(null);
   const [scrollOffset, setScrollOffset] = useState(0);
+  const isZenMode = config.mode === "zen";
   const renderedWords = useWordsRenderer({
     words: store.words,
     wordIndex: store.wordIndex,
     currentInput: store.currentInput,
     inputHistory: store.inputHistory,
     blindMode: config.blindMode,
+    isZenMode,
   });
 
   const showCaret =
     !store.isLoadingWords &&
-    store.words.length > 0 &&
+    (store.words.length > 0 || isZenMode) &&
     store.phase !== "finished";
 
   const caretPosition = useCaretPosition(
@@ -58,29 +98,41 @@ export const TypingTest = ({ typing, isTestFocused }: TypingTestProps) => {
 
   const prevWordsRef = useRef(store.words);
   useEffect(() => {
-    if (store.words !== prevWordsRef.current) {
-      prevWordsRef.current = store.words;
+    if (store.words === prevWordsRef.current) return;
+
+    const shouldResetScroll =
+      !isZenMode || !isZenWordAppend(prevWordsRef.current, store.words);
+
+    if (shouldResetScroll) {
       setScrollOffset(0);
     }
-  }, [store.words]);
 
-  useEffect(() => {
-    const container = wordsContainerRef.current;
-    if (!container) return;
+    prevWordsRef.current = store.words;
+  }, [store.words, isZenMode]);
 
-    const activeEl = container.querySelector<HTMLElement>(
-      `[data-word-index="${store.wordIndex}"]`,
-    );
-    if (!activeEl) return;
+  useLayoutEffect(() => {
+    const scrollWrapper = scrollWrapperRef.current;
+    if (!scrollWrapper) return;
 
-    const containerRect = container.getBoundingClientRect();
-    const wordRect = activeEl.getBoundingClientRect();
-    const relTop = wordRect.top - containerRect.top;
+    const updateScroll = () => {
+      setScrollOffset((currentOffset) =>
+        getScrollOffsetForActiveWord({
+          scrollWrapper,
+          wordIndex: store.wordIndex,
+          currentOffset,
+        }),
+      );
+    };
 
-    if (relTop >= ROW_HEIGHT_PX * 2) {
-      setScrollOffset((prev) => prev + ROW_HEIGHT_PX);
-    }
-  }, [store.wordIndex, wordsContainerRef]);
+    updateScroll();
+    const frame = requestAnimationFrame(updateScroll);
+    return () => cancelAnimationFrame(frame);
+  }, [
+    store.wordIndex,
+    store.currentInput,
+    renderedWords.length,
+    store.isLoadingWords,
+  ]);
 
   const handleContainerClick = useCallback(() => {
     focusInput();
@@ -151,9 +203,14 @@ export const TypingTest = ({ typing, isTestFocused }: TypingTestProps) => {
         }}
       >
         <Kbd>Esc</Kbd>
-        <span>or</span>
-        <Kbd>Tab</Kbd>
         <span>→ Restart test</span>
+        {config.mode !== "zen" && (
+          <>
+            <span>or</span>
+            <Kbd>Tab</Kbd>
+            <span>→ Restart test</span>
+          </>
+        )}
 
         {store.phase === "active" && (
           <>

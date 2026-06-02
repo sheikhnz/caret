@@ -196,6 +196,10 @@ export async function generateWords(
     return { words: [...options.existingWords] };
   }
 
+  if (config.mode === "zen") {
+    return { words: [""] };
+  }
+
   if (config.mode === "custom") {
     const settings = options?.customText;
     if (settings === undefined || settings.text.length === 0) {
@@ -243,7 +247,7 @@ export async function generateWords(
   const words: string[] = [];
 
   let limit: number;
-  if (config.mode === "time" || config.mode === "zen") {
+  if (config.mode === "time") {
     limit = 100;
   } else if (config.mode === "words") {
     limit = config.words === 0 ? 100 : config.words;

@@ -47,16 +47,27 @@ export const WordsDisplay = ({ renderedWords }: WordsDisplayProps) => (
               : "2px solid transparent",
         }}
       >
-        {word.chars.map((ch, ci) => (
+        {word.chars.length === 0 && word.isActive ? (
           <span
-            key={ci}
-            data-char-index={ci}
-            className={STATUS_CLASS[ch.status]}
+            data-char-index={0}
+            className={STATUS_CLASS.correct}
             style={{ display: "inline-block" }}
+            aria-hidden
           >
-            {ch.char}
+            {"\u200b"}
           </span>
-        ))}
+        ) : (
+          word.chars.map((ch, ci) => (
+            <span
+              key={ci}
+              data-char-index={ci}
+              className={STATUS_CLASS[ch.status]}
+              style={{ display: "inline-block" }}
+            >
+              {ch.char}
+            </span>
+          ))
+        )}
       </div>
     ))}
   </div>

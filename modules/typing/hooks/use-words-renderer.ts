@@ -32,6 +32,7 @@ type UseWordsRendererArgs = {
   currentInput: string;
   inputHistory: string[];
   blindMode: boolean;
+  isZenMode?: boolean;
 };
 
 export const useWordsRenderer = ({
@@ -40,8 +41,33 @@ export const useWordsRenderer = ({
   currentInput,
   inputHistory,
   blindMode,
+  isZenMode = false,
 }: UseWordsRendererArgs): RenderedWord[] => {
   return useMemo<RenderedWord[]>(() => {
+    if (isZenMode) {
+      const slotCount = Math.max(words.length, wordIndex + 1);
+
+      return Array.from({ length: slotCount }, (_, wi): RenderedWord => {
+        const isActive = wi === wordIndex;
+        const isCompleted = wi < wordIndex;
+        const typedWord = isCompleted
+          ? (inputHistory[wi] ?? "")
+          : isActive
+            ? currentInput
+            : "";
+
+        return {
+          word: words[wi] ?? "",
+          chars: [...typedWord].map((char) => ({
+            char,
+            status: "correct" as CharStatus,
+          })),
+          isActive,
+          isCompleted,
+        };
+      });
+    }
+
     return words.map((word, wi): RenderedWord => {
       const isActive = wi === wordIndex;
       const isCompleted = wi < wordIndex;
@@ -88,5 +114,5 @@ export const useWordsRenderer = ({
 
       return { word, chars, isActive, isCompleted };
     });
-  }, [words, wordIndex, currentInput, inputHistory, blindMode]);
+  }, [words, wordIndex, currentInput, inputHistory, blindMode, isZenMode]);
 };

@@ -155,10 +155,11 @@ export const processChar = (data: string, ctx: InputContext): InputEvent => {
   TestInput.incrementKeypressCount();
   TestInput.pushKeypressWord(wordIndex);
 
-  // determine correctness
-  const correct = charIsSpace
-    ? true
-    : isCharCorrect(char, TestInput.currentInput + char, currentWord);
+  // determine correctness — zen mode has no target text
+  const correct =
+    config.mode === "zen" || charIsSpace
+      ? true
+      : isCharCorrect(char, TestInput.currentInput + char, currentWord);
 
   if (!correct) {
     TestInput.incrementKeypressErrors();
@@ -203,9 +204,13 @@ export const processChar = (data: string, ctx: InputContext): InputEvent => {
 
     wordCompleted = true;
 
-    const isLastWord = wordIndex >= targetWords.length - 1;
-    if (!isLastWord) {
+    if (config.mode === "zen") {
       TestState.incrementActiveWordIndex();
+    } else {
+      const isLastWord = wordIndex >= targetWords.length - 1;
+      if (!isLastWord) {
+        TestState.incrementActiveWordIndex();
+      }
     }
   }
 

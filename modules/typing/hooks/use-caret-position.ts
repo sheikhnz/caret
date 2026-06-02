@@ -73,7 +73,7 @@ export const useCaretPosition = (
     update();
     const id = requestAnimationFrame(update);
     return () => cancelAnimationFrame(id);
-  }, [update, isActive]);
+  }, [update, isActive, wordIndex, charIndex]);
 
   return position;
 };

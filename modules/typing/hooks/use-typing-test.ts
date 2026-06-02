@@ -217,9 +217,11 @@ export const useTypingTest = (
       const isTimedTest =
         config.mode === "time" ||
         isCustomTimedMode({ config, customText: customTextRef.current });
+      const isZenMode = config.mode === "zen";
       const stats = TestStats.calculateFinalStats(
         wordsRef.current,
         isTimedTest,
+        isZenMode,
       );
 
       // Handle last-second for non-time modes
@@ -232,7 +234,7 @@ export const useTypingTest = (
         !difficultyFailed &&
         Math.round(stats.time % 1) >= 0.5
       ) {
-        const liveWpm = TestStats.getLiveWpmAndRaw(wordsRef.current);
+        const liveWpm = TestStats.getLiveWpmAndRaw(wordsRef.current, isZenMode);
         TestInput.pushToWpmHistory(liveWpm.wpm);
         TestInput.pushToRawHistory(liveWpm.raw);
         TestInput.pushKeypressesToHistory();
@@ -277,7 +279,10 @@ export const useTypingTest = (
       const s = storeRef.current;
       const c = configRef.current;
 
-      const liveWpm = TestStats.getLiveWpmAndRaw(wordsRef.current);
+      const liveWpm = TestStats.getLiveWpmAndRaw(
+        wordsRef.current,
+        c.mode === "zen",
+      );
       const acc = TestStats.getLiveAccuracy();
       const burst = calculateBurst(
         TestInput.currentInput.length,
@@ -426,6 +431,20 @@ export const useTypingTest = (
       store.setCurrentInput(TestInput.currentInput);
       store.setWordIndex(TestState.getActiveWordIndex());
       store.setInputHistory([...TestInput.inputHistory]);
+
+      if (config.mode === "zen") {
+        const requiredSlots = TestState.getActiveWordIndex() + 1;
+        if (wordsRef.current.length < requiredSlots) {
+          const padded = [...wordsRef.current];
+          while (padded.length < requiredSlots) {
+            padded.push("");
+          }
+          wordsRef.current = padded;
+          if (languageRef.current) {
+            store.setWords(padded, languageRef.current);
+          }
+        }
+      }
 
       if (event.type === "finish") {
         finishTest();
