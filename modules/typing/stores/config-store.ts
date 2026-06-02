@@ -5,11 +5,10 @@
 "use client";
 
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 import { DEFAULT_CONFIG } from "@/modules/typing/constants/config-defaults";
 import type { TypingConfig } from "@/modules/typing/types/config";
-import { createPersistStorage } from "@/modules/typing/utils/persist-storage";
 
 type ConfigStore = {
   config: TypingConfig;
@@ -39,7 +38,7 @@ export const useConfigStore = create<ConfigStore>()(
     }),
     {
       name: "typing-playground-config",
-      storage: createPersistStorage(),
+      storage: createJSONStorage(() => localStorage),
       merge: (persisted, current) => {
         const persistedState = persisted as Partial<ConfigStore> | undefined;
         return {

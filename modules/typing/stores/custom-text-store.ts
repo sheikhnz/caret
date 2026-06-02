@@ -5,14 +5,13 @@
 "use client";
 
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 import { DEFAULT_CUSTOM_TEXT } from "@/modules/typing/constants/custom-text-defaults";
 import type {
   CustomTextSettings,
   SavedCustomText,
 } from "@/modules/typing/types/custom-text";
-import { createPersistStorage } from "@/modules/typing/utils/persist-storage";
 
 type CustomTextStore = {
   settings: CustomTextSettings;
@@ -49,7 +48,7 @@ export const useCustomTextStore = create<CustomTextStore>()(
     }),
     {
       name: "typing-playground-custom-text",
-      storage: createPersistStorage(),
+      storage: createJSONStorage(() => localStorage),
       merge: (persisted, current) => {
         const persistedState = persisted as
           | Partial<CustomTextStore>

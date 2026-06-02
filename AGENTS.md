@@ -53,8 +53,8 @@ Match Monkeytype behavior unless this project intentionally diverges (document t
 
 ## Persistence
 
-- Config: `typing-playground-config` (migrates from `monkeytype-config`)
-- Custom text: `typing-playground-custom-text` (migrates from `monkeytype-custom-text`)
+- Config: `typing-playground-config`
+- Custom text: `typing-playground-custom-text`
 - Quote mode loads `/public/quotes/{language}.json` (Monkeytype format) via `quote-loader`.
 
 ## Word generation
