@@ -6,7 +6,7 @@
  * All setters/getters are exported so stores/hooks can read and dispatch updates.
  */
 
-import type { TestPhase } from "../types/engine";
+import type { TestPhase } from "../../types/engine";
 
 let _phase: TestPhase = "idle";
 let _activeWordIndex = 0;

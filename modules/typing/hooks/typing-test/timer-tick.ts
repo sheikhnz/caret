@@ -3,10 +3,10 @@ import {
   getNextWord,
   isCustomTimedMode,
   shouldAppendWordsDuringTest,
-} from "@/modules/typing/engine/word-generator";
-import * as TestInput from "@/modules/typing/engine/test-input";
-import * as TestStats from "@/modules/typing/engine/test-stats";
-import { playTimeWarning } from "@/modules/typing/services/sound-controller";
+} from "@/modules/typing/engine/generation/word-generator";
+import * as TestInput from "@/modules/typing/engine/input/test-input";
+import * as TestStats from "@/modules/typing/engine/runtime/test-stats";
+import { playTimeWarning } from "@/modules/typing/services/sound";
 import type { useConfigStore } from "@/modules/typing/stores/config-store";
 import type { useTestStore } from "@/modules/typing/stores/test-store";
 import type { CustomTextSettings } from "@/modules/typing/types/custom-text";

@@ -3,7 +3,7 @@
  * Source: frontend/src/ts/test/wordset.ts
  */
 
-import { randomIntFromRange } from "../calculations/numbers";
+import { randomIntFromRange } from "../../calculations/numbers";
 
 export type WordsFrequency = "normal" | "zipf";
 

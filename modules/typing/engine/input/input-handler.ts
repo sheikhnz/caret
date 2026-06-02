@@ -9,10 +9,10 @@
  * words, updates test-input state, and returns events for the store/hooks to act on.
  */
 
-import type { TypingConfig } from "../types/config";
+import { calculateBurst } from "../../calculations/wpm";
+import type { TypingConfig } from "../../types/config";
 import * as TestInput from "./test-input";
-import * as TestState from "./test-state";
-import { calculateBurst } from "../calculations/wpm";
+import * as TestState from "../runtime/test-state";
 import {
   pushKeypressesToHistory,
   pushErrorToHistory,

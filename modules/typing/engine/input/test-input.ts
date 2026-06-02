@@ -6,15 +6,15 @@
  * WPM/raw/burst/error histories, and AFK detection.
  */
 
-import { mean, roundTo2 } from "../calculations/numbers";
-import { KEYS_TO_TRACK } from "../constants/keys";
+import { mean, roundTo2 } from "../../calculations/numbers";
+import { KEYS_TO_TRACK } from "../../constants/keys";
 import type {
   Accuracy,
   ErrorHistoryEntry,
   KeyOverlap,
   KeypressTimings,
-} from "../types/engine";
-import { getActiveWordIndex } from "./test-state";
+} from "../../types/engine";
+import { getActiveWordIndex } from "../runtime/test-state";
 
 type KeyData = { timestamp: number; index: number };
 

@@ -1,18 +1,18 @@
-import { isCustomTimedMode } from "@/modules/typing/engine/word-generator";
 import {
-  processChar,
   processBackspace,
-} from "@/modules/typing/engine/input-handler";
-import * as TestInput from "@/modules/typing/engine/test-input";
-import * as TestState from "@/modules/typing/engine/test-state";
-import * as TestStats from "@/modules/typing/engine/test-stats";
-import { startTimer } from "@/modules/typing/engine/test-timer";
+  processChar,
+} from "@/modules/typing/engine/input/input-handler";
+import * as TestInput from "@/modules/typing/engine/input/test-input";
+import { isCustomTimedMode } from "@/modules/typing/engine/generation/word-generator";
+import * as TestState from "@/modules/typing/engine/runtime/test-state";
+import * as TestStats from "@/modules/typing/engine/runtime/test-stats";
+import { startTimer } from "@/modules/typing/engine/runtime/test-timer";
 import {
   isBackspaceShortcut,
   isBailOutShortcut,
   isRestartShortcut,
 } from "@/modules/typing/constants/keyboard-shortcuts";
-import { playInputSound } from "@/modules/typing/services/sound-controller";
+import { playInputSound } from "@/modules/typing/services/sound";
 import type { useConfigStore } from "@/modules/typing/stores/config-store";
 import type { useTestStore } from "@/modules/typing/stores/test-store";
 import type { CustomTextSettings } from "@/modules/typing/types/custom-text";

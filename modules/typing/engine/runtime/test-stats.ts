@@ -6,15 +6,15 @@
  * to the pure calculation modules.
  */
 
-import { roundTo2 } from "../calculations/numbers";
-import { calculateWpmAndRaw } from "../calculations/wpm";
 import {
   calculateAccuracy,
   calculateAfkSeconds,
-} from "../calculations/accuracy";
-import { countChars } from "../calculations/char-stats";
-import type { FinalStats } from "../types/result";
-import * as TestInput from "./test-input";
+} from "../../calculations/accuracy";
+import { countChars } from "../../calculations/char-stats";
+import { roundTo2 } from "../../calculations/numbers";
+import { calculateWpmAndRaw } from "../../calculations/wpm";
+import * as TestInput from "../input/test-input";
+import type { FinalStats } from "../../types/result";
 import { isActive } from "./test-state";
 
 export let start = 0;

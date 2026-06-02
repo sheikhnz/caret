@@ -1,10 +1,10 @@
 import { buildCompletedEvent } from "@/modules/typing/analytics/result-builder";
 import { calculateBurst } from "@/modules/typing/calculations/wpm";
-import { isCustomTimedMode } from "@/modules/typing/engine/word-generator";
-import * as TestInput from "@/modules/typing/engine/test-input";
-import * as TestState from "@/modules/typing/engine/test-state";
-import * as TestStats from "@/modules/typing/engine/test-stats";
-import { clearTimer } from "@/modules/typing/engine/test-timer";
+import { isCustomTimedMode } from "@/modules/typing/engine/generation/word-generator";
+import * as TestInput from "@/modules/typing/engine/input/test-input";
+import * as TestState from "@/modules/typing/engine/runtime/test-state";
+import * as TestStats from "@/modules/typing/engine/runtime/test-stats";
+import { clearTimer } from "@/modules/typing/engine/runtime/test-timer";
 import type { useConfigStore } from "@/modules/typing/stores/config-store";
 import type { useTestStore } from "@/modules/typing/stores/test-store";
 import type { CustomTextSettings } from "@/modules/typing/types/custom-text";

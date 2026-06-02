@@ -8,9 +8,9 @@
 import { useCallback, useEffect, useRef } from "react";
 
 import { shouldPreventDefaultInTypingInput } from "@/modules/typing/constants/keyboard-shortcuts";
-import * as TestInput from "@/modules/typing/engine/test-input";
-import * as TestState from "@/modules/typing/engine/test-state";
-import { setSoundSettings } from "@/modules/typing/services/sound-controller";
+import * as TestInput from "@/modules/typing/engine/input/test-input";
+import * as TestState from "@/modules/typing/engine/runtime/test-state";
+import { setSoundSettings } from "@/modules/typing/services/sound";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
 import { useCustomTextStore } from "@/modules/typing/stores/custom-text-store";
 import { useTestStore } from "@/modules/typing/stores/test-store";

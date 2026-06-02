@@ -3,11 +3,11 @@
  * Source: frontend/src/ts/test/words-generator.ts
  */
 
-import type { TypingConfig } from "../types/config";
-import type { CustomTextSettings } from "../types/custom-text";
-import type { LanguageObject } from "../types/language";
+import type { TypingConfig } from "../../types/config";
+import type { CustomTextSettings } from "../../types/custom-text";
+import type { LanguageObject } from "../../types/language";
+import { randomIntFromRange } from "../../calculations/numbers";
 import { Wordset, withWords } from "./wordset";
-import { randomIntFromRange } from "../calculations/numbers";
 
 const NUMBERS_POOL = "0123456789";
 

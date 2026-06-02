@@ -14,9 +14,9 @@ import {
   calculateWpmConsistency,
 } from "../calculations/consistency";
 import { calculateAfkSeconds } from "../calculations/accuracy";
-import * as TestInput from "../engine/test-input";
-import * as TestStats from "../engine/test-stats";
-import * as TestState from "../engine/test-state";
+import * as TestInput from "../engine/input/test-input";
+import * as TestState from "../engine/runtime/test-state";
+import * as TestStats from "../engine/runtime/test-stats";
 
 export type BuildCompletedEventArgs = {
   stats: FinalStats;

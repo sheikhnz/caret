@@ -1,16 +1,16 @@
 import { calculateAccuracy } from "@/modules/typing/calculations/accuracy";
-import { generateWords } from "@/modules/typing/engine/word-generator";
-import * as TestInput from "@/modules/typing/engine/test-input";
-import * as TestState from "@/modules/typing/engine/test-state";
-import * as TestStats from "@/modules/typing/engine/test-stats";
-import { clearTimer } from "@/modules/typing/engine/test-timer";
+import { generateWords } from "@/modules/typing/engine/generation/word-generator";
+import * as TestInput from "@/modules/typing/engine/input/test-input";
+import * as TestState from "@/modules/typing/engine/runtime/test-state";
+import * as TestStats from "@/modules/typing/engine/runtime/test-stats";
+import { clearTimer } from "@/modules/typing/engine/runtime/test-timer";
 import { loadLanguage } from "@/modules/typing/services/language-loader";
 import type { useConfigStore } from "@/modules/typing/stores/config-store";
 import type { useTestStore } from "@/modules/typing/stores/test-store";
 import type { CustomTextSettings } from "@/modules/typing/types/custom-text";
 import type { LanguageObject } from "@/modules/typing/types/language";
 
-import { clearAllSounds } from "@/modules/typing/services/sound-controller";
+import { clearAllSounds } from "@/modules/typing/services/sound";
 
 type Config = ReturnType<typeof useConfigStore.getState>["config"];
 type TestStore = ReturnType<typeof useTestStore.getState>;
