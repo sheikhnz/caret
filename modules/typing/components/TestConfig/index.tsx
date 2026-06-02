@@ -5,6 +5,19 @@
 "use client";
 
 import { LayoutGroup, motion } from "framer-motion";
+import {
+  AtSign,
+  Clock,
+  Hash,
+  ListOrdered,
+  PenLine,
+  Pencil,
+  Quote,
+  Sparkles,
+  Timer,
+  Type,
+  type LucideIcon,
+} from "lucide-react";
 import { useState } from "react";
 
 import { cn } from "@/utils";
@@ -29,11 +42,13 @@ const TCBtn = ({
   active,
   disabled,
   onClick,
+  icon: Icon,
   children,
 }: {
   active?: boolean;
   disabled?: boolean;
   onClick: () => void;
+  icon?: LucideIcon;
   children: React.ReactNode;
 }) => (
   <button
@@ -41,23 +56,24 @@ const TCBtn = ({
     disabled={disabled}
     onClick={onClick}
     className={cn(
-      "cursor-pointer select-none px-[0.5em] py-[0.65rem] text-[0.875rem] leading-none transition-colors duration-150",
+      "inline-flex cursor-pointer select-none items-center gap-1 px-[0.5em] py-[0.65rem] text-[0.875rem] leading-none transition-colors duration-150",
       active
         ? "text-accent"
         : "text-text-muted hover:text-text-primary",
       disabled && "pointer-events-none opacity-50",
     )}
   >
+    {Icon && <Icon className="size-3 shrink-0 opacity-80" aria-hidden />}
     {children}
   </button>
 );
 
-const MODES: { key: TestMode; label: string }[] = [
-  { key: "time", label: "Time" },
-  { key: "words", label: "Words" },
-  { key: "quote", label: "Quote" },
-  { key: "custom", label: "Custom" },
-  { key: "zen", label: "Zen" },
+const MODES: { key: TestMode; label: string; icon: LucideIcon }[] = [
+  { key: "time", label: "Time", icon: Timer },
+  { key: "words", label: "Words", icon: Type },
+  { key: "quote", label: "Quote", icon: Quote },
+  { key: "custom", label: "Custom", icon: PenLine },
+  { key: "zen", label: "Zen", icon: Sparkles },
 ];
 
 type TestConfigProps = {
@@ -97,9 +113,10 @@ export const TestConfig = ({
             className={cn("z-2 shrink-0", CARD_CLASS)}
             transition={LAYOUT_TRANSITION}
           >
-            {MODES.map(({ key, label }) => (
+            {MODES.map(({ key, label, icon }) => (
               <TCBtn
                 key={key}
+                icon={icon}
                 active={config.mode === key}
                 disabled={disabled}
                 onClick={() => interact(() => setConfig("mode", key))}
@@ -124,22 +141,24 @@ export const TestConfig = ({
           >
             <div className={cn(CARD_CLASS, "whitespace-nowrap")}>
               <TCBtn
+                icon={AtSign}
                 active={config.punctuation}
                 disabled={disabled || config.mode === "quote"}
                 onClick={() =>
                   interact(() => setConfig("punctuation", !config.punctuation))
                 }
               >
-                @ Punctuation
+                Punctuation
               </TCBtn>
               <TCBtn
+                icon={Hash}
                 active={config.numbers}
                 disabled={disabled || config.mode === "quote"}
                 onClick={() =>
                   interact(() => setConfig("numbers", !config.numbers))
                 }
               >
-                # Numbers
+                Numbers
               </TCBtn>
             </div>
           </motion.div>
@@ -173,6 +192,7 @@ export const TestConfig = ({
                 {TIME_PRESETS.map((t) => (
                   <TCBtn
                     key={t}
+                    icon={Clock}
                     active={config.time === t}
                     disabled={disabled}
                     onClick={() => interact(() => setConfig("time", t))}
@@ -197,6 +217,7 @@ export const TestConfig = ({
                 {WORD_COUNT_PRESETS.map((w) => (
                   <TCBtn
                     key={w}
+                    icon={ListOrdered}
                     active={config.words === w}
                     disabled={disabled}
                     onClick={() => interact(() => setConfig("words", w))}
@@ -223,6 +244,7 @@ export const TestConfig = ({
           >
             <div className={CARD_CLASS}>
               <TCBtn
+                icon={Pencil}
                 disabled={disabled}
                 onClick={() => interact(() => setCustomModalOpen(true))}
               >

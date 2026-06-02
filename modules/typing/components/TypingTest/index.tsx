@@ -89,11 +89,6 @@ export const TypingTest = ({ typing, isTestFocused }: TypingTestProps) => {
   if (store.phase === "finished") return null;
 
   const showLiveStats = isTestFocused && config.showTimerProgress;
-  const language = store.language;
-  const showLanguage =
-    !isTestFocused &&
-    store.phase === "idle" &&
-    (language !== null || config.mode === "custom");
 
   return (
     <div
@@ -118,26 +113,6 @@ export const TypingTest = ({ typing, isTestFocused }: TypingTestProps) => {
             wordIndex={store.wordIndex}
             totalWords={store.words.length}
           />
-        </div>
-
-        <div
-          className="mb-3 flex min-h-5 items-center gap-1.5 text-sm text-text-muted transition-opacity duration-125"
-          aria-hidden={!showLanguage}
-          style={{ opacity: showLanguage ? 1 : 0 }}
-        >
-          {config.mode === "custom" ? (
-            <>
-              <span aria-hidden>✎</span>
-              <span>Custom lesson</span>
-            </>
-          ) : (
-            language !== null && (
-              <>
-                <span aria-hidden>⌨</span>
-                <span>{language.name}</span>
-              </>
-            )
-          )}
         </div>
 
         <div
