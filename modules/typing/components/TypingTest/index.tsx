@@ -202,13 +202,17 @@ export const TypingTest = ({ typing, isTestFocused }: TypingTestProps) => {
           pointerEvents: isTestFocused ? "none" : "auto",
         }}
       >
-        <Kbd>Esc</Kbd>
-        <span>→ Restart test</span>
-        {config.mode !== "zen" && (
+        {config.mode === "zen" ? (
           <>
-            <span>or</span>
+            <Kbd>Esc</Kbd>
+            <span>Restart</span>
+          </>
+        ) : (
+          <>
+            <Kbd>Esc</Kbd>
+            <span>/</span>
             <Kbd>Tab</Kbd>
-            <span>→ Restart test</span>
+            <span>Restart</span>
           </>
         )}
 
