@@ -12,7 +12,6 @@ import {
   AtSign,
   CONFIG_TRANSITION,
   Hash,
-  LAYOUT_TRANSITION,
   TEST_CONFIG_CARD_CLASS,
   TEST_CONFIG_SIDE_GAP,
 } from "./constants";

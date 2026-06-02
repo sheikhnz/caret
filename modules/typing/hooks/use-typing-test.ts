@@ -125,8 +125,6 @@ export const useTypingTest = (
       await runRestartTest({
         config,
         store,
-        customText: customTextRef.current,
-        refs: { languageRef, wordsRef, isInitializingRef },
         withSameWords,
         onRestart: () => onRestartRef.current?.(),
         initTest,

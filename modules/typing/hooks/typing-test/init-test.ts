@@ -73,16 +73,12 @@ export const runInitTest = async ({
 export const runRestartTest = async ({
   config,
   store,
-  customText,
-  refs,
   withSameWords = false,
   onRestart,
   initTest,
 }: {
   config: Config;
   store: TestStore;
-  customText: CustomTextSettings;
-  refs: InitTestRefs;
   withSameWords?: boolean;
   onRestart?: () => void;
   initTest: (withSameWords?: boolean) => Promise<void>;

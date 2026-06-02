@@ -13,7 +13,6 @@ import type { TestMode } from "@/modules/typing/types/config";
 import {
   Clock,
   CONFIG_TRANSITION,
-  LAYOUT_TRANSITION,
   ListOrdered,
   TEST_CONFIG_CARD_CLASS,
   TEST_CONFIG_SIDE_GAP,
