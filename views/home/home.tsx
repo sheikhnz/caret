@@ -15,7 +15,6 @@ import { useTestStore } from "@/modules/typing/stores/test-store";
 import { isGlobalTypingCaptureKey } from "@/modules/typing/constants/keyboard-shortcuts";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
 import { shouldDeferGlobalTypingCapture } from "@/modules/typing/utils/keyboard";
-import { Badge } from "@/ui/Badge";
 
 export const Home = () => {
   const { phase, isLoadingWords } = useTestStore();
@@ -60,26 +59,6 @@ export const Home = () => {
 
   return (
     <div className="flex min-h-dvh flex-col bg-background">
-      <header
-        className="flex items-center justify-between px-6 py-5 transition-opacity duration-150 md:px-10"
-        style={{
-          opacity: isTestFocused ? 0.35 : 1,
-          pointerEvents: isTestFocused ? "none" : "auto",
-        }}
-      >
-        <div className="flex items-center gap-3">
-          <span className="text-lg font-semibold tracking-tight text-text-primary">
-            Typing Practice
-          </span>
-          <Badge tone="accent" className="hidden sm:inline-flex">
-            Beta
-          </Badge>
-        </div>
-        <p className="hidden text-sm text-text-muted md:block">
-          Click the words or start typing to begin
-        </p>
-      </header>
-
       <main className="flex flex-1 flex-col items-center justify-center px-6 pb-20 md:px-10">
         {phase === "finished" ? (
           <Results
