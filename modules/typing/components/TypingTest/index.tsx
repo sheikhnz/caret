@@ -1,11 +1,13 @@
 /**
  * Main typing test UI.
- * Source: frontend/src/ts/test/test-ui.ts + elements/caret.ts
  */
 
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+
+import { Kbd } from "@/ui/Kbd";
+import { Separator } from "@/ui/Separator";
 
 import type { UseTypingTestReturn } from "../../hooks/use-typing-test";
 
@@ -16,18 +18,6 @@ import { useTestStore } from "../../stores/test-store";
 import { Caret } from "./Caret";
 import { LiveStats } from "./LiveStats";
 import { WordsDisplay } from "./WordsDisplay";
-
-const Key = ({ children }: { children: React.ReactNode }) => (
-  <span
-    className="rounded px-1.5 py-0.5 text-xs"
-    style={{
-      backgroundColor: "var(--color-sub-alt)",
-      color: "var(--color-sub)",
-    }}
-  >
-    {children}
-  </span>
-);
 
 const FONT_SIZE_REM = 2;
 const ROW_HEIGHT_PX = 48;
@@ -110,21 +100,15 @@ export const TypingTest = ({ typing, isTestFocused }: TypingTestProps) => {
       className="flex w-full max-w-[870px] flex-col"
       onClick={handleContainerClick}
     >
-      <div
-        style={{
-          fontSize: `${FONT_SIZE_REM}rem`,
-          fontFamily: "var(--font-mono)",
-        }}
-      >
+      <div className="font-mono" style={{ fontSize: `${FONT_SIZE_REM}rem` }}>
         <div
           aria-hidden={!showLiveStats}
+          className="pointer-events-none transition-opacity duration-125"
           style={{
             minHeight: "1.25em",
             marginTop: "-1.25em",
             marginBottom: "0.25em",
             opacity: showLiveStats ? 1 : 0,
-            transition: "opacity 0.125s ease",
-            pointerEvents: "none",
           }}
         >
           <LiveStats
@@ -137,23 +121,19 @@ export const TypingTest = ({ typing, isTestFocused }: TypingTestProps) => {
         </div>
 
         <div
-          className="mb-3 flex min-h-5 items-center gap-1 text-sm"
+          className="mb-3 flex min-h-5 items-center gap-1.5 text-sm text-text-muted transition-opacity duration-125"
           aria-hidden={!showLanguage}
-          style={{
-            color: "var(--color-sub)",
-            opacity: showLanguage ? 1 : 0,
-            transition: "opacity 0.125s ease",
-          }}
+          style={{ opacity: showLanguage ? 1 : 0 }}
         >
           {config.mode === "custom" ? (
             <>
-              <span>✎</span>
+              <span aria-hidden>✎</span>
               <span>custom lesson</span>
             </>
           ) : (
             language !== null && (
               <>
-                <span>⌨</span>
+                <span aria-hidden>⌨</span>
                 <span>{language.name}</span>
               </>
             )
@@ -166,20 +146,14 @@ export const TypingTest = ({ typing, isTestFocused }: TypingTestProps) => {
           style={{ height: `${CONTAINER_HEIGHT_PX}px` }}
         >
           {store.isLoadingWords ? (
-            <div
-              className="flex h-full items-center justify-center"
-              style={{ color: "var(--color-sub)" }}
-            >
+            <div className="flex h-full items-center justify-center text-text-muted">
               <span>loading…</span>
             </div>
           ) : (
             <div
               ref={scrollWrapperRef}
-              className="relative"
-              style={{
-                transform: `translateY(-${scrollOffset}px)`,
-                transition: "transform 0.125s ease",
-              }}
+              className="relative transition-transform duration-125"
+              style={{ transform: `translateY(-${scrollOffset}px)` }}
             >
               <WordsDisplay renderedWords={renderedWords} />
               <Caret
@@ -195,30 +169,23 @@ export const TypingTest = ({ typing, isTestFocused }: TypingTestProps) => {
       </div>
 
       <div
-        className="mt-10 flex min-h-5 items-center justify-center gap-2 text-sm"
+        className="mt-10 flex min-h-5 flex-wrap items-center justify-center gap-2 text-sm text-text-muted transition-opacity duration-125"
         style={{
-          color: "var(--color-sub)",
           opacity: isTestFocused ? 0 : 1,
           pointerEvents: isTestFocused ? "none" : "auto",
-          transition: "opacity 0.125s ease",
         }}
       >
-        <Key>esc</Key>
+        <Kbd>esc</Kbd>
         <span>or</span>
-        <Key>tab</Key>
+        <Kbd>tab</Kbd>
         <span>→ restart test</span>
-
-        <span className="mx-1 opacity-30">|</span>
-
-        <Key>enter</Key>
-        <span>→ command line</span>
 
         {store.phase === "active" && (
           <>
-            <span className="mx-1 opacity-30">|</span>
+            <Separator vertical className="mx-1 h-4" />
             <button
-              className="transition-colors hover:underline"
-              style={{ color: "var(--color-sub)" }}
+              type="button"
+              className="text-text-muted cursor-pointer transition-colors hover:text-text-primary hover:underline"
               onClick={(e) => {
                 e.stopPropagation();
                 bailOut();

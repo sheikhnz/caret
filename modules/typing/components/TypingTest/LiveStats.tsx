@@ -1,9 +1,5 @@
 /**
  * Live stats (mini timer style).
- * Source: frontend/src/ts/test/timer-progress.ts + test.scss #liveStatsMini
- *
- * One mode-appropriate counter in .time (original default).
- * Live WPM is not shown (matches original liveSpeedStyle: off).
  */
 
 "use client";
@@ -66,37 +62,17 @@ export const LiveStats = (props: Props) => {
 
   return (
     <div
-      className="timerMain"
+      className="timerMain pointer-events-none ml-[0.25em] flex min-h-[1.25em] select-none items-end font-mono text-[1em] leading-none text-accent"
       style={{
-        display: "flex",
-        alignItems: "flex-end",
-        marginLeft: "0.25em",
-        minHeight: "1.25em",
-        color: "var(--color-caret)",
-        fontFamily: "var(--font-mono)",
-        fontSize: "1em",
-        lineHeight: "1em",
-        pointerEvents: "none",
-        userSelect: "none",
         visibility: timerLabel === null && !showAcc ? "hidden" : "visible",
       }}
     >
       {timerLabel !== null && (
-        <span className="time" style={{ fontVariantNumeric: "tabular-nums" }}>
-          {timerLabel}
-        </span>
+        <span className="time tabular-nums">{timerLabel}</span>
       )}
 
       {showAcc && (
-        <span
-          className="acc"
-          style={{
-            marginLeft: "0.5em",
-            fontVariantNumeric: "tabular-nums",
-          }}
-        >
-          {stats.acc}%
-        </span>
+        <span className="acc ml-[0.5em] tabular-nums">{stats.acc}%</span>
       )}
     </div>
   );

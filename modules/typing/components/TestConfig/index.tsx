@@ -1,7 +1,5 @@
 /**
- * Test configuration bar.
- * Center chip is flex-centered; side chips are absolute so zen never shifts it.
- * Source: frontend TestConfig.tsx
+ * Test configuration bar — segmented controls using design tokens.
  */
 
 "use client";
@@ -23,7 +21,8 @@ import { CustomTextModal } from "../CustomTextModal";
 const CONFIG_TRANSITION = { duration: 0.25, ease: "easeInOut" as const };
 const LAYOUT_TRANSITION = { layout: CONFIG_TRANSITION };
 
-const CARD_CLASS = "flex items-center rounded bg-sub-alt";
+const CARD_CLASS =
+  "flex items-center rounded-md border border-border-subtle bg-surface";
 const SIDE_GAP = "1em";
 
 const TCBtn = ({
@@ -42,8 +41,10 @@ const TCBtn = ({
     disabled={disabled}
     onClick={onClick}
     className={cn(
-      "cursor-pointer select-none px-[0.5em] py-[0.65rem] text-[0.875rem] leading-none transition-colors duration-75",
-      active ? "text-accent" : "text-sub hover:text-main",
+      "cursor-pointer select-none px-[0.5em] py-[0.65rem] text-[0.875rem] leading-none transition-colors duration-150",
+      active
+        ? "text-accent"
+        : "text-text-muted hover:text-text-primary",
       disabled && "pointer-events-none opacity-50",
     )}
   >

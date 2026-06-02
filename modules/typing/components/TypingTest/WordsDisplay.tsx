@@ -43,7 +43,7 @@ export const WordsDisplay = ({ renderedWords }: WordsDisplayProps) => (
           fontVariant: "no-common-ligatures",
           borderBottom:
             word.isActive && word.chars.some((c) => c.status === "incorrect")
-              ? "2px solid var(--color-error)"
+              ? "2px solid var(--tp-error)"
               : "2px solid transparent",
         }}
       >

@@ -1,26 +1,17 @@
 import type { Metadata } from "next";
 
-import { Roboto_Mono } from "next/font/google";
-
 import "./globals.css";
 
-const robotoMono = Roboto_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-mono",
-  display: "swap",
-});
-
 export const metadata: Metadata = {
-  title: "monkeytype",
-  description: "A typing speed test",
+  title: "Typing Practice",
+  description: "A minimal typing speed test with live stats and results.",
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={robotoMono.variable}>
+    <html lang="en" suppressHydrationWarning>
       <body>{children}</body>
     </html>
   );

@@ -1,120 +1,139 @@
 @import "tailwindcss";
+@import "../styles/tokens.css";
 
-/*
- * Design tokens — serika-dark theme.
- * Source: frontend/src/styles/themes/serika-dark.css
- *
- * Tailwind v4 reads @theme and auto-generates text-*, bg-*, border-* utilities
- * for every --color-* token defined here.
- */
 @theme {
-  --color-bg: #323437;
-  --color-bg-alt: #2c2e31;
-  --color-sub-alt: #2c2e31;
-  --color-sub: #646669;
-  --color-main: #d1d0c5;
-  --color-caret: #e2b714;
-  --color-accent: #e2b714;
-  --color-text: #d1d0c5;
-  --color-error: #ca4754;
-  --color-error-extra: #7e2a33;
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji";
+  --font-mono:
+    ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas,
+    monospace;
 
-  /* Semantic aliases used in word coloring */
-  --color-correct: #d1d0c5;
-  --color-incorrect: #ca4754;
-  --color-extra: #ca4754;
-  --color-missed: #646669;
+  --color-background: var(--tp-background);
+  --color-surface: var(--tp-surface);
+  --color-surface-elevated: var(--tp-surface-elevated);
+  --color-border: var(--tp-border);
+  --color-border-subtle: var(--tp-border-subtle);
 
-  --roundness: 0.25rem;
+  --color-primary: var(--tp-primary);
+  --color-primary-hover: var(--tp-primary-hover);
+  --color-secondary: var(--tp-secondary);
+  --color-accent: var(--tp-accent);
+  --color-accent-hover: var(--tp-accent-hover);
+  --color-accent-muted: var(--tp-accent-muted);
+  --color-success: var(--tp-success);
+  --color-success-muted: var(--tp-success-muted);
+  --color-warning: var(--tp-warning);
+  --color-warning-muted: var(--tp-warning-muted);
+  --color-error: var(--tp-error);
+  --color-error-muted: var(--tp-error-muted);
 
-  --font-mono: "Roboto Mono", "SF Mono", "Fira Code", ui-monospace, monospace;
-  --font-sans: "Roboto", "Inter", system-ui, sans-serif;
+  --color-text-primary: var(--tp-text-primary);
+  --color-text-secondary: var(--tp-text-secondary);
+  --color-text-muted: var(--tp-text-muted);
+
+  --color-focus-ring: var(--tp-focus-ring);
+  --radius-sm: var(--tp-radius-sm);
+  --radius-md: var(--tp-radius-md);
+  --radius-lg: var(--tp-radius-lg);
 }
 
-/* ─── Reset ──────────────────────────────────────────────────────────────── */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+@layer base {
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--tp-scrollbar-thumb) transparent;
+  }
+
+  html::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  html::-webkit-scrollbar-thumb {
+    border-radius: var(--tp-radius-sm);
+    background-color: var(--tp-scrollbar-thumb);
+  }
+
+  html::-webkit-scrollbar-thumb:hover {
+    background-color: var(--tp-scrollbar-thumb-hover);
+  }
+
+  body {
+    @apply min-h-dvh bg-background font-sans text-[15px] text-text-primary antialiased;
+    line-height: 1.5;
+  }
+
+  :where(h1, h2, h3, h4, h5, h6) {
+    @apply font-semibold tracking-tight text-text-primary;
+    line-height: 1.25;
+  }
+
+  main {
+    @apply text-left;
+  }
+
+  a {
+    @apply font-medium text-accent underline-offset-2 transition-colors duration-150;
+    text-decoration-thickness: 1px;
+    text-decoration-color: color-mix(
+      in srgb,
+      var(--tp-accent) 40%,
+      transparent
+    );
+  }
+
+  a:hover {
+    @apply text-accent-hover;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid var(--tp-focus-ring);
+    outline-offset: var(--tp-focus-offset);
+  }
+
+  ::selection {
+    background: var(--tp-accent-muted);
+    color: var(--tp-text-primary);
+  }
 }
 
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
+@layer components {
+  .letter-pending {
+    color: var(--tp-text-muted);
+  }
+
+  .letter-correct {
+    color: var(--tp-text-primary);
+  }
+
+  .letter-incorrect {
+    color: var(--tp-error);
+  }
+
+  .letter-extra {
+    color: var(--tp-error);
+    background: var(--tp-error-muted);
+    border-radius: var(--tp-radius-sm);
+  }
+
+  .letter-missed {
+    color: var(--tp-error);
+    opacity: 0.55;
+    text-decoration: underline;
+    text-decoration-color: var(--tp-error);
+    text-underline-offset: 0.15em;
+  }
 }
 
-body {
-  background-color: var(--color-bg);
-  color: var(--color-main);
-  font-family: var(--font-mono);
-  font-size: 16px;
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* ─── Scrollbar ──────────────────────────────────────────────────────────── */
-::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-::-webkit-scrollbar-track {
-  background: var(--color-bg);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--color-sub);
-  border-radius: 2px;
-}
-
-/* ─── Caret animations ───────────────────────────────────────────────────── */
-/* Source: frontend/src/styles/animations.scss                               */
 @keyframes caretFlashSmooth {
   0%,
   100% {
     opacity: 0;
   }
+
   50% {
     opacity: 1;
   }
-}
-
-@keyframes caretFlashHard {
-  0%,
-  50% {
-    opacity: 1;
-  }
-  51%,
-  100% {
-    opacity: 0;
-  }
-}
-
-/* ─── Focus / selection ──────────────────────────────────────────────────── */
-:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-}
-::selection {
-  background: var(--color-accent);
-  color: var(--color-bg);
-}
-
-/* ─── Letter-level color utilities used by WordsDisplay ─────────────────── */
-/* These complement the auto-generated Tailwind utilities above.             */
-.letter-correct {
-  color: var(--color-correct);
-}
-.letter-incorrect {
-  color: var(--color-incorrect);
-}
-.letter-extra {
-  color: var(--color-extra);
-}
-.letter-missed {
-  color: var(--color-missed);
-}
-.letter-pending {
-  color: var(--color-sub);
 }

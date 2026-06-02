@@ -1,0 +1,120 @@
+/**
+ * Typing Practice — color design tokens only.
+ * Light on :root; dark via prefers-color-scheme or [data-theme="dark"].
+ */
+
+:root {
+  color-scheme: light;
+
+  --tp-background: #f6f6f7;
+  --tp-surface: #ffffff;
+  --tp-surface-elevated: #ffffff;
+  --tp-border: #e3e3e8;
+  --tp-border-subtle: #ececef;
+
+  --tp-primary: #111113;
+  --tp-primary-hover: #27272a;
+  --tp-secondary: #52525b;
+  --tp-accent: #4f46e5;
+  --tp-accent-hover: #4338ca;
+  --tp-accent-muted: rgb(79 70 229 / 0.12);
+  --tp-success: #15803d;
+  --tp-success-muted: rgb(21 128 61 / 0.12);
+  --tp-warning: #a16207;
+  --tp-warning-muted: rgb(161 98 7 / 0.12);
+  --tp-error: #b91c1c;
+  --tp-error-muted: rgb(185 28 28 / 0.12);
+
+  --tp-text-primary: #111113;
+  --tp-text-secondary: #3f3f46;
+  --tp-text-muted: #71717a;
+
+  --tp-focus-ring: #4f46e5;
+  --tp-focus-offset: 2px;
+  --tp-shadow-elevated:
+    0 1px 2px rgb(17 17 19 / 0.04), 0 4px 12px rgb(17 17 19 / 0.06);
+  --tp-scrollbar-thumb: rgb(63 63 70 / 0.35);
+  --tp-scrollbar-thumb-hover: rgb(63 63 70 / 0.55);
+
+  --tp-radius-sm: 2px;
+  --tp-radius-md: 4px;
+  --tp-radius-lg: 6px;
+
+  --tp-caret: var(--tp-accent);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --tp-background: #09090b;
+    --tp-surface: #111113;
+    --tp-surface-elevated: #18181b;
+    --tp-border: #27272a;
+    --tp-border-subtle: #1f1f23;
+
+    --tp-primary: #fafafa;
+    --tp-primary-hover: #e4e4e7;
+    --tp-secondary: #a1a1aa;
+    --tp-accent: #818cf8;
+    --tp-accent-hover: #a5b4fc;
+    --tp-accent-muted: rgb(129 140 248 / 0.16);
+    --tp-success: #4ade80;
+    --tp-success-muted: rgb(74 222 128 / 0.12);
+    --tp-warning: #fbbf24;
+    --tp-warning-muted: rgb(251 191 36 / 0.12);
+    --tp-error: #f87171;
+    --tp-error-muted: rgb(248 113 113 / 0.14);
+
+    --tp-text-primary: #fafafa;
+    --tp-text-secondary: #d4d4d8;
+    --tp-text-muted: #71717a;
+
+    --tp-focus-ring: #818cf8;
+    --tp-shadow-elevated:
+      0 1px 2px rgb(0 0 0 / 0.24), 0 8px 24px rgb(0 0 0 / 0.32);
+    --tp-scrollbar-thumb: rgb(161 161 170 / 0.3);
+    --tp-scrollbar-thumb-hover: rgb(161 161 170 / 0.5);
+
+    --tp-caret: var(--tp-accent);
+  }
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --tp-background: #09090b;
+  --tp-surface: #111113;
+  --tp-surface-elevated: #18181b;
+  --tp-border: #27272a;
+  --tp-border-subtle: #1f1f23;
+
+  --tp-primary: #fafafa;
+  --tp-primary-hover: #e4e4e7;
+  --tp-secondary: #a1a1aa;
+  --tp-accent: #818cf8;
+  --tp-accent-hover: #a5b4fc;
+  --tp-accent-muted: rgb(129 140 248 / 0.16);
+  --tp-success: #4ade80;
+  --tp-success-muted: rgb(74 222 128 / 0.12);
+  --tp-warning: #fbbf24;
+  --tp-warning-muted: rgb(251 191 36 / 0.12);
+  --tp-error: #f87171;
+  --tp-error-muted: rgb(248 113 113 / 0.14);
+
+  --tp-text-primary: #fafafa;
+  --tp-text-secondary: #d4d4d8;
+  --tp-text-muted: #71717a;
+
+  --tp-focus-ring: #818cf8;
+  --tp-shadow-elevated:
+    0 1px 2px rgb(0 0 0 / 0.24), 0 8px 24px rgb(0 0 0 / 0.32);
+  --tp-scrollbar-thumb: rgb(161 161 170 / 0.3);
+  --tp-scrollbar-thumb-hover: rgb(161 161 170 / 0.5);
+
+  --tp-caret: var(--tp-accent);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+}

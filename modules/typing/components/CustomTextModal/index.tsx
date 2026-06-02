@@ -1,13 +1,16 @@
 /**
  * Custom text / lesson editor modal.
- * Source: frontend/src/ts/components/modals/CustomTextModal.tsx
  */
 
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { cn } from "@/utils";
+import { Button } from "@/ui/Button";
+import { Card } from "@/ui/Card";
+import { Input } from "@/ui/Input";
+import { Textarea } from "@/ui/Textarea";
 
 import type {
   CustomTextMode,
@@ -79,25 +82,28 @@ const MODE_OPTIONS: { value: FormMode; label: string }[] = [
   { value: "random", label: "random" },
 ];
 
-const FieldLabel = ({ children }: { children: React.ReactNode }) => (
-  <span className="text-sub text-sm">{children}</span>
-);
+const SEGMENT_CLASS =
+  "inline-flex items-center rounded-md border border-border-subtle bg-surface";
 
-const OptionBtn = ({
+const SegBtn = ({
   active,
+  disabled,
   onClick,
   children,
 }: {
   active?: boolean;
+  disabled?: boolean;
   onClick: () => void;
   children: React.ReactNode;
 }) => (
   <button
     type="button"
+    disabled={disabled}
     onClick={onClick}
     className={cn(
-      "rounded px-3 py-1.5 text-sm transition-colors",
-      active ? "bg-accent text-bg" : "bg-sub-alt text-sub hover:text-main",
+      "cursor-pointer select-none px-2.5 py-2 text-sm leading-none transition-colors duration-150",
+      active ? "text-accent" : "text-text-muted hover:text-text-primary",
+      disabled && "pointer-events-none opacity-45",
     )}
   >
     {children}
@@ -240,182 +246,186 @@ const CustomTextModalForm = ({
 
   const limitsDisabled = formMode === "simple";
 
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [onClose]);
+
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
       onClick={onClose}
     >
-      <div
-        className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-lg bg-bg shadow-xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between border-b border-sub-alt px-6 py-4">
-          <h2 className="text-lg text-main">Custom text</h2>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-sub transition-colors hover:text-main"
-          >
-            close
-          </button>
-        </div>
-
-        <div className="flex-1 space-y-4 overflow-y-auto px-6 py-4">
-          <div className="space-y-2">
-            <FieldLabel>Text</FieldLabel>
-            <textarea
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              placeholder="Enter custom text or paste a lesson"
-              className="min-h-40 w-full resize-y rounded bg-sub-alt px-3 py-2 text-main outline-none focus:ring-1 focus:ring-accent"
-            />
-            <p className="text-xs text-sub">
-              {parsedPreview.length} {pipeDelimiter ? "sections" : "words"}
-            </p>
+      <div onClick={(e) => e.stopPropagation()}>
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="custom-text-title"
+        >
+        <Card
+          className="flex max-h-[85vh] w-full max-w-lg flex-col gap-4 overflow-hidden p-4 md:p-5"
+        >
+          <div className="flex items-center justify-between gap-3">
+            <h2
+              id="custom-text-title"
+              className="text-base font-medium text-text-primary"
+            >
+              custom text
+            </h2>
+            <button
+              type="button"
+              onClick={onClose}
+              className="text-sm text-text-muted transition-colors hover:text-text-primary"
+            >
+              esc
+            </button>
           </div>
 
-          <div className="space-y-2">
-            <FieldLabel>Mode</FieldLabel>
-            <div className="flex flex-wrap gap-2">
-              {MODE_OPTIONS.map(({ value, label }) => (
-                <OptionBtn
-                  key={value}
-                  active={formMode === value}
-                  onClick={() => setFormMode(value)}
+          <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto">
+            <div className="space-y-1.5">
+              <Textarea
+                id="custom-text"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder="paste or type custom text"
+                className="min-h-28 px-3 py-3 text-sm"
+              />
+              <p className="text-xs text-text-muted">
+                {parsedPreview.length} {pipeDelimiter ? "sections" : "words"}
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <div className={SEGMENT_CLASS} role="group" aria-label="Mode">
+                {MODE_OPTIONS.map(({ value, label }) => (
+                  <SegBtn
+                    key={value}
+                    active={formMode === value}
+                    onClick={() => setFormMode(value)}
+                  >
+                    {label}
+                  </SegBtn>
+                ))}
+              </div>
+              <div className={SEGMENT_CLASS} role="group" aria-label="Delimiter">
+                <SegBtn
+                  active={!pipeDelimiter}
+                  onClick={() => setPipeDelimiter(false)}
                 >
-                  {label}
-                </OptionBtn>
-              ))}
+                  space
+                </SegBtn>
+                <SegBtn
+                  active={pipeDelimiter}
+                  onClick={() => setPipeDelimiter(true)}
+                >
+                  pipe
+                </SegBtn>
+              </div>
             </div>
-          </div>
 
-          <div className="space-y-2">
-            <FieldLabel>Delimiter</FieldLabel>
-            <div className="flex gap-2">
-              <OptionBtn
-                active={!pipeDelimiter}
-                onClick={() => setPipeDelimiter(false)}
-              >
-                space
-              </OptionBtn>
-              <OptionBtn
-                active={pipeDelimiter}
-                onClick={() => setPipeDelimiter(true)}
-              >
-                pipe
-              </OptionBtn>
-            </div>
-          </div>
-
-          <div className="grid gap-3 md:grid-cols-3">
-            <label className="space-y-1">
-              <FieldLabel>Word limit</FieldLabel>
-              <input
+            <div className="grid grid-cols-3 gap-2">
+              <Input
+                id="limit-word"
                 type="number"
                 min={0}
                 value={limitWord}
                 disabled={limitsDisabled || pipeDelimiter}
                 onChange={(e) => setLimitWord(e.target.value)}
-                className="w-full rounded bg-sub-alt px-3 py-2 text-main outline-none disabled:opacity-40"
+                placeholder="words"
+                aria-label="Word limit"
+                className="h-9 min-h-9 px-3 py-2 text-sm"
               />
-            </label>
-            <label className="space-y-1">
-              <FieldLabel>Time limit (seconds)</FieldLabel>
-              <input
+              <Input
+                id="limit-time"
                 type="number"
                 min={0}
                 value={limitTime}
                 disabled={limitsDisabled}
                 onChange={(e) => setLimitTime(e.target.value)}
-                className="w-full rounded bg-sub-alt px-3 py-2 text-main outline-none disabled:opacity-40"
+                placeholder="seconds"
+                aria-label="Time limit in seconds"
+                className="h-9 min-h-9 px-3 py-2 text-sm"
               />
-            </label>
-            <label className="space-y-1">
-              <FieldLabel>Section limit</FieldLabel>
-              <input
+              <Input
+                id="limit-section"
                 type="number"
                 min={0}
                 value={limitSection}
                 disabled={limitsDisabled || !pipeDelimiter}
                 onChange={(e) => setLimitSection(e.target.value)}
-                className="w-full rounded bg-sub-alt px-3 py-2 text-main outline-none disabled:opacity-40"
+                placeholder="sections"
+                aria-label="Section limit"
+                className="h-9 min-h-9 px-3 py-2 text-sm"
               />
-            </label>
-          </div>
-
-          <div className="space-y-2 rounded bg-sub-alt p-3">
-            <div className="flex flex-wrap items-end gap-2">
-              <label className="min-w-0 flex-1 space-y-1">
-                <FieldLabel>Save lesson as</FieldLabel>
-                <input
-                  value={saveName}
-                  onChange={(e) => setSaveName(e.target.value)}
-                  placeholder="lesson name"
-                  className="w-full rounded bg-bg px-3 py-2 text-main outline-none"
-                />
-              </label>
-              <button
-                type="button"
-                onClick={handleSave}
-                className="rounded bg-main px-3 py-2 text-sm text-bg"
-              >
-                save
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowSaved((prev) => !prev)}
-                className="rounded px-3 py-2 text-sm text-sub hover:text-main"
-              >
-                saved ({savedNames.length})
-              </button>
             </div>
 
-            {showSaved && (
-              <div className="space-y-2 pt-2">
-                {savedNames.length === 0 ? (
-                  <p className="text-sm text-sub">No saved lessons yet</p>
-                ) : (
-                  savedNames.map((name) => (
-                    <div key={name} className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => handleLoadSaved(name)}
-                        className="flex-1 rounded bg-bg px-3 py-2 text-left text-sm text-main hover:text-accent"
-                      >
-                        {name}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => deleteText(name)}
-                        className="rounded px-3 py-2 text-sm text-error hover:underline"
-                      >
-                        delete
-                      </button>
-                    </div>
-                  ))
-                )}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Input
+                  id="save-name"
+                  value={saveName}
+                  onChange={(e) => setSaveName(e.target.value)}
+                  placeholder="save as…"
+                  aria-label="Save lesson as"
+                  className="h-9 min-h-9 flex-1 px-3 py-2 text-sm"
+                />
+                <Button variant="secondary" size="sm" onClick={handleSave}>
+                  save
+                </Button>
+                <button
+                  type="button"
+                  onClick={() => setShowSaved((prev) => !prev)}
+                  className="shrink-0 text-sm text-text-muted transition-colors hover:text-text-primary"
+                >
+                  saved ({savedNames.length})
+                </button>
               </div>
+
+              {showSaved && (
+                <div className="space-y-1">
+                  {savedNames.length === 0 ? (
+                    <p className="text-xs text-text-muted">no saved lessons</p>
+                  ) : (
+                    savedNames.map((name) => (
+                      <div key={name} className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleLoadSaved(name)}
+                          className="min-w-0 flex-1 truncate text-left text-sm text-text-secondary transition-colors hover:text-accent"
+                        >
+                          {name}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => deleteText(name)}
+                          className="text-xs text-text-muted transition-colors hover:text-error"
+                        >
+                          delete
+                        </button>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
+
+            {error !== null && (
+              <p className="text-xs text-error" role="alert">
+                {error}
+              </p>
             )}
           </div>
 
-          {error !== null && <p className="text-sm text-error">{error}</p>}
-        </div>
-
-        <div className="flex justify-end gap-2 border-t border-sub-alt px-6 py-4">
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded px-4 py-2 text-sub hover:text-main"
-          >
-            cancel
-          </button>
-          <button
-            type="button"
-            onClick={handleSubmit}
-            className="rounded bg-accent px-4 py-2 text-bg"
-          >
-            start custom test
-          </button>
+          <Button variant="primary" size="md" className="w-full" onClick={handleSubmit}>
+            start
+          </Button>
+        </Card>
         </div>
       </div>
     </div>

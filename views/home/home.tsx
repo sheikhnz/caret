@@ -1,5 +1,5 @@
 /**
- * Root page — mirrors the original monkeytype.com layout.
+ * Root page — typing test shell with minimal site chrome.
  */
 
 "use client";
@@ -12,6 +12,8 @@ import { TypingTest } from "@/modules/typing/components/TypingTest";
 import { useTestFocus } from "@/modules/typing/hooks/use-test-focus";
 import { useTypingTest } from "@/modules/typing/hooks/use-typing-test";
 import { useTestStore } from "@/modules/typing/stores/test-store";
+import { shouldDeferGlobalTypingCapture } from "@/modules/typing/utils/keyboard";
+import { Badge } from "@/ui/Badge";
 
 export const Home = () => {
   const { phase, isLoadingWords } = useTestStore();
@@ -30,17 +32,12 @@ export const Home = () => {
     focusInputRef.current = typing.focusInput;
   }, [typing.focusInput]);
 
-  /* Refocus input after words reload while in focus mode */
   useEffect(() => {
     if (isTestFocused && !isLoadingWords && phase !== "finished") {
       typing.focusInput();
     }
   }, [isTestFocused, isLoadingWords, phase, typing.focusInput, typing]);
 
-  /*
-   * When input not focused, first typing key must still register (original: focusWords).
-   * Focus + process the same key — do not only enterFocus (that drops the character).
-   */
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (phase === "finished") return;
@@ -56,6 +53,7 @@ export const Home = () => {
 
       if (!isTypingKey) return;
       if (document.activeElement === typing.inputRef.current) return;
+      if (shouldDeferGlobalTypingCapture(document.activeElement)) return;
 
       e.preventDefault();
       e.stopPropagation();
@@ -68,11 +66,28 @@ export const Home = () => {
   }, [phase, typing]);
 
   return (
-    <div
-      className="flex min-h-screen flex-col"
-      style={{ backgroundColor: "var(--color-bg)" }}
-    >
-      <main className="flex flex-1 flex-col items-center justify-center px-8 pb-16">
+    <div className="flex min-h-dvh flex-col bg-background">
+      <header
+        className="flex items-center justify-between px-6 py-5 transition-opacity duration-150 md:px-10"
+        style={{
+          opacity: isTestFocused ? 0.35 : 1,
+          pointerEvents: isTestFocused ? "none" : "auto",
+        }}
+      >
+        <div className="flex items-center gap-3">
+          <span className="text-lg font-semibold tracking-tight text-text-primary">
+            Typing Practice
+          </span>
+          <Badge tone="accent" className="hidden sm:inline-flex">
+            beta
+          </Badge>
+        </div>
+        <p className="hidden text-sm text-text-muted md:block">
+          Click the words or start typing to begin
+        </p>
+      </header>
+
+      <main className="flex flex-1 flex-col items-center justify-center px-6 pb-20 md:px-10">
         {phase === "finished" ? (
           <Results
             onRestart={() => {
@@ -84,7 +99,6 @@ export const Home = () => {
           />
         ) : (
           <div className="flex w-full max-w-[870px] flex-col">
-            {/* Reserved slot — opacity only, no mount/unmount (avoids layout shift) */}
             <div className="mb-8 flex min-h-11 w-full items-center justify-center overflow-hidden">
               <div
                 className="transition-opacity duration-125"
@@ -106,6 +120,16 @@ export const Home = () => {
           </div>
         )}
       </main>
+
+      <footer
+        className="px-6 py-4 text-center text-xs text-text-muted md:px-10"
+        style={{
+          opacity: isTestFocused ? 0 : 1,
+          transition: "opacity 0.125s ease",
+        }}
+      >
+        Theme follows your system preference
+      </footer>
     </div>
   );
 };

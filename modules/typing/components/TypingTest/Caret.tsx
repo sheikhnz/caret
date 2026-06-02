@@ -1,16 +1,5 @@
 /**
  * Caret overlay component.
- * Source: frontend/src/styles/caret.scss + frontend/src/ts/elements/caret.ts
- *
- * Exact caret spec from caret.scss:
- *   #caret { height: 1.2em; animation: caretFlashSmooth 1s infinite; border-radius: var(--roundness); }
- *   .default { width: 0.1em }
- *   .block   { width: 0.5em; z-index: -1 }
- *   .outline { border: 0.05em solid var(--caret-color); background: transparent }
- *   .underline { height: 0.1em; width: 0.5em }
- *
- * Smooth movement: transition only left + top (NOT transition-all, which breaks the blink animation).
- * caretFlashSmooth: 0%,100% → opacity:0 / 50% → opacity:1 (defined in globals.css).
  */
 
 "use client";
@@ -23,7 +12,6 @@ type CaretProps = {
   style: CaretStyle;
   smooth: boolean;
   visible: boolean;
-  /** Blink in idle; original stops animation when focused (typing) */
   blink?: boolean;
 };
 
@@ -51,29 +39,20 @@ export const Caret = ({
         position: "absolute",
         zIndex: 10,
         pointerEvents: "none",
-        borderRadius: "var(--roundness)",
+        borderRadius: "var(--tp-radius-md)",
         backgroundColor:
-          style === "outline" ? "transparent" : "var(--color-caret)",
+          style === "outline" ? "transparent" : "var(--tp-caret)",
         border:
-          style === "outline" ? "0.05em solid var(--color-caret)" : undefined,
-        /* Match caret.scss: .default = 0.1em, .block/.outline/.underline = 0.5em */
+          style === "outline" ? "0.05em solid var(--tp-caret)" : undefined,
         width:
           style === "default"
             ? "0.1em"
             : style === "block" || style === "outline" || style === "underline"
               ? "0.5em"
               : "0.1em",
-        /*
-         * Height relative to the test font-size (inherited from container).
-         * caret.scss: #caret { height: 1.2em } — em resolves to the parent font.
-         */
         height: isUnderline ? `${Math.round(height)}px` : "1.2em",
         top: `${Math.round(top)}px`,
         left: `${Math.round(position.left)}px`,
-        /*
-         * Smooth caret: only transition position properties, never opacity.
-         * transition-all would conflict with the blink animation.
-         */
         transition: canAnimate ? "left 0.1s ease, top 0.1s ease" : undefined,
         animation: blink ? "caretFlashSmooth 1s infinite" : undefined,
         animationDelay: blink ? "-0.5s" : undefined,

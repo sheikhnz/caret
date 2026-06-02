@@ -1,12 +1,5 @@
 /**
  * WPM / raw / errors chart for the results screen.
- * Source: frontend/src/ts/test/result.ts + chart-controller.ts
- *
- * Layout mirrors the original:
- *   - Line: WPM    → main-color (#d1d0c5), solid, left y-axis
- *   - Line: raw    → sub-color  (#646669), dashed, left y-axis
- *   - Bar:  errors → error-color(#ca4754), right y-axis
- * No legend, no point dots, smooth tension 0.3.
  */
 
 "use client";
@@ -31,6 +24,7 @@ import { Chart } from "react-chartjs-2";
 import type { ChartData } from "../../types/result";
 
 import { prepareChartData } from "../../analytics/chart-data";
+import { useChartTheme } from "../../hooks/use-chart-theme";
 
 ChartJS.register(
   CategoryScale,
@@ -44,15 +38,10 @@ ChartJS.register(
   Filler,
 );
 
-/* Exact colors from serika-dark theme */
-const C_MAIN = "#d1d0c5";
-const C_SUB = "#646669";
-const C_ERROR = "#ca4754";
-const C_BG = "#323437";
-
 type Props = { data: ChartData };
 
 export const WpmChart = ({ data }: Props) => {
+  const theme = useChartTheme();
   const prepared = useMemo(() => prepareChartData(data), [data]);
 
   const chartData = useMemo<CJSChartData<"line" | "bar", number[], number>>(
@@ -63,8 +52,8 @@ export const WpmChart = ({ data }: Props) => {
           type: "line" as const,
           label: "wpm",
           data: prepared.wpmDataset.map((p) => p.y),
-          borderColor: C_MAIN,
-          backgroundColor: C_MAIN + "1a" /* 10% opacity fill */,
+          borderColor: theme.primary,
+          backgroundColor: `${theme.primary}1a`,
           borderWidth: 2,
           pointRadius: 0,
           tension: 0.3,
@@ -76,7 +65,7 @@ export const WpmChart = ({ data }: Props) => {
           type: "line" as const,
           label: "raw",
           data: prepared.rawDataset.map((p) => p.y),
-          borderColor: C_SUB,
+          borderColor: theme.muted,
           borderWidth: 1.5,
           borderDash: [4, 4],
           pointRadius: 0,
@@ -89,14 +78,14 @@ export const WpmChart = ({ data }: Props) => {
           type: "bar" as const,
           label: "errors",
           data: prepared.errDataset.map((p) => p.y),
-          backgroundColor: C_ERROR + "99" /* 60% opacity */,
+          backgroundColor: `${theme.error}99`,
           borderWidth: 0,
           yAxisID: "y1",
           order: 1,
         },
       ],
     }),
-    [prepared],
+    [prepared, theme],
   );
 
   const options = useMemo<ChartOptions<"line" | "bar">>(
@@ -111,10 +100,10 @@ export const WpmChart = ({ data }: Props) => {
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: C_BG,
-          titleColor: C_SUB,
-          bodyColor: C_MAIN,
-          borderColor: C_SUB + "40",
+          backgroundColor: theme.surface,
+          titleColor: theme.muted,
+          bodyColor: theme.primary,
+          borderColor: `${theme.border}66`,
           borderWidth: 1,
           callbacks: {
             title: (items) => `${items[0]?.label ?? ""}s`,
@@ -123,19 +112,19 @@ export const WpmChart = ({ data }: Props) => {
       },
       scales: {
         x: {
-          border: { color: C_SUB + "40" },
-          grid: { color: C_SUB + "20" },
-          ticks: { color: C_SUB, maxTicksLimit: 12, font: { size: 11 } },
+          border: { color: `${theme.border}66` },
+          grid: { color: `${theme.muted}33` },
+          ticks: { color: theme.muted, maxTicksLimit: 12, font: { size: 11 } },
         },
         y: {
           position: "left",
-          border: { color: C_SUB + "40" },
-          grid: { color: C_SUB + "20" },
-          ticks: { color: C_SUB, font: { size: 11 } },
+          border: { color: `${theme.border}66` },
+          grid: { color: `${theme.muted}33` },
+          ticks: { color: theme.muted, font: { size: 11 } },
           title: {
             display: true,
             text: "wpm",
-            color: C_SUB,
+            color: theme.muted,
             font: { size: 11 },
           },
         },
@@ -144,24 +133,24 @@ export const WpmChart = ({ data }: Props) => {
           border: { color: "transparent" },
           grid: { drawOnChartArea: false },
           ticks: {
-            color: C_ERROR,
+            color: theme.error,
             precision: 0,
             font: { size: 11 },
           },
           title: {
             display: true,
             text: "errors",
-            color: C_ERROR,
+            color: theme.error,
             font: { size: 11 },
           },
         },
       },
     }),
-    [],
+    [theme],
   );
 
   return (
-    <div style={{ height: "200px", width: "100%" }}>
+    <div className="h-[200px] w-full">
       <Chart
         type="line"
         data={chartData as CJSChartData<"line", number[], number>}
