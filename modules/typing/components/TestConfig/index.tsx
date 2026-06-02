@@ -57,9 +57,7 @@ const TCBtn = ({
     onClick={onClick}
     className={cn(
       "inline-flex cursor-pointer select-none items-center gap-1 px-[0.5em] py-[0.65rem] text-[0.875rem] leading-none transition-colors duration-150",
-      active
-        ? "text-accent"
-        : "text-text-muted hover:text-text-primary",
+      active ? "text-accent" : "text-text-muted hover:text-text-primary",
       disabled && "pointer-events-none opacity-50",
     )}
   >
