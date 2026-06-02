@@ -22,6 +22,12 @@ import { processChar, processBackspace } from "../engine/input-handler";
 import { buildCompletedEvent } from "../analytics/result-builder";
 import { calculateBurst } from "../calculations/wpm";
 import { calculateAccuracy } from "../calculations/accuracy";
+import {
+  clearAllSounds,
+  playInputSound,
+  playTimeWarning,
+  setSoundSettings,
+} from "../services/sound-controller";
 import type { LanguageObject } from "../types/language";
 
 export type UseTypingTestReturn = {
@@ -79,6 +85,21 @@ export const useTypingTest = (
     configRef.current = config;
   });
 
+  useEffect(() => {
+    setSoundSettings({
+      playSoundOnClick: config.playSoundOnClick,
+      playSoundOnError: config.playSoundOnError,
+      soundVolume: config.soundVolume,
+    });
+  }, [config.playSoundOnClick, config.playSoundOnError, config.soundVolume]);
+
+  const getSoundOptions = (nativeEvent: KeyboardEvent) => ({
+    codeOverride: nativeEvent.code,
+    shifted:
+      nativeEvent.getModifierState("Shift") ||
+      nativeEvent.getModifierState("CapsLock"),
+  });
+
   // ─── Init / Restart ─────────────────────────────────────────────────────────
 
   const initTest = useCallback(
@@ -123,6 +144,7 @@ export const useTypingTest = (
   const restart = useCallback(
     async (withSameWords = false) => {
       clearTimer(true);
+      void clearAllSounds();
       if (
         TestState.isActive() &&
         config.mode === "time" &&
@@ -259,6 +281,15 @@ export const useTypingTest = (
       TestInput.pushErrorToHistory();
       TestInput.pushAfkToHistory();
 
+      if (
+        c.mode === "time" &&
+        c.playTimeWarning !== "off" &&
+        remaining !== null &&
+        Math.ceil(remaining) === c.time - parseInt(c.playTimeWarning, 10)
+      ) {
+        void playTimeWarning();
+      }
+
       // Append more words for time mode
       if (
         c.mode === "time" &&
@@ -305,6 +336,13 @@ export const useTypingTest = (
         const result = processBackspace(config, store.wordIndex);
         if (result === "blocked") return;
 
+        void playInputSound({
+          type: "backspace",
+          correct: null,
+          blindMode: config.blindMode,
+          ...getSoundOptions(nativeEvent),
+        });
+
         store.setCurrentInput(TestInput.currentInput);
         store.setWordIndex(TestState.getActiveWordIndex());
         store.setInputHistory([...TestInput.inputHistory]);
@@ -318,7 +356,7 @@ export const useTypingTest = (
 
       onTypingKeyRef.current?.();
 
-      const event = processChar(key, {
+      let event = processChar(key, {
         targetWords: wordsRef.current,
         config,
         now,
@@ -335,7 +373,20 @@ export const useTypingTest = (
           onFinish: () => finishTest(),
           onFail: (reason) => failTest(reason),
         });
-        processChar(key, { targetWords: wordsRef.current, config, now });
+        event = processChar(key, {
+          targetWords: wordsRef.current,
+          config,
+          now,
+        });
+      }
+
+      if (event.type !== "startTest" && event.type !== "noOp") {
+        void playInputSound({
+          type: "char",
+          correct: event.correct,
+          blindMode: config.blindMode,
+          ...getSoundOptions(nativeEvent),
+        });
       }
 
       store.setCurrentInput(TestInput.currentInput);

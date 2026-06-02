@@ -15,6 +15,41 @@ export type StopOnError = "off" | "word" | "letter";
 
 export type QuoteLength = -3 | -2 | -1 | 0 | 1 | 2 | 3;
 
+export type PlaySoundOnError = "off" | "1" | "2" | "3" | "4";
+
+export type PlaySoundOnClick =
+  | "off"
+  | "1"
+  | "2"
+  | "3"
+  | "4"
+  | "5"
+  | "6"
+  | "7"
+  | "8"
+  | "9"
+  | "10"
+  | "11"
+  | "12"
+  | "13"
+  | "14"
+  | "15"
+  | "16"
+  | "17"
+  | "18"
+  | "19"
+  | "20"
+  | "21"
+  | "22"
+  | "23"
+  | "24"
+  | "25"
+  | "26";
+
+export type SoundVolume = number;
+
+export type PlayTimeWarning = "off" | "5" | "10" | "15" | "20" | "30" | "60";
+
 export type TypingConfig = {
   mode: TestMode;
   time: number;
@@ -38,4 +73,8 @@ export type TypingConfig = {
   showLiveAcc: boolean;
   showLiveBurst: boolean;
   showTimerProgress: boolean;
+  soundVolume: SoundVolume;
+  playSoundOnClick: PlaySoundOnClick;
+  playSoundOnError: PlaySoundOnError;
+  playTimeWarning: PlayTimeWarning;
 };

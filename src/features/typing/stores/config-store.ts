@@ -31,6 +31,16 @@ export const useConfigStore = create<ConfigStore>()(
     }),
     {
       name: "monkeytype-config",
+      merge: (persisted, current) => {
+        const persistedState = persisted as Partial<ConfigStore> | undefined;
+        return {
+          ...current,
+          config: {
+            ...DEFAULT_CONFIG,
+            ...persistedState?.config,
+          },
+        };
+      },
     },
   ),
 );

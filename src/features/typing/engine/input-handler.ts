@@ -25,9 +25,9 @@ const CHAR_OVERRIDES = new Map<string, string>([["…", "..."]]);
 export type InputEvent =
   | { type: "startTest" }
   | { type: "wordCompleted"; wordIndex: number; correct: boolean }
-  | { type: "finish" }
-  | { type: "fail"; reason: string }
-  | { type: "charUpdate" }
+  | { type: "finish"; correct: boolean }
+  | { type: "fail"; reason: string; correct: boolean }
+  | { type: "charUpdate"; correct: boolean }
   | { type: "noOp" };
 
 export type InputContext = {
@@ -174,7 +174,7 @@ export const processChar = (data: string, ctx: InputContext): InputEvent => {
 
   // stopOnError — letter mode: block incorrect characters
   if (config.stopOnError === "letter" && !correct && !charIsSpace) {
-    return { type: "charUpdate" };
+    return { type: "charUpdate", correct: false };
   }
 
   // update current input
@@ -185,7 +185,7 @@ export const processChar = (data: string, ctx: InputContext): InputEvent => {
 
   // check difficulty fail
   const diffFail = checkDifficultyFail(config, correct, shouldGoToNextWord);
-  if (diffFail) return { type: "fail", reason: diffFail };
+  if (diffFail) return { type: "fail", reason: diffFail, correct };
 
   // word navigation
   let wordCompleted = false;
@@ -211,7 +211,7 @@ export const processChar = (data: string, ctx: InputContext): InputEvent => {
 
   // check min-burst fail
   const burstFail = checkMinBurstFail(config, burstWpm, wordCompleted);
-  if (burstFail) return { type: "fail", reason: burstFail };
+  if (burstFail) return { type: "fail", reason: burstFail, correct };
 
   // check min-acc fail
   const accFail = checkMinAccFail(
@@ -219,7 +219,7 @@ export const processChar = (data: string, ctx: InputContext): InputEvent => {
     TestInput.accuracy.correct,
     TestInput.accuracy.incorrect,
   );
-  if (accFail) return { type: "fail", reason: accFail };
+  if (accFail) return { type: "fail", reason: accFail, correct };
 
   // check finish
   const allWordsTyped = wordIndex >= targetWords.length - 1;
@@ -232,14 +232,14 @@ export const processChar = (data: string, ctx: InputContext): InputEvent => {
       config,
     )
   ) {
-    return { type: "finish" };
+    return { type: "finish", correct };
   }
 
   if (wordCompleted) {
     return { type: "wordCompleted", wordIndex, correct };
   }
 
-  return { type: "charUpdate" };
+  return { type: "charUpdate", correct };
 };
 
 /**
