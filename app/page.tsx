@@ -93,7 +93,12 @@ export default function Home() {
                   pointerEvents: isTestFocused ? "none" : "auto",
                 }}
               >
-                <TestConfig disabled={isTestFocused} />
+                <TestConfig
+                  disabled={isTestFocused}
+                  onCustomTextApplied={() => {
+                    void typing.restart(false);
+                  }}
+                />
               </div>
             </div>
 

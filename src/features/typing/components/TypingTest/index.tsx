@@ -101,7 +101,9 @@ export const TypingTest = ({ typing, isTestFocused }: TypingTestProps) => {
   const showLiveStats = isTestFocused && config.showTimerProgress;
   const language = store.language;
   const showLanguage =
-    !isTestFocused && store.phase === "idle" && language !== null;
+    !isTestFocused &&
+    store.phase === "idle" &&
+    (language !== null || config.mode === "custom");
 
   return (
     <div
@@ -143,11 +145,18 @@ export const TypingTest = ({ typing, isTestFocused }: TypingTestProps) => {
             transition: "opacity 0.125s ease",
           }}
         >
-          {language !== null && (
+          {config.mode === "custom" ? (
             <>
-              <span>⌨</span>
-              <span>{language.name}</span>
+              <span>✎</span>
+              <span>custom lesson</span>
             </>
+          ) : (
+            language !== null && (
+              <>
+                <span>⌨</span>
+                <span>{language.name}</span>
+              </>
+            )
           )}
         </div>
 

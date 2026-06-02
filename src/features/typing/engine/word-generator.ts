@@ -1,17 +1,28 @@
 /**
  * Word generation engine.
  * Source: frontend/src/ts/test/words-generator.ts
- *
- * Generates the word list for a test based on config (mode, punctuation, numbers, etc.)
- * Pure logic with no React dependencies.
  */
 
 import type { TypingConfig } from "../types/config";
+import type { CustomTextSettings } from "../types/custom-text";
 import type { LanguageObject } from "../types/language";
 import { Wordset, withWords } from "./wordset";
 import { randomIntFromRange } from "../calculations/numbers";
 
 const NUMBERS_POOL = "0123456789";
+
+let activeWordset: Wordset | null = null;
+let activeCustomText: CustomTextSettings | null = null;
+let currentSection: string[] = [];
+let sectionIndex = 0;
+const sectionHistory: string[] = [];
+
+export const resetCustomGeneration = (): void => {
+  currentSection = [];
+  sectionIndex = 0;
+  sectionHistory.length = 0;
+  activeWordset?.reset();
+};
 
 function getRandomNumber(length = 4): string {
   return Array.from(
@@ -33,11 +44,6 @@ function shouldCapitalize(lastChar: string): boolean {
   return /[?!.]/.test(lastChar);
 }
 
-/**
- * Applies punctuation rules to a word.
- * Simplified from: frontend/src/ts/test/words-generator.ts → punctuateWord
- * English-only punctuation for initial port (full multi-language in future).
- */
 async function punctuateWord(
   previousWord: string,
   currentWord: string,
@@ -73,22 +79,167 @@ async function punctuateWord(
   return word;
 }
 
+function getCustomDisplayLimit(settings: CustomTextSettings): number {
+  if (settings.limit.value === 0 || settings.limit.mode === "time") {
+    return 100;
+  }
+
+  if (settings.limit.mode === "word") {
+    return settings.limit.value > 100 ? 100 : settings.limit.value;
+  }
+
+  return 100;
+}
+
+function pickCustomSection(
+  wordset: Wordset,
+  settings: CustomTextSettings,
+): string {
+  if (settings.mode === "repeat") {
+    return wordset.nextWord();
+  }
+
+  if (settings.mode === "shuffle") {
+    return wordset.shuffledWord();
+  }
+
+  if (settings.mode === "random" && wordset.length < 4) {
+    return wordset.randomWord();
+  }
+
+  if (settings.limit.mode === "section") {
+    let section = wordset.randomWord();
+    let retries = 0;
+    const previousSection = sectionHistory[sectionHistory.length - 1];
+    const previousSection2 = sectionHistory[sectionHistory.length - 2];
+    while (
+      retries < 100 &&
+      (section === previousSection || section === previousSection2)
+    ) {
+      section = wordset.randomWord();
+      retries++;
+    }
+    return section;
+  }
+
+  let section = wordset.randomWord();
+  let retries = 0;
+  const firstWord = (section.split(" ")[0] ?? "").toLowerCase();
+  const previousWord = (
+    sectionHistory[sectionHistory.length - 1]?.split(" ")[0] ?? ""
+  ).toLowerCase();
+  const previousWord2 = (
+    sectionHistory[sectionHistory.length - 2]?.split(" ")[0] ?? ""
+  ).toLowerCase();
+  while (
+    retries < 100 &&
+    (firstWord === previousWord || firstWord === previousWord2)
+  ) {
+    section = wordset.randomWord();
+    retries++;
+  }
+  return section;
+}
+
+async function getCustomNextWord(
+  settings: CustomTextSettings,
+  words: string[],
+  wordIndex: number,
+  wordsBound: number,
+): Promise<string> {
+  if (activeWordset === null) {
+    throw new Error("Custom wordset is not initialized");
+  }
+
+  if (currentSection.length === 0) {
+    let section = pickCustomSection(activeWordset, settings);
+    section = section.replace(/ +/g, " ").trim();
+    currentSection = section.split(" ").filter((part) => part !== "");
+    sectionHistory.push(section);
+    sectionIndex++;
+  }
+
+  let word = currentSection.shift();
+  if (word === undefined || word === "") {
+    throw new Error("Custom word is empty");
+  }
+
+  if (/ /g.test(word)) {
+    throw new Error("Custom word contains spaces");
+  }
+
+  if (settings.pipeDelimiter) {
+    return word;
+  }
+
+  const previousWord = words[words.length - 1] ?? "";
+  if (!/[A-Z]/.test(word)) {
+    word = word.toLowerCase();
+  }
+
+  return word;
+}
+
 export type GeneratedWords = {
   words: string[];
 };
 
-/**
- * Generates the full word list for the test.
- * @param language - loaded language object
- * @param config   - current typing config
- * @param existingWords - words already in the test (for repeat/same-wordset)
- */
 export async function generateWords(
   language: LanguageObject,
   config: TypingConfig,
-  existingWords?: string[],
+  options?: {
+    existingWords?: string[];
+    customText?: CustomTextSettings;
+  },
 ): Promise<GeneratedWords> {
-  const wordset: Wordset = withWords(language.words);
+  if (options?.existingWords && options.existingWords.length > 0) {
+    return { words: [...options.existingWords] };
+  }
+
+  if (config.mode === "custom") {
+    const settings = options?.customText;
+    if (settings === undefined || settings.text.length === 0) {
+      return { words: [] };
+    }
+
+    resetCustomGeneration();
+    activeCustomText = settings;
+    activeWordset = withWords(settings.text);
+
+    const words: string[] = [];
+    const limit = getCustomDisplayLimit(settings);
+    let i = 0;
+
+    if (limit === 0) {
+      return { words };
+    }
+
+    let stop = false;
+    while (!stop) {
+      const nextWord = await getCustomNextWord(settings, words, i, limit);
+      words.push(nextWord);
+
+      if (settings.pipeDelimiter && settings.limit.mode === "section") {
+        const sectionFinished =
+          currentSection.length === 0 && sectionIndex >= settings.limit.value;
+        if (sectionFinished || words.length >= 100) {
+          stop = true;
+        }
+      } else if (words.length >= limit) {
+        stop = true;
+      }
+
+      i++;
+    }
+
+    return { words };
+  }
+
+  activeCustomText = null;
+  activeWordset = null;
+  resetCustomGeneration();
+
+  const wordset = withWords(language.words);
   const words: string[] = [];
 
   let limit: number;
@@ -100,14 +251,9 @@ export async function generateWords(
     limit = 100;
   }
 
-  if (existingWords && existingWords.length > 0) {
-    return { words: [...existingWords] };
-  }
-
   for (let i = 0; i < limit; i++) {
     let word = wordset.randomWord("normal");
 
-    // avoid repeating consecutive words
     if (words.length > 0) {
       let retries = 0;
       while (retries < 10 && word === words[words.length - 1]) {
@@ -116,12 +262,10 @@ export async function generateWords(
       }
     }
 
-    // avoid standalone capital I
     while (word === "I" && !config.punctuation) {
       word = wordset.randomWord("normal");
     }
 
-    // lowercase unless punctuation is enabled (punctuation capitalizes as needed)
     if (!config.punctuation) {
       word = word.toLowerCase();
     }
@@ -146,9 +290,6 @@ export async function generateWords(
   return { words };
 }
 
-/**
- * Generates additional words to append during a time-mode test.
- */
 export async function getNextWord(
   language: LanguageObject,
   config: TypingConfig,
@@ -156,7 +297,17 @@ export async function getNextWord(
   previousWord2: string,
   wordIndex: number,
   wordsBound: number,
+  customText?: CustomTextSettings,
+  existingWords: string[] = [],
 ): Promise<string> {
+  if (config.mode === "custom" && customText !== undefined) {
+    if (activeWordset === null) {
+      activeWordset = withWords(customText.text);
+      activeCustomText = customText;
+    }
+    return getCustomNextWord(customText, existingWords, wordIndex, wordsBound);
+  }
+
   const wordset = withWords(language.words);
   let word = wordset.randomWord("normal");
 
@@ -184,3 +335,32 @@ export async function getNextWord(
 
   return word;
 }
+
+export const isCustomTimedMode = ({
+  config,
+  customText,
+}: {
+  config: TypingConfig;
+  customText: CustomTextSettings;
+}): boolean => {
+  return (
+    config.mode === "custom" &&
+    customText.limit.mode === "time" &&
+    customText.limit.value > 0
+  );
+};
+
+export const shouldAppendWordsDuringTest = ({
+  config,
+  customText,
+}: {
+  config: TypingConfig;
+  customText: CustomTextSettings;
+}): boolean => {
+  return (
+    config.mode === "time" ||
+    isCustomTimedMode({ config, customText }) ||
+    (config.mode === "custom" &&
+      (customText.limit.value === 0 || customText.limit.mode === "time"))
+  );
+};

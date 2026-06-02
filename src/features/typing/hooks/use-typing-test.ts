@@ -12,8 +12,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTestStore } from "../stores/test-store";
 import { useConfigStore } from "../stores/config-store";
+import { useCustomTextStore } from "../stores/custom-text-store";
 import { loadLanguage } from "../services/language-loader";
-import { generateWords, getNextWord } from "../engine/word-generator";
+import {
+  generateWords,
+  getNextWord,
+  isCustomTimedMode,
+  shouldAppendWordsDuringTest,
+} from "../engine/word-generator";
 import * as TestInput from "../engine/test-input";
 import * as TestState from "../engine/test-state";
 import * as TestStats from "../engine/test-stats";
@@ -65,6 +71,8 @@ export const useTypingTest = (
 
   const store = useTestStore();
   const { config } = useConfigStore();
+  const customText = useCustomTextStore((state) => state.settings);
+  const customTextRevision = useCustomTextStore((state) => state.revision);
 
   const languageRef = useRef<LanguageObject | null>(null);
   const wordsRef = useRef<string[]>([]);
@@ -83,6 +91,11 @@ export const useTypingTest = (
   const configRef = useRef(config);
   useEffect(() => {
     configRef.current = config;
+  });
+
+  const customTextRef = useRef(customText);
+  useEffect(() => {
+    customTextRef.current = customText;
   });
 
   useEffect(() => {
@@ -117,7 +130,10 @@ export const useTypingTest = (
         if (withSameWords && wordsRef.current.length > 0) {
           words = [...wordsRef.current];
         } else {
-          const result = await generateWords(language, config);
+          const result = await generateWords(language, config, {
+            customText:
+              config.mode === "custom" ? customTextRef.current : undefined,
+          });
           words = result.words;
         }
 
@@ -198,7 +214,9 @@ export const useTypingTest = (
         TestStats.removeAfkData();
       }
 
-      const isTimedTest = config.mode === "time";
+      const isTimedTest =
+        config.mode === "time" ||
+        isCustomTimedMode({ config, customText: customTextRef.current });
       const stats = TestStats.calculateFinalStats(
         wordsRef.current,
         isTimedTest,
@@ -281,18 +299,27 @@ export const useTypingTest = (
       TestInput.pushErrorToHistory();
       TestInput.pushAfkToHistory();
 
+      const warningBase =
+        c.mode === "time"
+          ? c.time
+          : isCustomTimedMode({ config: c, customText: customTextRef.current })
+            ? customTextRef.current.limit.value
+            : null;
+
       if (
-        c.mode === "time" &&
+        warningBase !== null &&
         c.playTimeWarning !== "off" &&
         remaining !== null &&
-        Math.ceil(remaining) === c.time - parseInt(c.playTimeWarning, 10)
+        Math.ceil(remaining) === warningBase - parseInt(c.playTimeWarning, 10)
       ) {
         void playTimeWarning();
       }
 
-      // Append more words for time mode
       if (
-        c.mode === "time" &&
+        shouldAppendWordsDuringTest({
+          config: c,
+          customText: customTextRef.current,
+        }) &&
         languageRef.current &&
         wordsRef.current.length - s.wordIndex < 30
       ) {
@@ -308,6 +335,8 @@ export const useTypingTest = (
           secondLastWord,
           wordIdx,
           100,
+          c.mode === "custom" ? customTextRef.current : undefined,
+          wordsRef.current,
         )
           .then((word) => {
             wordsRef.current = [...wordsRef.current, word];
@@ -367,7 +396,12 @@ export const useTypingTest = (
         store.setPhase("active");
         TestState.setPhase("active");
 
-        const durationSeconds = config.mode === "time" ? config.time : null;
+        const durationSeconds =
+          config.mode === "time"
+            ? config.time
+            : isCustomTimedMode({ config, customText: customTextRef.current })
+              ? customTextRef.current.limit.value
+              : null;
         startTimer(now, durationSeconds, {
           onTick: onTimerTick,
           onFinish: () => finishTest(),
@@ -455,6 +489,7 @@ export const useTypingTest = (
     config.language,
     config.punctuation,
     config.numbers,
+    customTextRevision,
   ]);
 
   return {
