@@ -5,6 +5,7 @@ export { Input } from "./Input";
 export { Textarea } from "./Textarea";
 export { Kbd } from "./Kbd";
 export { Label } from "./Label";
+export { Modal } from "./Modal";
 export { Separator } from "./Separator";
 
 export const UI_COMPONENTS = [
@@ -16,6 +17,7 @@ export const UI_COMPONENTS = [
   "Textarea",
   "Kbd",
   "Label",
+  "Modal",
 ] as const;
 
 export type UIComponentName = (typeof UI_COMPONENTS)[number];

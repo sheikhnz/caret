@@ -4,12 +4,12 @@
 
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { cn } from "@/utils";
 import { Button } from "@/ui/Button";
-import { Card } from "@/ui/Card";
 import { Input } from "@/ui/Input";
+import { Modal } from "@/ui/Modal";
 import { Textarea } from "@/ui/Textarea";
 
 import type {
@@ -21,7 +21,6 @@ import {
   cleanUpCustomText,
   customTextToRaw,
 } from "../../services/custom-text-utils";
-import { isCloseDialogShortcut } from "../../constants/keyboard-shortcuts";
 import { useConfigStore } from "../../stores/config-store";
 import { useCustomTextStore } from "../../stores/custom-text-store";
 
@@ -111,12 +110,16 @@ const SegBtn = ({
   </button>
 );
 
+const CUSTOM_TEXT_MODAL_TITLE_ID = "custom-text-title";
+
 type CustomTextModalFormProps = {
+  open: boolean;
   onClose: () => void;
   onApplied?: () => void;
 };
 
 const CustomTextModalForm = ({
+  open,
   onClose,
   onApplied,
 }: CustomTextModalFormProps) => {
@@ -247,198 +250,153 @@ const CustomTextModalForm = ({
 
   const limitsDisabled = formMode === "simple";
 
-  useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (isCloseDialogShortcut(event)) {
-        onClose();
-      }
-    };
-
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [onClose]);
-
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
-      onClick={onClose}
-    >
-      <div onClick={(e) => e.stopPropagation()}>
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="custom-text-title"
+    <Modal
+      open={open}
+      onClose={onClose}
+      title="Custom Text"
+      titleId={CUSTOM_TEXT_MODAL_TITLE_ID}
+      footer={
+        <Button
+          variant="primary"
+          size="md"
+          className="w-full"
+          onClick={handleSubmit}
         >
-          <Card className="flex max-h-[85vh] w-full max-w-lg flex-col gap-4 overflow-hidden p-4 md:p-5">
-            <div className="flex items-center justify-between gap-3">
-              <h2
-                id="custom-text-title"
-                className="text-base font-medium text-text-primary"
-              >
-                Custom Text
-              </h2>
-              <button
-                type="button"
-                onClick={onClose}
-                className="text-sm text-text-muted transition-colors hover:text-text-primary"
-              >
-                Esc
-              </button>
-            </div>
+          Start
+        </Button>
+      }
+    >
+      <div className="space-y-1.5">
+        <Textarea
+          id="custom-text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Paste or type custom text"
+          className="min-h-28 px-3 py-3 text-sm"
+        />
+        <p className="text-xs text-text-muted">
+          {parsedPreview.length} {pipeDelimiter ? "Sections" : "Words"}
+        </p>
+      </div>
 
-            <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto">
-              <div className="space-y-1.5">
-                <Textarea
-                  id="custom-text"
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                  placeholder="Paste or type custom text"
-                  className="min-h-28 px-3 py-3 text-sm"
-                />
-                <p className="text-xs text-text-muted">
-                  {parsedPreview.length} {pipeDelimiter ? "Sections" : "Words"}
-                </p>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-2">
-                <div className={SEGMENT_CLASS} role="group" aria-label="Mode">
-                  {MODE_OPTIONS.map(({ value, label }) => (
-                    <SegBtn
-                      key={value}
-                      active={formMode === value}
-                      onClick={() => setFormMode(value)}
-                    >
-                      {label}
-                    </SegBtn>
-                  ))}
-                </div>
-                <div
-                  className={SEGMENT_CLASS}
-                  role="group"
-                  aria-label="Delimiter"
-                >
-                  <SegBtn
-                    active={!pipeDelimiter}
-                    onClick={() => setPipeDelimiter(false)}
-                  >
-                    Space
-                  </SegBtn>
-                  <SegBtn
-                    active={pipeDelimiter}
-                    onClick={() => setPipeDelimiter(true)}
-                  >
-                    Pipe
-                  </SegBtn>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-3 gap-2">
-                <Input
-                  id="limit-word"
-                  type="number"
-                  min={0}
-                  value={limitWord}
-                  disabled={limitsDisabled || pipeDelimiter}
-                  onChange={(e) => setLimitWord(e.target.value)}
-                  placeholder="Words"
-                  aria-label="Word limit"
-                  className="h-9 min-h-9 px-3 py-2 text-sm"
-                />
-                <Input
-                  id="limit-time"
-                  type="number"
-                  min={0}
-                  value={limitTime}
-                  disabled={limitsDisabled}
-                  onChange={(e) => setLimitTime(e.target.value)}
-                  placeholder="Seconds"
-                  aria-label="Time limit in seconds"
-                  className="h-9 min-h-9 px-3 py-2 text-sm"
-                />
-                <Input
-                  id="limit-section"
-                  type="number"
-                  min={0}
-                  value={limitSection}
-                  disabled={limitsDisabled || !pipeDelimiter}
-                  onChange={(e) => setLimitSection(e.target.value)}
-                  placeholder="Sections"
-                  aria-label="Section limit"
-                  className="h-9 min-h-9 px-3 py-2 text-sm"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <Input
-                    id="save-name"
-                    value={saveName}
-                    onChange={(e) => setSaveName(e.target.value)}
-                    placeholder="Save as…"
-                    aria-label="Save lesson as"
-                    className="h-9 min-h-9 flex-1 px-3 py-2 text-sm"
-                  />
-                  <Button variant="secondary" size="sm" onClick={handleSave}>
-                    Save
-                  </Button>
-                  <button
-                    type="button"
-                    onClick={() => setShowSaved((prev) => !prev)}
-                    className="shrink-0 text-sm text-text-muted transition-colors hover:text-text-primary"
-                  >
-                    Saved ({savedNames.length})
-                  </button>
-                </div>
-
-                {showSaved && (
-                  <div className="space-y-1">
-                    {savedNames.length === 0 ? (
-                      <p className="text-xs text-text-muted">
-                        No saved lessons
-                      </p>
-                    ) : (
-                      savedNames.map((name) => (
-                        <div key={name} className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={() => handleLoadSaved(name)}
-                            className="min-w-0 flex-1 truncate text-left text-sm text-text-secondary transition-colors hover:text-accent"
-                          >
-                            {name}
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => deleteText(name)}
-                            className="text-xs text-text-muted transition-colors hover:text-error"
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {error !== null && (
-                <p className="text-xs text-error" role="alert">
-                  {error}
-                </p>
-              )}
-            </div>
-
-            <Button
-              variant="primary"
-              size="md"
-              className="w-full"
-              onClick={handleSubmit}
+      <div className="flex flex-wrap items-center gap-2">
+        <div className={SEGMENT_CLASS} role="group" aria-label="Mode">
+          {MODE_OPTIONS.map(({ value, label }) => (
+            <SegBtn
+              key={value}
+              active={formMode === value}
+              onClick={() => setFormMode(value)}
             >
-              Start
-            </Button>
-          </Card>
+              {label}
+            </SegBtn>
+          ))}
+        </div>
+        <div className={SEGMENT_CLASS} role="group" aria-label="Delimiter">
+          <SegBtn
+            active={!pipeDelimiter}
+            onClick={() => setPipeDelimiter(false)}
+          >
+            Space
+          </SegBtn>
+          <SegBtn active={pipeDelimiter} onClick={() => setPipeDelimiter(true)}>
+            Pipe
+          </SegBtn>
         </div>
       </div>
-    </div>
+
+      <div className="grid grid-cols-3 gap-2">
+        <Input
+          id="limit-word"
+          type="number"
+          min={0}
+          value={limitWord}
+          disabled={limitsDisabled || pipeDelimiter}
+          onChange={(e) => setLimitWord(e.target.value)}
+          placeholder="Words"
+          aria-label="Word limit"
+          className="h-9 min-h-9 px-3 py-2 text-sm"
+        />
+        <Input
+          id="limit-time"
+          type="number"
+          min={0}
+          value={limitTime}
+          disabled={limitsDisabled}
+          onChange={(e) => setLimitTime(e.target.value)}
+          placeholder="Seconds"
+          aria-label="Time limit in seconds"
+          className="h-9 min-h-9 px-3 py-2 text-sm"
+        />
+        <Input
+          id="limit-section"
+          type="number"
+          min={0}
+          value={limitSection}
+          disabled={limitsDisabled || !pipeDelimiter}
+          onChange={(e) => setLimitSection(e.target.value)}
+          placeholder="Sections"
+          aria-label="Section limit"
+          className="h-9 min-h-9 px-3 py-2 text-sm"
+        />
+      </div>
+
+      <div className="space-y-2">
+        <div className="flex items-center gap-2">
+          <Input
+            id="save-name"
+            value={saveName}
+            onChange={(e) => setSaveName(e.target.value)}
+            placeholder="Save as…"
+            aria-label="Save lesson as"
+            className="h-9 min-h-9 flex-1 px-3 py-2 text-sm"
+          />
+          <Button variant="secondary" size="sm" onClick={handleSave}>
+            Save
+          </Button>
+          <button
+            type="button"
+            onClick={() => setShowSaved((prev) => !prev)}
+            className="shrink-0 text-sm text-text-muted transition-colors hover:text-text-primary"
+          >
+            Saved ({savedNames.length})
+          </button>
+        </div>
+
+        {showSaved && (
+          <div className="space-y-1">
+            {savedNames.length === 0 ? (
+              <p className="text-xs text-text-muted">No saved lessons</p>
+            ) : (
+              savedNames.map((name) => (
+                <div key={name} className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleLoadSaved(name)}
+                    className="min-w-0 flex-1 truncate text-left text-sm text-text-secondary transition-colors hover:text-accent"
+                  >
+                    {name}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => deleteText(name)}
+                    className="text-xs text-text-muted transition-colors hover:text-error"
+                  >
+                    Delete
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+      </div>
+
+      {error !== null && (
+        <p className="text-xs text-error" role="alert">
+          {error}
+        </p>
+      )}
+    </Modal>
   );
 };
 
@@ -446,8 +404,10 @@ export const CustomTextModal = ({
   open,
   onClose,
   onApplied,
-}: CustomTextModalProps) => {
-  if (!open) return null;
-
-  return <CustomTextModalForm onClose={onClose} onApplied={onApplied} />;
-};
+}: CustomTextModalProps) => (
+  <CustomTextModalForm
+    open={open}
+    onClose={onClose}
+    onApplied={onApplied}
+  />
+);
