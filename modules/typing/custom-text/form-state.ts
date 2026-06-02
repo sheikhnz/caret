@@ -61,9 +61,11 @@ export const buildSettingsFromForm = (
     return { ok: false, error: "Text cannot be empty" };
   }
 
-  const activeLimits = [form.limitWord, form.limitTime, form.limitSection].filter(
-    (limit) => limit !== "",
-  );
+  const activeLimits = [
+    form.limitWord,
+    form.limitTime,
+    form.limitSection,
+  ].filter((limit) => limit !== "");
   if (activeLimits.length > 1) {
     return { ok: false, error: "You can only specify one limit" };
   }

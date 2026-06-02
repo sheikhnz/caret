@@ -1,5 +1,8 @@
 import { isCustomTimedMode } from "@/modules/typing/engine/word-generator";
-import { processChar, processBackspace } from "@/modules/typing/engine/input-handler";
+import {
+  processChar,
+  processBackspace,
+} from "@/modules/typing/engine/input-handler";
 import * as TestInput from "@/modules/typing/engine/test-input";
 import * as TestState from "@/modules/typing/engine/test-state";
 import * as TestStats from "@/modules/typing/engine/test-stats";

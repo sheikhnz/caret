@@ -22,9 +22,7 @@ export const TypingTestShortcuts = ({
   onBailOut,
 }: TypingTestShortcutsProps) => {
   const restartShortcut =
-    mode === "zen"
-      ? KEYBOARD_SHORTCUTS.restartZen
-      : KEYBOARD_SHORTCUTS.restart;
+    mode === "zen" ? KEYBOARD_SHORTCUTS.restartZen : KEYBOARD_SHORTCUTS.restart;
 
   return (
     <div

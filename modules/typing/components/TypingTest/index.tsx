@@ -14,7 +14,10 @@ import { useTestStore } from "@/modules/typing/stores/test-store";
 
 import { Caret } from "./Caret";
 import { LiveStats } from "./LiveStats";
-import { TYPING_CONTAINER_HEIGHT_PX, TYPING_FONT_SIZE_REM } from "./scroll-constants";
+import {
+  TYPING_CONTAINER_HEIGHT_PX,
+  TYPING_FONT_SIZE_REM,
+} from "./scroll-constants";
 import { TypingTestShortcuts } from "./TypingTestShortcuts";
 import { useWordScroll } from "./use-word-scroll";
 import { WordsDisplay } from "./WordsDisplay";
@@ -74,7 +77,10 @@ export const TypingTest = ({ typing, isTestFocused }: TypingTestProps) => {
       className="flex w-full max-w-[870px] flex-col"
       onClick={handleContainerClick}
     >
-      <div className="font-mono" style={{ fontSize: `${TYPING_FONT_SIZE_REM}rem` }}>
+      <div
+        className="font-mono"
+        style={{ fontSize: `${TYPING_FONT_SIZE_REM}rem` }}
+      >
         <div
           aria-hidden={!showLiveStats}
           className="pointer-events-none transition-opacity duration-125"

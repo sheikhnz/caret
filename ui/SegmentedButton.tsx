@@ -15,10 +15,8 @@ type SegmentedButtonProps = {
 };
 
 const SIZE_CLASS: Record<SegmentedButtonSize, string> = {
-  compact:
-    "px-2.5 py-2 text-sm leading-none",
-  comfortable:
-    "gap-1 px-[0.5em] py-[0.65rem] text-[0.875rem] leading-none",
+  compact: "px-2.5 py-2 text-sm leading-none",
+  comfortable: "gap-1 px-[0.5em] py-[0.65rem] text-[0.875rem] leading-none",
 };
 
 export const SegmentedButton = ({

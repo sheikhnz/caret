@@ -51,8 +51,7 @@ export const runFinishTest = ({
   }
 
   const isTimedTest =
-    config.mode === "time" ||
-    isCustomTimedMode({ config, customText });
+    config.mode === "time" || isCustomTimedMode({ config, customText });
   const isZenMode = config.mode === "zen";
   const stats = TestStats.calculateFinalStats(words, isTimedTest, isZenMode);
 
