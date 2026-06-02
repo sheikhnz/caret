@@ -12,10 +12,17 @@ import { Separator } from "@/ui/Separator";
 import { roundTo2 } from "../../calculations/numbers";
 import { useConfigStore } from "../../stores/config-store";
 import { useTestStore } from "../../stores/test-store";
+import type { TestMode } from "../../types/config";
 import { StatCard } from "./StatCard";
 import { WpmChart } from "./WpmChart";
 
 const MIN_DURATION_S = 1;
+
+const getModeLabel = (mode: TestMode, time: number, words: number): string => {
+  if (mode === "time") return `${time}s`;
+  if (mode === "words") return `${words} words`;
+  return mode.charAt(0).toUpperCase() + mode.slice(1);
+};
 
 export const Results = ({
   onRestart = () => undefined,
@@ -32,13 +39,7 @@ export const Results = ({
   const [correct, incorrect, extra, missed] = result.charStats;
   const testInvalid = result.testDuration < MIN_DURATION_S;
 
-  const modeLabel =
-    config.mode === "time"
-      ? `${config.time}s`
-      : config.mode === "words"
-        ? `${config.words} Words`
-        : config.mode.charAt(0).toUpperCase() + config.mode.slice(1);
-
+  const modeLabel = getModeLabel(config.mode, config.time, config.words);
   const timeLabel = `${roundTo2(result.testDuration)}s`;
   const afkLabel =
     result.afkDuration > 0 ? `-${result.afkDuration}s AFK` : undefined;
@@ -56,25 +57,25 @@ export const Results = ({
   return (
     <div className="flex w-full max-w-[870px] flex-col gap-4">
       <Card elevated className="p-5 md:p-6">
-        <div className="grid gap-6 md:grid-cols-[auto_1fr] md:items-center md:[grid-template-areas:'stats_chart''morestats_morestats']">
+        <div className="grid gap-6 md:grid-cols-[auto_1fr] md:items-start md:[grid-template-areas:'stats_chart''morestats_morestats']">
           <div className="grid gap-4 md:pr-8 md:[grid-area:stats] md:[grid-template-areas:'wpm''acc']">
             <StatCard
               label="WPM"
               value={result.wpm}
               sub={result.rawWpm !== undefined ? `${result.rawWpm}` : undefined}
               subLabel="Raw"
-              large
-              className="wpm"
+              size="hero"
+              className="md:[grid-area:wpm]"
             />
             <StatCard
               label="Acc"
               value={`${result.acc}%`}
-              large
-              className="acc"
+              size="hero"
+              className="md:[grid-area:acc]"
             />
           </div>
 
-          <div className="md:[grid-area:chart]">
+          <div className="min-w-0 md:[grid-area:chart]">
             {result.chartData !== "toolong" ? (
               <WpmChart data={result.chartData} />
             ) : (
@@ -84,7 +85,7 @@ export const Results = ({
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:auto-cols-fr md:grid-flow-col md:gap-8 md:[grid-area:morestats]">
+          <div className="flex flex-wrap gap-x-8 gap-y-4 md:[grid-area:morestats] md:justify-between">
             <StatCard label="Raw" value={result.rawWpm} />
             <StatCard label="Consistency" value={`${result.consistency}%`} />
             <StatCard label="Time" value={timeLabel} sub={afkLabel} />
@@ -92,7 +93,7 @@ export const Results = ({
               label="Chars"
               value={`${correct}/${incorrect}/${extra}/${missed}`}
             />
-            <StatCard label="Test Type" value={modeLabel} />
+            <StatCard label="Test Type" value={modeLabel} size="compact" />
           </div>
         </div>
       </Card>
