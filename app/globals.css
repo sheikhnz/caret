@@ -1,26 +1,105 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/**
+ * Monkeytype-inspired design tokens.
+ * Adapted from: frontend/src/styles/themes/*.css
+ *
+ * Default theme: dark (serika-dark inspired).
+ * All semantic color tokens are defined as CSS variables and exposed
+ * via @theme so Tailwind utility classes can reference them.
+ */
+@theme {
+  /* Core palette */
+  --color-bg: #323437;
+  --color-main: #d1d0c5;
+  --color-caret: #e2b714;
+  --color-sub: #646669;
+  --color-sub-alt: #2c2e31;
+  --color-text: #d1d0c5;
+  --color-error: #ca4754;
+  --color-error-extra: #7e2a33;
+  --color-correct: #d1d0c5;
+  --color-incorrect: #ca4754;
+  --color-extra: #ca4754;
+  --color-missed: #646669;
+  --color-accent: #e2b714;
+  --color-bg-alt: #2c2e31;
+
+  /* Font stacks */
+  --font-mono: "Roboto Mono", "SF Mono", "Fira Code", ui-monospace, monospace;
+  --font-sans: "Roboto", "Inter", system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Base reset */
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-main);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-sub);
+  border-radius: 2px;
+}
+
+/* Caret blink animation */
+@keyframes caret-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* Word / character colors */
+.text-correct  { color: var(--color-correct); }
+.text-incorrect { color: var(--color-incorrect); }
+.text-extra    { color: var(--color-extra); }
+.text-missed   { color: var(--color-missed); }
+.text-main     { color: var(--color-main); }
+.text-sub      { color: var(--color-sub); }
+.text-accent   { color: var(--color-accent); }
+.text-error    { color: var(--color-error); }
+.text-bg       { color: var(--color-bg); }
+
+/* Background helpers */
+.bg-bg      { background-color: var(--color-bg); }
+.bg-bg-alt  { background-color: var(--color-bg-alt); }
+.bg-accent  { background-color: var(--color-accent); }
+.bg-sub     { background-color: var(--color-sub); }
+.bg-error   { background-color: var(--color-error); }
+
+/* Border helpers */
+.border-main   { border-color: var(--color-main); }
+.border-sub    { border-color: var(--color-sub); }
+.border-accent { border-color: var(--color-accent); }
+
+/* Focus ring */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background: var(--color-accent);
+  color: var(--color-bg);
 }
