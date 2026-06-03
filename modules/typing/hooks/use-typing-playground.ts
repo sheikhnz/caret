@@ -8,6 +8,8 @@
 import { useEffect, useRef } from "react";
 
 import { useGlobalTypingKeys } from "@/modules/typing/hooks/use-global-typing-keys";
+import type { PlaygroundDialogsApi } from "@/modules/typing/hooks/use-playground-dialogs";
+import { usePlaygroundDialogs } from "@/modules/typing/hooks/use-playground-dialogs";
 import { useTestFocus } from "@/modules/typing/hooks/use-test-focus";
 import { useTypingTest } from "@/modules/typing/hooks/use-typing-test";
 import type { UseTypingTestReturn } from "@/modules/typing/hooks/use-typing-test";
@@ -18,6 +20,7 @@ export type TypingPlaygroundState = {
   phase: TestPhase;
   isTestFocused: boolean;
   typing: UseTypingTestReturn;
+  dialogs: PlaygroundDialogsApi;
 };
 
 export const useTypingPlayground = (): TypingPlaygroundState => {
@@ -43,7 +46,9 @@ export const useTypingPlayground = (): TypingPlaygroundState => {
     }
   }, [isTestFocused, isLoadingWords, phase, typing.focusInput, typing]);
 
+  const dialogs = usePlaygroundDialogs();
+
   useGlobalTypingKeys({ phase, typing });
 
-  return { phase, isTestFocused, typing };
+  return { phase, isTestFocused, typing, dialogs };
 };

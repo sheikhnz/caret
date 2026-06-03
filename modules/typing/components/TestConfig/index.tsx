@@ -5,8 +5,9 @@
 "use client";
 
 import { LayoutGroup, motion } from "framer-motion";
-import { useState } from "react";
 
+import { PLAYGROUND_DIALOGS } from "@/modules/typing/constants/playground-dialogs";
+import type { PlaygroundDialogsApi } from "@/modules/typing/hooks/use-playground-dialogs";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
 
 import { CustomTextModal } from "../CustomTextModal";
@@ -18,17 +19,18 @@ import { PunctuationNumbers } from "./PunctuationNumbers";
 
 type TestConfigProps = {
   disabled?: boolean;
+  dialogs: PlaygroundDialogsApi;
   onInteract?: () => void;
   onCustomTextApplied?: () => void;
 };
 
 export const TestConfig = ({
   disabled: disabledProp = false,
+  dialogs,
   onInteract,
   onCustomTextApplied,
-}: TestConfigProps = {}) => {
+}: TestConfigProps) => {
   const { config, setConfig } = useConfigStore();
-  const [customModalOpen, setCustomModalOpen] = useState(false);
   const disabled = disabledProp;
   const showPuncNum = config.mode !== "zen" && config.mode !== "custom";
   const showPresets = config.mode === "time" || config.mode === "words";
@@ -81,14 +83,16 @@ export const TestConfig = ({
           <CustomModeControls
             visible={showCustomControls}
             disabled={disabled}
-            onOpenEditor={() => interact(() => setCustomModalOpen(true))}
+            onOpenEditor={() =>
+              interact(() => dialogs.open(PLAYGROUND_DIALOGS.customText))
+            }
           />
         </motion.nav>
       </LayoutGroup>
 
       <CustomTextModal
-        open={customModalOpen}
-        onClose={() => setCustomModalOpen(false)}
+        open={dialogs.isOpen(PLAYGROUND_DIALOGS.customText)}
+        onClose={() => dialogs.close(PLAYGROUND_DIALOGS.customText)}
         onApplied={onCustomTextApplied}
       />
     </>

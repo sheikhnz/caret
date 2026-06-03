@@ -8,6 +8,11 @@ import { useCallback, useMemo, useState } from "react";
 
 import { Button, Input, Modal, Textarea } from "@/ui";
 
+import { getKeyboardShortcut } from "@/modules/typing/constants/keyboard-shortcuts";
+import type { CustomTextModalShortcutAction } from "@/modules/typing/constants/keyboard-shortcuts";
+import { ShortcutKeys } from "@/modules/typing/components/ShortcutKeys";
+import { useCustomTextModalShortcuts } from "@/modules/typing/hooks/use-custom-text-modal-shortcuts";
+
 import {
   buildSettingsFromForm,
   settingsToFormState,
@@ -122,6 +127,31 @@ export const CustomTextModalForm = ({
 
   const limitsDisabled = formMode === "simple";
 
+  const handleModalShortcut = useCallback(
+    (action: CustomTextModalShortcutAction) => {
+      switch (action.type) {
+        case "start":
+          handleSubmit();
+          break;
+        case "save":
+          handleSave();
+          break;
+        case "toggleSavedPanel":
+          setShowSaved((prev) => !prev);
+          break;
+        case "setFormMode":
+          setFormMode(action.mode);
+          break;
+        case "setPipeDelimiter":
+          setPipeDelimiter(action.pipeDelimiter);
+          break;
+      }
+    },
+    [handleSave, handleSubmit],
+  );
+
+  useCustomTextModalShortcuts({ open, onAction: handleModalShortcut });
+
   return (
     <Modal
       open={open}
@@ -135,7 +165,10 @@ export const CustomTextModalForm = ({
           className="w-full"
           onClick={handleSubmit}
         >
-          Start
+          <span className="inline-flex items-center justify-center gap-2">
+            Start
+            <ShortcutKeys shortcut={getKeyboardShortcut("customTextStart")} />
+          </span>
         </Button>
       }
     >
@@ -181,14 +214,18 @@ export const CustomTextModalForm = ({
             className="h-9 min-h-9 flex-1 px-3 py-2 text-sm"
           />
           <Button variant="secondary" size="sm" onClick={handleSave}>
-            Save
+            <span className="inline-flex items-center gap-1.5">
+              Save
+              <ShortcutKeys shortcut={getKeyboardShortcut("customTextSave")} />
+            </span>
           </Button>
           <button
             type="button"
             onClick={() => setShowSaved((prev) => !prev)}
-            className="shrink-0 text-sm text-text-muted transition-colors hover:text-text-primary"
+            className="inline-flex shrink-0 items-center gap-1.5 text-sm text-text-muted transition-colors hover:text-text-primary"
           >
             Saved ({savedNames.length})
+            <ShortcutKeys shortcut={getKeyboardShortcut("customTextSavedPanel")} />
           </button>
         </div>
 

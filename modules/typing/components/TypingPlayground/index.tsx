@@ -15,7 +15,7 @@ type TypingPlaygroundProps = {
 };
 
 export const TypingPlayground = ({ playground }: TypingPlaygroundProps) => {
-  const { phase, isTestFocused, typing } = playground;
+  const { phase, isTestFocused, typing, dialogs } = playground;
 
   return (
     <>
@@ -40,6 +40,7 @@ export const TypingPlayground = ({ playground }: TypingPlaygroundProps) => {
             >
               <TestConfig
                 disabled={isTestFocused}
+                dialogs={dialogs}
                 onCustomTextApplied={() => {
                   void typing.restart(false);
                 }}
