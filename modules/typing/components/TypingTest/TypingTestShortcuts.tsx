@@ -12,6 +12,7 @@ type TypingTestShortcutsProps = {
   mode: TestMode;
   phase: TestPhase;
   isTestFocused: boolean;
+  onRestart: () => void;
   onBailOut: () => void;
   onOpenShortcutsHelp: () => void;
 };
@@ -20,6 +21,7 @@ export const TypingTestShortcuts = ({
   mode,
   phase,
   isTestFocused,
+  onRestart,
   onBailOut,
   onOpenShortcutsHelp,
 }: TypingTestShortcutsProps) => {
@@ -35,7 +37,16 @@ export const TypingTestShortcuts = ({
       }}
     >
       <ShortcutKeys shortcut={restartShortcut} />
-      <span>{restartShortcut.label}</span>
+      <button
+        type="button"
+        className="text-text-muted cursor-pointer transition-colors hover:text-text-primary hover:underline"
+        onClick={(e) => {
+          e.stopPropagation();
+          onRestart();
+        }}
+      >
+        {restartShortcut.label}
+      </button>
 
       {phase === "active" && (
         <>

@@ -27,9 +27,9 @@ export const KEYBOARD_SHORTCUTS = {
   openShortcutsHelp: {
     id: "open-shortcuts-help",
     label: "Keyboard shortcuts",
-    displayKeys: ["?"],
+    displayKeys: ["F9"],
     helpSection: "playground",
-    helpNote: "Opens this reference.",
+    helpNote: "Works anytime, including during a test.",
   },
   restart: {
     id: "restart",
@@ -174,10 +174,10 @@ export const isBackspaceShortcut = (event: KeyboardEvent): boolean =>
 export const isTypingCharacter = (event: KeyboardEvent): boolean =>
   event.key.length === 1 && !hasPrimaryModifier(event);
 
-/** Open the shortcuts help dialog (?). */
+/** Open the shortcuts help dialog (F9). */
 export const isOpenShortcutsHelpShortcut = (event: KeyboardEvent): boolean => {
   if (hasPrimaryModifier(event)) return false;
-  return event.key === "?";
+  return event.key === "F9";
 };
 
 /** Prevent browser defaults for keys handled by the hidden typing input. */
@@ -188,6 +188,7 @@ export const shouldPreventDefaultInTypingInput = (
   isRestartShortcut(event, mode) ||
   isBailOutShortcut(event) ||
   isBackspaceShortcut(event) ||
+  isOpenShortcutsHelpShortcut(event) ||
   isTypingCharacter(event);
 
 /** Keys replayed by the document listener when the typing input is not focused. */

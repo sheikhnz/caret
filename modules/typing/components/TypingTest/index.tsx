@@ -36,8 +36,14 @@ export const TypingTest = ({
 }: TypingTestProps) => {
   const store = useTypingTestView();
   const { config } = useConfigStore();
-  const { inputRef, wordsContainerRef, handleKeyDown, bailOut, focusInput } =
-    typing;
+  const {
+    inputRef,
+    wordsContainerRef,
+    handleKeyDown,
+    restart,
+    bailOut,
+    focusInput,
+  } = typing;
 
   const isZenMode = config.mode === "zen";
   const renderedWords = useWordsRenderer({
@@ -121,6 +127,9 @@ export const TypingTest = ({
         mode={config.mode}
         phase={store.phase}
         isTestFocused={isTestFocused}
+        onRestart={() => {
+          void restart(false);
+        }}
         onBailOut={bailOut}
         onOpenShortcutsHelp={onOpenShortcutsHelp}
       />

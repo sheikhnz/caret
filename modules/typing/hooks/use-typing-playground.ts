@@ -50,7 +50,7 @@ export const useTypingPlayground = (): TypingPlaygroundState => {
 
   const dialogs = usePlaygroundDialogs();
 
-  useShortcutsHelpKey({ isTestFocused, dialogs });
+  useShortcutsHelpKey({ dialogs });
 
   useGlobalTypingKeys({ phase, typing });
 

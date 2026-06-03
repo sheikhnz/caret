@@ -7,6 +7,7 @@
 import { Modal } from "@/ui";
 
 import { listShortcutHelpGroups } from "@/modules/typing/constants/shortcut-help";
+import { KEYBOARD_SHORTCUTS } from "@/modules/typing/constants/keyboard-shortcuts";
 import { ShortcutKeys } from "@/modules/typing/components/ShortcutKeys";
 
 const SHORTCUTS_HELP_TITLE_ID = "shortcuts-help-title";
@@ -31,11 +32,8 @@ export const ShortcutsHelpModal = ({
       className="max-w-md"
     >
       <p className="text-sm text-text-muted">
-        Press{" "}
-        <kbd className="rounded border border-border-subtle bg-surface px-1.5 py-0.5 font-sans text-xs">
-          ?
-        </kbd>{" "}
-        anytime the word area is not focused to open or close this panel.
+        Press <ShortcutKeys shortcut={KEYBOARD_SHORTCUTS.openShortcutsHelp} />{" "}
+        anytime to open or close this panel.
       </p>
 
       <div className="flex flex-col gap-6">

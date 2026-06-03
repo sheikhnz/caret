@@ -1,5 +1,5 @@
 /**
- * Opens the shortcuts help dialog with ? when the playground is idle.
+ * Opens the shortcuts help dialog with F9.
  */
 
 "use client";
@@ -9,21 +9,18 @@ import { useEffect } from "react";
 import { isOpenShortcutsHelpShortcut } from "@/modules/typing/constants/keyboard-shortcuts";
 import { PLAYGROUND_DIALOGS } from "@/modules/typing/constants/playground-dialogs";
 import type { PlaygroundDialogsApi } from "@/modules/typing/hooks/use-playground-dialogs";
-import { shouldDeferGlobalTypingCapture } from "@/modules/typing/utils/keyboard";
+import { shouldDeferPlaygroundShortcuts } from "@/modules/typing/utils/keyboard";
 
 type UseShortcutsHelpKeyParams = {
-  isTestFocused: boolean;
   dialogs: PlaygroundDialogsApi;
 };
 
 export const useShortcutsHelpKey = ({
-  isTestFocused,
   dialogs,
 }: UseShortcutsHelpKeyParams): void => {
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (!isOpenShortcutsHelpShortcut(event)) return;
-      if (isTestFocused) return;
 
       const shortcutsHelpOpen = dialogs.isOpen(
         PLAYGROUND_DIALOGS.shortcutsHelp,
@@ -36,7 +33,7 @@ export const useShortcutsHelpKey = ({
         return;
       }
 
-      if (shouldDeferGlobalTypingCapture(document.activeElement)) return;
+      if (shouldDeferPlaygroundShortcuts(document.activeElement)) return;
 
       event.preventDefault();
       event.stopPropagation();
@@ -45,5 +42,5 @@ export const useShortcutsHelpKey = ({
 
     document.addEventListener("keydown", onKeyDown, true);
     return () => document.removeEventListener("keydown", onKeyDown, true);
-  }, [isTestFocused, dialogs]);
+  }, [dialogs]);
 };
