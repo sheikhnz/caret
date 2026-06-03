@@ -32,6 +32,13 @@ export const KEYBOARD_SHORTCUTS = {
     helpSection: "playground",
     helpNote: "Works anytime, including during a test.",
   },
+  openSettings: {
+    id: "open-settings",
+    label: "Settings",
+    displayKeys: ["F10"],
+    helpSection: "playground",
+    helpNote: "Works anytime, including during a test.",
+  },
   restart: {
     id: "restart",
     label: "Restart test",
@@ -209,6 +216,12 @@ export const isOpenShortcutsHelpShortcut = (event: KeyboardEvent): boolean => {
   return event.key === "F9";
 };
 
+/** Open the settings dialog (F10). */
+export const isOpenSettingsShortcut = (event: KeyboardEvent): boolean => {
+  if (hasPrimaryModifier(event)) return false;
+  return event.key === "F10";
+};
+
 /** Prevent browser defaults for keys handled by the hidden typing input. */
 export const shouldPreventDefaultInTypingInput = (
   event: KeyboardEvent,
@@ -218,6 +231,7 @@ export const shouldPreventDefaultInTypingInput = (
   isBailOutShortcut(event) ||
   isBackspaceShortcut(event) ||
   isOpenShortcutsHelpShortcut(event) ||
+  isOpenSettingsShortcut(event) ||
   isTypingCharacter(event);
 
 /** Keys replayed by the document listener when the typing input is not focused. */

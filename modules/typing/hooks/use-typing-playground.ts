@@ -11,6 +11,7 @@ import { useGlobalTypingKeys } from "@/modules/typing/hooks/use-global-typing-ke
 import { useResultsShortcuts } from "@/modules/typing/hooks/use-results-shortcuts";
 import type { PlaygroundDialogsApi } from "@/modules/typing/hooks/use-playground-dialogs";
 import { usePlaygroundDialogs } from "@/modules/typing/hooks/use-playground-dialogs";
+import { useSettingsKey } from "@/modules/typing/hooks/use-settings-key";
 import { useShortcutsHelpKey } from "@/modules/typing/hooks/use-shortcuts-help-key";
 import { useTestFocus } from "@/modules/typing/hooks/use-test-focus";
 import { useTypingTest } from "@/modules/typing/hooks/use-typing-test";
@@ -52,6 +53,7 @@ export const useTypingPlayground = (): TypingPlaygroundState => {
   const dialogs = usePlaygroundDialogs();
 
   useShortcutsHelpKey({ dialogs });
+  useSettingsKey({ dialogs });
 
   useGlobalTypingKeys({ phase, typing });
   useResultsShortcuts({ phase, restart: typing.restart });

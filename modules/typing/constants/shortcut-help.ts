@@ -43,7 +43,8 @@ export const SHORTCUT_HELP_SECTIONS: readonly ShortcutHelpSectionMeta[] = [
   {
     id: "dialogs",
     title: "Dialogs",
-    description: "While any modal (custom text, shortcuts help, etc.) is open.",
+    description:
+      "While any modal (custom text, shortcuts help, settings, etc.) is open.",
   },
 ] as const;
 
