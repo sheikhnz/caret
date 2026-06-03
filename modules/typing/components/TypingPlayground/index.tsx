@@ -5,9 +5,12 @@
 
 "use client";
 
+import { PlaygroundModals } from "@/modules/typing/components/PlaygroundModals";
+import { handlePlaygroundModalAction } from "@/modules/typing/components/PlaygroundModals/handle-playground-modal-action";
 import { Results } from "@/modules/typing/components/Results";
 import { TestConfig } from "@/modules/typing/components/TestConfig";
 import { TypingTest } from "@/modules/typing/components/TypingTest";
+import { PLAYGROUND_DIALOGS } from "@/modules/typing/constants/playground-dialogs";
 import type { TypingPlaygroundState } from "@/modules/typing/hooks/use-typing-playground";
 
 type TypingPlaygroundProps = {
@@ -19,6 +22,15 @@ export const TypingPlayground = ({ playground }: TypingPlaygroundProps) => {
 
   return (
     <>
+      <PlaygroundModals
+        dialogs={dialogs}
+        onModalAction={(action) => {
+          handlePlaygroundModalAction(action, {
+            restartTest: typing.restart,
+          });
+        }}
+      />
+
       {phase === "finished" ? (
         <Results
           onRestart={() => {
@@ -38,17 +50,17 @@ export const TypingPlayground = ({ playground }: TypingPlaygroundProps) => {
                 pointerEvents: isTestFocused ? "none" : "auto",
               }}
             >
-              <TestConfig
-                disabled={isTestFocused}
-                dialogs={dialogs}
-                onCustomTextApplied={() => {
-                  void typing.restart(false);
-                }}
-              />
+              <TestConfig disabled={isTestFocused} dialogs={dialogs} />
             </div>
           </div>
 
-          <TypingTest typing={typing} isTestFocused={isTestFocused} />
+          <TypingTest
+            typing={typing}
+            isTestFocused={isTestFocused}
+            onOpenShortcutsHelp={() =>
+              dialogs.open(PLAYGROUND_DIALOGS.shortcutsHelp)
+            }
+          />
         </div>
       )}
     </>

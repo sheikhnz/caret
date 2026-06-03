@@ -5,6 +5,7 @@
 
 export const PLAYGROUND_DIALOGS = {
   customText: "customText",
+  shortcutsHelp: "shortcutsHelp",
   settings: "settings",
 } as const;
 

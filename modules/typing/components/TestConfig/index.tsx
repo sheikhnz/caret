@@ -10,7 +10,6 @@ import { PLAYGROUND_DIALOGS } from "@/modules/typing/constants/playground-dialog
 import type { PlaygroundDialogsApi } from "@/modules/typing/hooks/use-playground-dialogs";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
 
-import { CustomTextModal } from "../CustomTextModal";
 import { CustomModeControls } from "./CustomModeControls";
 import { LAYOUT_TRANSITION } from "./constants";
 import { ModePresets } from "./ModePresets";
@@ -21,14 +20,12 @@ type TestConfigProps = {
   disabled?: boolean;
   dialogs: PlaygroundDialogsApi;
   onInteract?: () => void;
-  onCustomTextApplied?: () => void;
 };
 
 export const TestConfig = ({
   disabled: disabledProp = false,
   dialogs,
   onInteract,
-  onCustomTextApplied,
 }: TestConfigProps) => {
   const { config, setConfig } = useConfigStore();
   const disabled = disabledProp;
@@ -42,8 +39,7 @@ export const TestConfig = ({
   };
 
   return (
-    <>
-      <LayoutGroup id="test-config">
+    <LayoutGroup id="test-config">
         <motion.nav
           layout
           className="relative mx-auto hidden w-max justify-center text-[0.875rem] md:flex"
@@ -88,13 +84,6 @@ export const TestConfig = ({
             }
           />
         </motion.nav>
-      </LayoutGroup>
-
-      <CustomTextModal
-        open={dialogs.isOpen(PLAYGROUND_DIALOGS.customText)}
-        onClose={() => dialogs.close(PLAYGROUND_DIALOGS.customText)}
-        onApplied={onCustomTextApplied}
-      />
-    </>
+    </LayoutGroup>
   );
 };

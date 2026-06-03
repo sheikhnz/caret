@@ -13,6 +13,7 @@ type TypingTestShortcutsProps = {
   phase: TestPhase;
   isTestFocused: boolean;
   onBailOut: () => void;
+  onOpenShortcutsHelp: () => void;
 };
 
 export const TypingTestShortcuts = ({
@@ -20,6 +21,7 @@ export const TypingTestShortcuts = ({
   phase,
   isTestFocused,
   onBailOut,
+  onOpenShortcutsHelp,
 }: TypingTestShortcutsProps) => {
   const restartShortcut =
     mode === "zen" ? KEYBOARD_SHORTCUTS.restartZen : KEYBOARD_SHORTCUTS.restart;
@@ -51,6 +53,19 @@ export const TypingTestShortcuts = ({
           </button>
         </>
       )}
+
+      <Separator vertical className="mx-1 h-4" />
+      <ShortcutKeys shortcut={KEYBOARD_SHORTCUTS.openShortcutsHelp} />
+      <button
+        type="button"
+        className="text-text-muted cursor-pointer transition-colors hover:text-text-primary hover:underline"
+        onClick={(e) => {
+          e.stopPropagation();
+          onOpenShortcutsHelp();
+        }}
+      >
+        All shortcuts
+      </button>
     </div>
   );
 };

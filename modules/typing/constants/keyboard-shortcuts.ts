@@ -5,88 +5,122 @@
 import type { TestMode } from "../types/config";
 import type { CustomTextFormMode } from "../custom-text/form-state";
 
+export type ShortcutHelpSectionId =
+  | "playground"
+  | "test"
+  | "customText"
+  | "dialogs";
+
 export type ShortcutDefinition = {
   id: string;
   label: string;
   displayKeys: readonly string[];
   /** Separator shown between display keys in the UI (e.g. "/" or "+"). */
   keySeparator?: string;
+  /** Where this shortcut appears in the help dialog. */
+  helpSection: ShortcutHelpSectionId;
+  /** Extra context shown in the help dialog. */
+  helpNote?: string;
 };
 
 export const KEYBOARD_SHORTCUTS = {
+  openShortcutsHelp: {
+    id: "open-shortcuts-help",
+    label: "Keyboard shortcuts",
+    displayKeys: ["?"],
+    helpSection: "playground",
+    helpNote: "Opens this reference.",
+  },
   restart: {
     id: "restart",
-    label: "Restart",
+    label: "Restart test",
     displayKeys: ["Esc", "Tab"],
     keySeparator: "/",
+    helpSection: "test",
+    helpNote: "Tab does not restart in Zen mode — use Esc there.",
   },
   restartZen: {
     id: "restart-zen",
-    label: "Restart",
+    label: "Restart test",
     displayKeys: ["Esc"],
+    helpSection: "test",
+    helpNote: "Zen mode only.",
   },
   bailOut: {
     id: "bail-out",
     label: "Bail out",
     displayKeys: ["Shift", "Enter"],
     keySeparator: "+",
-  },
-  closeDialog: {
-    id: "close-dialog",
-    label: "Close",
-    displayKeys: ["Esc"],
+    helpSection: "test",
+    helpNote: "Ends the test early and shows results.",
   },
   backspace: {
     id: "backspace",
     label: "Backspace",
     displayKeys: ["Backspace"],
+    helpSection: "test",
+  },
+  closeDialog: {
+    id: "close-dialog",
+    label: "Close dialog",
+    displayKeys: ["Esc"],
+    helpSection: "dialogs",
   },
   customTextStart: {
     id: "custom-text-start",
-    label: "Start",
+    label: "Start test with custom text",
     displayKeys: ["Ctrl", "Enter"],
     keySeparator: "+",
+    helpSection: "customText",
   },
   customTextSave: {
     id: "custom-text-save",
-    label: "Save",
+    label: "Save lesson",
     displayKeys: ["Ctrl", "S"],
     keySeparator: "+",
+    helpSection: "customText",
   },
   customTextSavedPanel: {
     id: "custom-text-saved-panel",
-    label: "Saved texts",
+    label: "Toggle saved texts",
     displayKeys: ["S"],
+    helpSection: "customText",
   },
   customFormSimple: {
     id: "custom-form-simple",
-    label: "Simple",
+    label: "Simple mode",
     displayKeys: ["1"],
+    helpSection: "customText",
   },
   customFormRepeat: {
     id: "custom-form-repeat",
-    label: "Repeat",
+    label: "Repeat mode",
     displayKeys: ["2"],
+    helpSection: "customText",
   },
   customFormShuffle: {
     id: "custom-form-shuffle",
-    label: "Shuffle",
+    label: "Shuffle mode",
     displayKeys: ["3"],
+    helpSection: "customText",
   },
   customFormRandom: {
     id: "custom-form-random",
-    label: "Random",
+    label: "Random mode",
     displayKeys: ["4"],
+    helpSection: "customText",
   },
   customDelimiterSpace: {
     id: "custom-delimiter-space",
     label: "Space delimiter",
     displayKeys: [","],
+    helpSection: "customText",
   },
   customDelimiterPipe: {
     id: "custom-delimiter-pipe",
     label: "Pipe delimiter",
     displayKeys: ["."],
+    helpSection: "customText",
   },
 } as const satisfies Record<string, ShortcutDefinition>;
 
@@ -139,6 +173,12 @@ export const isBackspaceShortcut = (event: KeyboardEvent): boolean =>
 
 export const isTypingCharacter = (event: KeyboardEvent): boolean =>
   event.key.length === 1 && !hasPrimaryModifier(event);
+
+/** Open the shortcuts help dialog (?). */
+export const isOpenShortcutsHelpShortcut = (event: KeyboardEvent): boolean => {
+  if (hasPrimaryModifier(event)) return false;
+  return event.key === "?";
+};
 
 /** Prevent browser defaults for keys handled by the hidden typing input. */
 export const shouldPreventDefaultInTypingInput = (
