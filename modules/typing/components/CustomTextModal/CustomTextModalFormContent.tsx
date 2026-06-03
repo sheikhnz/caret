@@ -11,7 +11,7 @@ import { Button, Input, Modal, Textarea } from "@/ui";
 import { getKeyboardShortcut } from "@/modules/typing/constants/keyboard-shortcuts";
 import type { CustomTextModalShortcutAction } from "@/modules/typing/constants/keyboard-shortcuts";
 import { ShortcutKeys } from "@/modules/typing/components/ShortcutKeys";
-import { useCustomTextModalShortcuts } from "@/modules/typing/hooks/use-custom-text-modal-shortcuts";
+import { useCustomTextModalShortcuts } from "@/modules/typing/hooks/keyboard-shortcuts";
 
 import {
   buildSettingsFromForm,

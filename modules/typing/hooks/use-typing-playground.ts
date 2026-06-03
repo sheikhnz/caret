@@ -7,12 +7,9 @@
 
 import { useEffect, useRef } from "react";
 
-import { useGlobalTypingKeys } from "@/modules/typing/hooks/use-global-typing-keys";
-import { useResultsShortcuts } from "@/modules/typing/hooks/use-results-shortcuts";
+import { usePlaygroundKeyboardShortcuts } from "@/modules/typing/hooks/keyboard-shortcuts";
 import type { PlaygroundDialogsApi } from "@/modules/typing/hooks/use-playground-dialogs";
 import { usePlaygroundDialogs } from "@/modules/typing/hooks/use-playground-dialogs";
-import { useSettingsKey } from "@/modules/typing/hooks/use-settings-key";
-import { useShortcutsHelpKey } from "@/modules/typing/hooks/use-shortcuts-help-key";
 import { useTestFocus } from "@/modules/typing/hooks/use-test-focus";
 import { useTypingTest } from "@/modules/typing/hooks/use-typing-test";
 import type { UseTypingTestReturn } from "@/modules/typing/hooks/use-typing-test";
@@ -52,11 +49,8 @@ export const useTypingPlayground = (): TypingPlaygroundState => {
 
   const dialogs = usePlaygroundDialogs();
 
-  useShortcutsHelpKey({ dialogs });
-  useSettingsKey({ dialogs });
-
-  useGlobalTypingKeys({ phase, typing });
-  useResultsShortcuts({ phase, restart: typing.restart });
+  // Keyboard shortcuts for the playground shell
+  usePlaygroundKeyboardShortcuts({ phase, typing, dialogs });
 
   return { phase, isTestFocused, typing, dialogs };
 };

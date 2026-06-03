@@ -6,8 +6,8 @@
 
 import { useEffect } from "react";
 
-import { resolveCustomTextModalShortcut } from "@/modules/typing/constants/keyboard-shortcuts";
 import type { CustomTextModalShortcutAction } from "@/modules/typing/constants/keyboard-shortcuts";
+import { resolveCustomTextModalShortcut } from "@/modules/typing/constants/keyboard-shortcuts";
 
 const isDialogFormField = (activeElement: Element | null): boolean => {
   if (!(activeElement instanceof HTMLElement)) return false;
