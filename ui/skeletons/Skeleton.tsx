@@ -13,7 +13,10 @@ type SkeletonProps = {
 
 export const Skeleton = ({ className, style }: SkeletonProps) => (
   <span
-    className={cn("tp-skeleton inline-block rounded-(--tp-radius-sm)", className)}
+    className={cn(
+      "tp-skeleton inline-block rounded-(--tp-radius-sm)",
+      className,
+    )}
     style={style}
     aria-hidden
   />

@@ -109,13 +109,13 @@ export const processChar = (data: string, ctx: InputContext): InputEvent => {
 
   const allWordsTyped = wordIndex >= targetWords.length - 1;
   if (
-    checkIfFinished(
-      wordIndex,
-      targetWords.length,
+    checkIfFinished({
       allWordsTyped,
       shouldGoToNextWord,
-      config,
-    )
+      testInput: TestInput.currentInput,
+      currentWord,
+      finishOnLastWord: ctx.finishOnLastWord,
+    })
   ) {
     return { type: "finish", correct };
   }

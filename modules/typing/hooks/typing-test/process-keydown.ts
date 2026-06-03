@@ -7,6 +7,7 @@ import {
   syncStoreFromEngine,
 } from "@/modules/typing/engine/input/sync-store";
 import { getTimedDurationSeconds } from "@/modules/typing/engine/generation/mode-helpers";
+import { shouldAppendWordsDuringTest } from "@/modules/typing/engine/generation/word-generator";
 import * as TestInput from "@/modules/typing/engine/input/test-input";
 import * as TestState from "@/modules/typing/engine/runtime/test-state";
 import * as TestStats from "@/modules/typing/engine/runtime/test-stats";
@@ -26,10 +27,10 @@ import type { TestStoreState, TypingConfig } from "./types";
 export type ProcessKeyDownDeps = {
   config: TypingConfig;
   store: TestStoreState;
-  wordsRef: React.MutableRefObject<string[]>;
-  languageRef: React.MutableRefObject<LanguageObject | null>;
-  customTextRef: React.MutableRefObject<CustomTextSettings>;
-  onTypingKeyRef: React.MutableRefObject<(() => void) | undefined>;
+  wordsRef: React.RefObject<string[]>;
+  languageRef: React.RefObject<LanguageObject | null>;
+  customTextRef: React.RefObject<CustomTextSettings>;
+  onTypingKeyRef: React.RefObject<(() => void) | undefined>;
   restart: (withSameWords?: boolean) => Promise<void>;
   onTimerTick: (elapsed: number, remaining: number | null) => void;
   finishTest: (difficultyFailed?: boolean) => void;
@@ -93,10 +94,18 @@ export const processKeyDown = (
 
   onTypingKeyRef.current?.();
 
+  const finishOnLastWord =
+    config.mode !== "zen" &&
+    !shouldAppendWordsDuringTest({
+      config,
+      customText: customTextRef.current,
+    });
+
   let inputEvent = processChar(key, {
     targetWords: wordsRef.current,
     config,
     now,
+    finishOnLastWord,
   });
 
   if (inputEvent.type === "startTest") {
@@ -116,6 +125,7 @@ export const processKeyDown = (
       targetWords: wordsRef.current,
       config,
       now,
+      finishOnLastWord,
     });
   }
 

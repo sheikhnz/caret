@@ -21,6 +21,7 @@ describe("processChar", () => {
       targetWords: ["hello"],
       config: baseConfig,
       now: 1000,
+      finishOnLastWord: true,
     });
 
     expect(event.type).toBe("startTest");
@@ -33,12 +34,58 @@ describe("processChar", () => {
       targetWords: ["hello"],
       config: baseConfig,
       now: 2000,
+      finishOnLastWord: true,
     });
 
     expect(event.type).toBe("charUpdate");
     if (event.type === "charUpdate") {
       expect(event.correct).toBe(false);
     }
+  });
+
+  it("finishes when the last character of the final word is typed correctly", () => {
+    TestState.setPhase("active");
+    TestState.setActiveWordIndex(0);
+    TestInput.setCurrentInput("hel");
+
+    const event = processChar("l", {
+      targetWords: ["hell"],
+      config: baseConfig,
+      now: 3000,
+      finishOnLastWord: true,
+    });
+
+    expect(event.type).toBe("finish");
+  });
+
+  it("does not finish until space when the last word is incomplete", () => {
+    TestState.setPhase("active");
+    TestState.setActiveWordIndex(0);
+    TestInput.setCurrentInput("hel");
+
+    const event = processChar("x", {
+      targetWords: ["hell"],
+      config: baseConfig,
+      now: 3000,
+      finishOnLastWord: true,
+    });
+
+    expect(event.type).toBe("charUpdate");
+  });
+
+  it("finishes on space after the last word even when it was typed incorrectly", () => {
+    TestState.setPhase("active");
+    TestState.setActiveWordIndex(0);
+    TestInput.setCurrentInput("helx");
+
+    const event = processChar(" ", {
+      targetWords: ["hell"],
+      config: baseConfig,
+      now: 3000,
+      finishOnLastWord: true,
+    });
+
+    expect(event.type).toBe("finish");
   });
 });
 

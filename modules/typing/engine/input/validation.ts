@@ -16,17 +16,23 @@ export const checkDifficultyFail = (
   return null;
 };
 
-export const checkIfFinished = (
-  wordIndex: number,
-  totalWords: number,
-  allWordsTyped: boolean,
-  shouldGoToNextWord: boolean,
-  config: TypingConfig,
-): boolean => {
-  if (config.mode === "zen") return false;
-  if (!shouldGoToNextWord) return false;
-  if (!allWordsTyped) return false;
-  return wordIndex >= totalWords - 1;
+export const checkIfFinished = ({
+  allWordsTyped,
+  shouldGoToNextWord,
+  testInput,
+  currentWord,
+  finishOnLastWord,
+}: {
+  allWordsTyped: boolean;
+  shouldGoToNextWord: boolean;
+  testInput: string;
+  currentWord: string;
+  finishOnLastWord: boolean;
+}): boolean => {
+  if (!finishOnLastWord || !allWordsTyped) return false;
+
+  const wordIsCorrect = testInput === currentWord;
+  return wordIsCorrect || shouldGoToNextWord;
 };
 
 export const checkMinBurstFail = (

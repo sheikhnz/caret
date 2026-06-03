@@ -23,7 +23,10 @@ export const shouldDeferPlaygroundShortcuts = (
     return true;
   }
 
-  if (tag === "INPUT" && activeElement.getAttribute("aria-label") !== "Typing input") {
+  if (
+    tag === "INPUT" &&
+    activeElement.getAttribute("aria-label") !== "Typing input"
+  ) {
     return true;
   }
 

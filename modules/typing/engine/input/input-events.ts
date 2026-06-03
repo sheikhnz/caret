@@ -10,4 +10,6 @@ export type InputContext = {
   targetWords: string[];
   config: import("../../types/config").TypingConfig;
   now: number;
+  /** False for time/zen and other modes where word completion must not end the test. */
+  finishOnLastWord: boolean;
 };
