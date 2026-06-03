@@ -24,5 +24,10 @@ export const getSoundSettings = (): SoundSettings => settings;
 export const setSoundSettings = (next: Partial<SoundSettings>): void => {
   settings = { ...settings, ...next };
   if (next.soundVolume !== undefined) void setHowlerVolume(next.soundVolume);
-  if (settings.playSoundOnClick !== "off") void ensureHowlerReady();
+  if (
+    settings.playSoundOnClick !== "off" ||
+    settings.playSoundOnError !== "off"
+  ) {
+    void ensureHowlerReady();
+  }
 };

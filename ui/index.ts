@@ -2,6 +2,7 @@ export { Badge } from "./Badge";
 export { Button } from "./Button";
 export { Card } from "./Card";
 export { Input } from "./Input";
+export { Select } from "./Select";
 export { Textarea } from "./Textarea";
 export { Kbd } from "./Kbd";
 export { Label } from "./Label";
@@ -24,6 +25,7 @@ export const UI_COMPONENTS = [
   "Card",
   "Separator",
   "Input",
+  "Select",
   "Textarea",
   "Kbd",
   "Label",

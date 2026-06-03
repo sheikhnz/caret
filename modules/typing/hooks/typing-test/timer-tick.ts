@@ -61,8 +61,7 @@ export const handleTimerTick = (
   if (
     warningBase !== null &&
     c.playTimeWarning !== "off" &&
-    remaining !== null &&
-    Math.ceil(remaining) === warningBase - parseInt(c.playTimeWarning, 10)
+    Math.floor(elapsed) === warningBase - parseInt(c.playTimeWarning, 10)
   ) {
     void playTimeWarning();
   }

@@ -8,7 +8,11 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 import { DEFAULT_CONFIG } from "@/modules/typing/constants/config-defaults";
-import type { TypingConfig } from "@/modules/typing/types/config";
+import { VALID_TIME_WARNING_VALUES } from "@/modules/typing/constants/sound-option-labels";
+import type {
+  TypingConfig,
+  PlayTimeWarning,
+} from "@/modules/typing/types/config";
 
 type ConfigStore = {
   config: TypingConfig;
@@ -20,11 +24,23 @@ type ConfigStore = {
   resetConfig: () => void;
 };
 
-const normalizeConfig = (config: TypingConfig): TypingConfig => {
-  if (config.mode === "quote") {
-    return { ...config, punctuation: false, numbers: false };
+const normalizePlayTimeWarning = (value: unknown): PlayTimeWarning => {
+  if (typeof value === "string" && VALID_TIME_WARNING_VALUES.has(value)) {
+    return value as PlayTimeWarning;
   }
-  return config;
+  return DEFAULT_CONFIG.playTimeWarning;
+};
+
+const normalizeConfig = (config: TypingConfig): TypingConfig => {
+  const normalized = {
+    ...config,
+    playTimeWarning: normalizePlayTimeWarning(config.playTimeWarning),
+  };
+
+  if (normalized.mode === "quote") {
+    return { ...normalized, punctuation: false, numbers: false };
+  }
+  return normalized;
 };
 
 export const useConfigStore = create<ConfigStore>()(

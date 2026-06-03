@@ -1,13 +1,15 @@
 /**
- * Playground settings — shell only; options will be wired in later.
+ * Playground settings — composes independent setting modules.
  */
 
 "use client";
 
-import { Modal } from "@/ui";
+import { Modal, Separator } from "@/ui";
 
 import { KEYBOARD_SHORTCUTS } from "@/modules/typing/constants/keyboard-shortcuts";
 import { ShortcutKeys } from "@/modules/typing/components/ShortcutKeys";
+
+import { SoundSettings } from "./sections/SoundSettings";
 
 const SETTINGS_MODAL_TITLE_ID = "settings-modal-title";
 
@@ -28,6 +30,9 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => (
       Press <ShortcutKeys shortcut={KEYBOARD_SHORTCUTS.openSettings} /> to open
       or close this panel.
     </p>
-    <p className="text-sm text-text-muted">More options coming soon.</p>
+
+    <Separator />
+
+    <SoundSettings />
   </Modal>
 );

@@ -67,8 +67,9 @@ const initHowler = async (): Promise<void> => {
 
 export const ensureHowlerReady = (): Promise<void> => initHowler();
 
-export const playHowlerClick = async (): Promise<void> => {
-  const { playSoundOnClick, soundVolume } = getSoundSettings();
+const ensureClickBundleLoaded = async (
+  playSoundOnClick: PlaySoundOnClick,
+): Promise<void> => {
   if (
     playSoundOnClick === "off" ||
     playSoundOnClick === undefined ||
@@ -78,6 +79,30 @@ export const playHowlerClick = async (): Promise<void> => {
   }
 
   await initHowler();
+
+  if (!loadedBundles.has(playSoundOnClick)) {
+    loadedBundles.add(playSoundOnClick);
+    const config = clickSoundConfig[playSoundOnClick];
+    if (config === undefined) return;
+    await Promise.all(config.flatMap(getHowl));
+  }
+};
+
+export const playHowlerClick = async (
+  soundOverride?: PlaySoundOnClick,
+): Promise<void> => {
+  const playSoundOnClick = soundOverride ?? getSoundSettings().playSoundOnClick;
+  const { soundVolume } = getSoundSettings();
+
+  if (
+    playSoundOnClick === "off" ||
+    playSoundOnClick === undefined ||
+    !(playSoundOnClick in clickSoundConfig)
+  ) {
+    return;
+  }
+
+  await ensureClickBundleLoaded(playSoundOnClick);
   await resumeHowler();
 
   const sounds = clickSoundConfig[playSoundOnClick];
@@ -90,8 +115,12 @@ export const playHowlerClick = async (): Promise<void> => {
   soundToPlay.play();
 };
 
-export const playError = async (): Promise<void> => {
-  const { playSoundOnError, soundVolume } = getSoundSettings();
+export const playError = async (
+  soundOverride?: PlaySoundOnError,
+): Promise<void> => {
+  const playSoundOnError = soundOverride ?? getSoundSettings().playSoundOnError;
+  const { soundVolume } = getSoundSettings();
+
   if (playSoundOnError === "off" || playSoundOnError === undefined) return;
   if (errorSounds === null) await initErrorSound();
   await resumeHowler();
@@ -106,8 +135,13 @@ export const playError = async (): Promise<void> => {
 };
 
 export const playTimeWarning = async (): Promise<void> => {
+  const { soundVolume } = getSoundSettings();
+
   if (timeWarning === null) await initTimeWarning();
+  await resumeHowler();
+
   const soundToPlay = timeWarning as Howl;
+  soundToPlay.volume(soundVolume);
   soundToPlay.stop();
   soundToPlay.seek(0);
   soundToPlay.play();

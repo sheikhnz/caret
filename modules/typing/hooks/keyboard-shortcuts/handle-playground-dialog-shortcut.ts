@@ -2,7 +2,10 @@ import type { PlaygroundDialogId } from "@/modules/typing/constants/playground-d
 import type { PlaygroundDialogsApi } from "@/modules/typing/hooks/use-playground-dialogs";
 import { shouldDeferPlaygroundShortcuts } from "@/modules/typing/utils/keyboard";
 
-export type PlaygroundDialogShortcutResult = "not-matched" | "deferred" | "handled";
+export type PlaygroundDialogShortcutResult =
+  | "not-matched"
+  | "deferred"
+  | "handled";
 
 type HandlePlaygroundDialogShortcutParams = {
   event: KeyboardEvent;

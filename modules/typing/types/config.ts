@@ -48,7 +48,7 @@ export type PlaySoundOnClick =
 
 export type SoundVolume = number;
 
-export type PlayTimeWarning = "off" | "5" | "10" | "15" | "20" | "30" | "60";
+export type PlayTimeWarning = "off" | "1" | "3" | "5" | "10";
 
 export type TypingConfig = {
   mode: TestMode;
