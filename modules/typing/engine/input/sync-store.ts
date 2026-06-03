@@ -6,9 +6,11 @@ import type { useTestStore } from "../../stores/test-store";
 export type TestStoreSnapshot = ReturnType<typeof useTestStore.getState>;
 
 export const syncInputSnapshot = (store: TestStoreSnapshot): void => {
-  store.setCurrentInput(TestInput.currentInput);
-  store.setWordIndex(TestState.getActiveWordIndex());
-  store.setInputHistory([...TestInput.inputHistory]);
+  store.setInputSnapshot({
+    currentInput: TestInput.currentInput,
+    wordIndex: TestState.getActiveWordIndex(),
+    inputHistory: [...TestInput.inputHistory],
+  });
 };
 
 export const syncStoreFromEngine = (

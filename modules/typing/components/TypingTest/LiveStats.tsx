@@ -9,15 +9,20 @@ import type { TypingConfig } from "../../types/config";
 
 import { formatTimerSeconds } from "../../utils/format-time";
 
+export type LiveStatsConfig = Pick<
+  TypingConfig,
+  "mode" | "time" | "words" | "showTimerProgress" | "showLiveAcc"
+>;
+
 type Props = {
   stats: LiveStatsData;
-  config: TypingConfig;
+  config: LiveStatsConfig;
   phase: "idle" | "active" | "finished";
   wordIndex: number;
   totalWords: number;
 };
 
-const getWordsOutOf = (config: TypingConfig, totalWords: number): number => {
+const getWordsOutOf = (config: LiveStatsConfig, totalWords: number): number => {
   if (config.mode === "words") return config.words;
   if (config.mode === "quote") return totalWords;
   return 0;

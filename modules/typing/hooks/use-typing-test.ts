@@ -4,7 +4,7 @@
 
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 
 import { shouldPreventDefaultInTypingInput } from "@/modules/typing/constants/keyboard-shortcuts";
 import * as TestInput from "@/modules/typing/engine/input/test-input";
@@ -44,7 +44,6 @@ export const useTypingTest = (
   const inputRef = useRef<HTMLInputElement | null>(null);
   const wordsContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const store = useTestStore();
   const { config } = useConfigStore();
   const customText = useCustomTextStore((state) => state.settings);
   const customTextRevision = useCustomTextStore((state) => state.revision);
@@ -53,11 +52,6 @@ export const useTypingTest = (
   const languageRef = useRef<LanguageObject | null>(null);
   const wordsRef = useRef<string[]>([]);
   const isInitializingRef = useRef(false);
-
-  const storeRef = useRef(store);
-  useEffect(() => {
-    storeRef.current = store;
-  });
 
   const configRef = useRef(config);
   useEffect(() => {
@@ -81,41 +75,40 @@ export const useTypingTest = (
     async (withSameWords = false) => {
       await runInitTest({
         config,
-        store,
+        store: useTestStore.getState(),
         customText: useCustomTextStore.getState().settings,
         refs: { languageRef, wordsRef, isInitializingRef },
         withSameWords,
       });
     },
-    [config, store],
+    [config],
   );
 
   const finishTest = useCallback(
     (difficultyFailed = false) => {
       runFinishTest({
         config,
-        store,
+        store: useTestStore.getState(),
         words: wordsRef.current,
         customText: customTextRef.current,
         difficultyFailed,
       });
     },
-    [config, store],
+    [config],
   );
 
   const failTest = useCallback(() => {
     runFailTest({
       config,
-      store,
+      store: useTestStore.getState(),
       words: wordsRef.current,
       customText: customTextRef.current,
     });
-  }, [config, store]);
+  }, [config]);
 
   const onTimerTick = useCallback(
     (elapsed: number, remaining: number | null) => {
       handleTimerTick(elapsed, remaining, {
-        storeRef,
         configRef,
         customTextRef,
         wordsRef,
@@ -129,13 +122,13 @@ export const useTypingTest = (
     async (withSameWords = false) => {
       await runRestartTest({
         config,
-        store,
+        store: useTestStore.getState(),
         withSameWords,
         onRestart: () => onRestartRef.current?.(),
         initTest,
       });
     },
-    [config, initTest, store],
+    [config, initTest],
   );
 
   const bailOut = useCallback(() => {
@@ -147,7 +140,7 @@ export const useTypingTest = (
     (keyboardEvent: KeyboardEvent) => {
       processKeyDown(keyboardEvent, {
         config,
-        store,
+        store: useTestStore.getState(),
         wordsRef,
         languageRef,
         customTextRef,
@@ -159,7 +152,7 @@ export const useTypingTest = (
         bailOut,
       });
     },
-    [config, store, restart, onTimerTick, finishTest, failTest, bailOut],
+    [config, restart, onTimerTick, finishTest, failTest, bailOut],
   );
 
   const handleKeyDown = useCallback(
@@ -191,9 +184,9 @@ export const useTypingTest = (
     return () => window.removeEventListener("keyup", handleKeyUp);
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!persistedStoresHydrated) {
-      store.setIsLoadingWords(true);
+      useTestStore.getState().setIsLoadingWords(true);
       return;
     }
     void initTest();

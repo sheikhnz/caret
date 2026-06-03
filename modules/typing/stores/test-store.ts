@@ -37,6 +37,11 @@ type TestStore = {
   setWordIndex: (i: number) => void;
   setCurrentInput: (v: string) => void;
   setInputHistory: (h: string[]) => void;
+  setInputSnapshot: (snapshot: {
+    currentInput: string;
+    wordIndex: number;
+    inputHistory: string[];
+  }) => void;
   setLiveStats: (stats: Partial<LiveStats>) => void;
   setResult: (result: CompletedEvent) => void;
   setIsLoadingWords: (v: boolean) => void;
@@ -73,6 +78,8 @@ export const useTestStore = create<TestStore>()((set) => ({
   setWordIndex: (wordIndex) => set({ wordIndex }),
   setCurrentInput: (currentInput) => set({ currentInput }),
   setInputHistory: (inputHistory) => set({ inputHistory }),
+  setInputSnapshot: ({ currentInput, wordIndex, inputHistory }) =>
+    set({ currentInput, wordIndex, inputHistory }),
   setLiveStats: (stats) =>
     set((state) => ({ liveStats: { ...state.liveStats, ...stats } })),
   setResult: (result) => set({ result }),

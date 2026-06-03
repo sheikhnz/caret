@@ -13,6 +13,8 @@
 
 "use client";
 
+import { memo } from "react";
+
 import type { CharStatus, RenderedWord } from "../../types/engine";
 
 /* Map char status → CSS class defined in globals.css */
@@ -28,7 +30,7 @@ type WordsDisplayProps = {
   renderedWords: RenderedWord[];
 };
 
-export const WordsDisplay = ({ renderedWords }: WordsDisplayProps) => (
+export const WordsDisplay = memo(({ renderedWords }: WordsDisplayProps) => (
   <div className="flex flex-wrap">
     {renderedWords.map((word, wi) => (
       <div
@@ -71,4 +73,6 @@ export const WordsDisplay = ({ renderedWords }: WordsDisplayProps) => (
       </div>
     ))}
   </div>
-);
+));
+
+WordsDisplay.displayName = "WordsDisplay";

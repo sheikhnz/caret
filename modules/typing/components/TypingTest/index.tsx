@@ -7,17 +7,17 @@
 import { useCallback } from "react";
 
 import type { UseTypingTestReturn } from "@/modules/typing/hooks/use-typing-test";
+import { useTypingTestView } from "@/modules/typing/hooks/use-typing-test-view";
 import { useCaretPosition } from "@/modules/typing/hooks/use-caret-position";
 import { useWordsRenderer } from "@/modules/typing/hooks/use-words-renderer";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
-import { useTestStore } from "@/modules/typing/stores/test-store";
 
 import { Caret } from "./Caret";
-import { LiveStats } from "./LiveStats";
 import {
   TYPING_CONTAINER_HEIGHT_PX,
   TYPING_FONT_SIZE_REM,
 } from "./scroll-constants";
+import { TypingTestLiveStats } from "./TypingTestLiveStats";
 import { TypingTestShortcuts } from "./TypingTestShortcuts";
 import { useWordScroll } from "./use-word-scroll";
 import { WordsDisplay } from "./WordsDisplay";
@@ -33,7 +33,7 @@ export const TypingTest = ({
   isTestFocused,
   onOpenShortcutsHelp,
 }: TypingTestProps) => {
-  const store = useTestStore();
+  const store = useTypingTestView();
   const { config } = useConfigStore();
   const { inputRef, wordsContainerRef, handleKeyDown, bailOut, focusInput } =
     typing;
@@ -53,12 +53,12 @@ export const TypingTest = ({
     wordIndex: store.wordIndex,
     currentInputLength: store.currentInput.length,
     renderedWordsLength: renderedWords.length,
-    isLoadingWords: store.isLoadingWords,
+    isLoadingWords: store.isPreparingWords,
     isZenMode,
   });
 
   const showCaret =
-    !store.isLoadingWords &&
+    !store.isPreparingWords &&
     (store.words.length > 0 || isZenMode) &&
     store.phase !== "finished";
 
@@ -75,8 +75,6 @@ export const TypingTest = ({
 
   if (store.phase === "finished") return null;
 
-  const showLiveStats = isTestFocused && config.showTimerProgress;
-
   return (
     <div
       className="flex w-full max-w-[870px] flex-col"
@@ -86,31 +84,14 @@ export const TypingTest = ({
         className="font-mono"
         style={{ fontSize: `${TYPING_FONT_SIZE_REM}rem` }}
       >
-        <div
-          aria-hidden={!showLiveStats}
-          className="pointer-events-none transition-opacity duration-125"
-          style={{
-            minHeight: "1.25em",
-            marginTop: "-1.25em",
-            marginBottom: "0.25em",
-            opacity: showLiveStats ? 1 : 0,
-          }}
-        >
-          <LiveStats
-            stats={store.liveStats}
-            config={config}
-            phase={store.phase}
-            wordIndex={store.wordIndex}
-            totalWords={store.words.length}
-          />
-        </div>
+        <TypingTestLiveStats isTestFocused={isTestFocused} />
 
         <div
           ref={wordsContainerRef}
           className="relative cursor-pointer overflow-hidden"
           style={{ height: `${TYPING_CONTAINER_HEIGHT_PX}px` }}
         >
-          {store.isLoadingWords ? (
+          {store.isPreparingWords ? (
             <div className="flex h-full items-center justify-center text-text-muted">
               <span>Loading…</span>
             </div>
@@ -146,8 +127,6 @@ export const TypingTest = ({
         type="text"
         aria-label="Typing input"
         className="sr-only"
-        value={store.currentInput}
-        onChange={() => {}}
         onKeyDown={handleKeyDown}
         autoComplete="off"
         autoCorrect="off"

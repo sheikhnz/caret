@@ -25,7 +25,8 @@ export type TypingPlaygroundState = {
 };
 
 export const useTypingPlayground = (): TypingPlaygroundState => {
-  const { phase, isLoadingWords } = useTestStore();
+  const phase = useTestStore((state) => state.phase);
+  const isLoadingWords = useTestStore((state) => state.isLoadingWords);
 
   const focusInputRef = useRef<() => void>(() => {});
   const { isTestFocused, enterFocus, exitFocus } = useTestFocus({

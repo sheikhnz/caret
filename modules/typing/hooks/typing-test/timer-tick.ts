@@ -7,13 +7,13 @@ import { getTimedDurationSeconds } from "@/modules/typing/engine/generation/mode
 import * as TestInput from "@/modules/typing/engine/input/test-input";
 import * as TestStats from "@/modules/typing/engine/runtime/test-stats";
 import { playTimeWarning } from "@/modules/typing/services/sound";
+import { useTestStore } from "@/modules/typing/stores/test-store";
 import type { CustomTextSettings } from "@/modules/typing/types/custom-text";
 import type { LanguageObject } from "@/modules/typing/types/language";
 
-import type { TestStoreState, TypingConfig } from "./types";
+import type { TypingConfig } from "./types";
 
 export type TimerTickRefs = {
-  storeRef: React.MutableRefObject<TestStoreState>;
   configRef: React.MutableRefObject<TypingConfig>;
   customTextRef: React.MutableRefObject<CustomTextSettings>;
   wordsRef: React.MutableRefObject<string[]>;
@@ -25,7 +25,7 @@ export const handleTimerTick = (
   remaining: number | null,
   refs: TimerTickRefs,
 ): void => {
-  const s = refs.storeRef.current;
+  const s = useTestStore.getState();
   const c = refs.configRef.current;
 
   const liveWpm = TestStats.getLiveWpmAndRaw(
@@ -99,7 +99,7 @@ export const handleTimerTick = (
       refs.wordsRef.current = [...refs.wordsRef.current, word];
       const lang = refs.languageRef.current;
       if (lang) {
-        refs.storeRef.current.setWords(refs.wordsRef.current, lang);
+        useTestStore.getState().setWords(refs.wordsRef.current, lang);
       }
     })
     .catch((error) => {
