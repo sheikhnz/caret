@@ -6,6 +6,8 @@
 
 import { Badge, Button, Card, Separator } from "@/ui";
 
+import { ShortcutKeys } from "@/modules/typing/components/ShortcutKeys";
+import { KEYBOARD_SHORTCUTS } from "@/modules/typing/constants/keyboard-shortcuts";
 import { roundTo2 } from "@/modules/typing/calculations/numbers";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
 import { useTestStore } from "@/modules/typing/stores/test-store";
@@ -29,6 +31,8 @@ export const Results = ({
 
   const [correct, incorrect, extra, missed] = result.charStats;
   const testInvalid = result.testDuration < MIN_DURATION_S;
+
+  const isZenMode = config.mode === "zen";
 
   const modeLabel = getModeLabel(config.mode, config.time, config.words);
   const timeLabel = `${roundTo2(result.testDuration)}s`;
@@ -110,10 +114,22 @@ export const Results = ({
 
       <div className="flex flex-wrap justify-center gap-3">
         <Button variant="primary" size="md" onClick={onRestart}>
-          Next test
+          <span>Next test</span>
+          <ShortcutKeys shortcut={KEYBOARD_SHORTCUTS.nextTest} />
         </Button>
-        <Button variant="secondary" size="md" onClick={onRepeat}>
-          Repeat
+        <Button
+          variant="secondary"
+          size="md"
+          onClick={onRepeat}
+          disabled={isZenMode}
+          aria-label={
+            isZenMode ? "Repeat (not available in Zen mode)" : "Repeat test"
+          }
+        >
+          <span>Repeat</span>
+          {!isZenMode ? (
+            <ShortcutKeys shortcut={KEYBOARD_SHORTCUTS.repeatTest} />
+          ) : null}
         </Button>
       </div>
     </div>

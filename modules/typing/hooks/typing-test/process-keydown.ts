@@ -21,6 +21,8 @@ import { playInputSound } from "@/modules/typing/services/sound";
 import type { CustomTextSettings } from "@/modules/typing/types/custom-text";
 import type { LanguageObject } from "@/modules/typing/types/language";
 
+import { shouldDeferPlaygroundShortcuts } from "@/modules/typing/utils/keyboard";
+
 import { getSoundOptions } from "./sound-options";
 import type { TestStoreState, TypingConfig } from "./types";
 
@@ -57,6 +59,10 @@ export const processKeyDown = (
     failTest,
     bailOut,
   } = deps;
+
+  if (shouldDeferPlaygroundShortcuts(document.activeElement)) {
+    return;
+  }
 
   if (isRestartShortcut(keyboardEvent, config.mode)) {
     void restart(false);

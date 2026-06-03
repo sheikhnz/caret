@@ -8,6 +8,7 @@ import type { CustomTextFormMode } from "../custom-text/form-state";
 export type ShortcutHelpSectionId =
   | "playground"
   | "test"
+  | "results"
   | "customText"
   | "dialogs";
 
@@ -59,6 +60,21 @@ export const KEYBOARD_SHORTCUTS = {
     label: "Backspace",
     displayKeys: ["Backspace"],
     helpSection: "test",
+  },
+  nextTest: {
+    id: "next-test",
+    label: "Next test",
+    displayKeys: ["Enter", "Esc"],
+    keySeparator: "/",
+    helpSection: "results",
+  },
+  repeatTest: {
+    id: "repeat-test",
+    label: "Repeat test",
+    displayKeys: ["Shift", "Tab"],
+    keySeparator: "+",
+    helpSection: "results",
+    helpNote: "Same words as the last test. Not available in Zen mode.",
   },
   closeDialog: {
     id: "close-dialog",
@@ -160,6 +176,19 @@ export const isRestartShortcut = (
 export const isBailOutShortcut = (event: KeyboardEvent): boolean => {
   if (hasPrimaryModifier(event)) return false;
   return event.key === "Enter" && event.shiftKey;
+};
+
+/** Start a new test from the results screen. */
+export const isNextTestShortcut = (event: KeyboardEvent): boolean => {
+  if (hasPrimaryModifier(event)) return false;
+  if (event.key === "Enter" && !event.shiftKey) return true;
+  return event.key === "Escape";
+};
+
+/** Repeat the last test (same word set) from the results screen. */
+export const isRepeatTestShortcut = (event: KeyboardEvent): boolean => {
+  if (hasPrimaryModifier(event)) return false;
+  return event.key === "Tab" && event.shiftKey;
 };
 
 /** Close modal dialogs. */

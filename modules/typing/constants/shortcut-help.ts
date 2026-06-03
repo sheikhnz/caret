@@ -30,6 +30,11 @@ export const SHORTCUT_HELP_SECTIONS: readonly ShortcutHelpSectionMeta[] = [
     description: "While you are typing or the test input is focused.",
   },
   {
+    id: "results",
+    title: "Results screen",
+    description: "After a test finishes and the results view is shown.",
+  },
+  {
     id: "customText",
     title: "Custom text editor",
     description:
