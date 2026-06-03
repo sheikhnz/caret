@@ -2,6 +2,7 @@
  * Shared layout wrapper for a settings panel section.
  */
 
+import { Typography } from "antd";
 import type { ReactNode } from "react";
 
 type SettingsSectionProps = {
@@ -15,13 +16,15 @@ export const SettingsSection = ({
   description,
   children,
 }: SettingsSectionProps) => (
-  <section className="flex flex-col gap-3">
-    <div>
-      <h3 className="text-sm font-medium text-text-primary">{title}</h3>
-      {description ? (
-        <p className="mt-0.5 text-xs text-text-muted">{description}</p>
-      ) : null}
-    </div>
-    {children}
+  <section>
+    <Typography.Title level={5} className="mb-0! text-sm!">
+      {title}
+    </Typography.Title>
+    {description ? (
+      <Typography.Text type="secondary" className="text-xs">
+        {description}
+      </Typography.Text>
+    ) : null}
+    <div className="mt-3 flex flex-col gap-3">{children}</div>
   </section>
 );

@@ -1,22 +1,14 @@
 "use client";
 
-import { motion } from "framer-motion";
-
-import { cn } from "@/utils";
-import { SegmentedButton, SegmentedGroup } from "@/ui";
+import { AppToggleGroup } from "@/ui";
 
 import type { TestMode } from "@/modules/typing/types/config";
 
-import {
-  AtSign,
-  CONFIG_TRANSITION,
-  Hash,
-  TEST_CONFIG_CARD_CLASS,
-  TEST_CONFIG_SIDE_GAP,
-} from "./constants";
+import { AtSign, Hash } from "./constants";
+
+type PunctuationToggle = "punctuation" | "numbers";
 
 type PunctuationNumbersProps = {
-  visible: boolean;
   mode: TestMode;
   punctuation: boolean;
   numbers: boolean;
@@ -26,46 +18,30 @@ type PunctuationNumbersProps = {
 };
 
 export const PunctuationNumbers = ({
-  visible,
   mode,
   punctuation,
   numbers,
   disabled,
   onPunctuationChange,
   onNumbersChange,
-}: PunctuationNumbersProps) => (
-  <motion.div
-    layout
-    className="absolute top-1/2 right-full flex -translate-y-1/2 items-center overflow-hidden"
-    initial={false}
-    animate={{
-      opacity: visible ? 1 : 0,
-      width: visible ? "auto" : 0,
-      marginRight: visible ? TEST_CONFIG_SIDE_GAP : 0,
-    }}
-    transition={CONFIG_TRANSITION}
-    style={{ pointerEvents: visible ? "auto" : "none" }}
-    aria-hidden={!visible}
-  >
-    <SegmentedGroup className={cn(TEST_CONFIG_CARD_CLASS, "whitespace-nowrap")}>
-      <SegmentedButton
-        icon={AtSign}
-        size="comfortable"
-        active={punctuation}
-        disabled={disabled || mode === "quote"}
-        onClick={onPunctuationChange}
-      >
-        Punctuation
-      </SegmentedButton>
-      <SegmentedButton
-        icon={Hash}
-        size="comfortable"
-        active={numbers}
-        disabled={disabled || mode === "quote"}
-        onClick={onNumbersChange}
-      >
-        Numbers
-      </SegmentedButton>
-    </SegmentedGroup>
-  </motion.div>
-);
+}: PunctuationNumbersProps) => {
+  const toggleDisabled = disabled || mode === "quote";
+
+  return (
+    <AppToggleGroup<PunctuationToggle>
+      aria-label="Punctuation and numbers"
+      disabled={toggleDisabled}
+      options={[
+        { value: "punctuation", label: "Punctuation", icon: AtSign },
+        { value: "numbers", label: "Numbers", icon: Hash },
+      ]}
+      isActive={(value) =>
+        value === "punctuation" ? punctuation : numbers
+      }
+      onToggle={(value) => {
+        if (value === "punctuation") onPunctuationChange();
+        else onNumbersChange();
+      }}
+    />
+  );
+};

@@ -1,6 +1,8 @@
 "use client";
 
-import { SegmentedButton, SegmentedGroup } from "@/ui";
+import { Flex } from "antd";
+
+import { AppSegmented } from "@/ui";
 
 import { CUSTOM_TEXT_MODE_OPTIONS } from "@/modules/typing/custom-text/constants";
 import type { CustomTextFormMode } from "@/modules/typing/custom-text/form-state";
@@ -29,34 +31,33 @@ export const ModeDelimiterFields = ({
   onFormModeChange,
   onPipeDelimiterChange,
 }: ModeDelimiterFieldsProps) => (
-  <div className="flex flex-wrap items-center gap-2">
-    <SegmentedGroup aria-label="Mode">
-      {CUSTOM_TEXT_MODE_OPTIONS.map(({ value, label }) => (
-        <SegmentedButton
-          key={value}
-          active={formMode === value}
-          shortcutKey={getShortcutDisplayKey(FORM_MODE_SHORTCUT_IDS[value])}
-          onClick={() => onFormModeChange(value)}
-        >
-          {label}
-        </SegmentedButton>
-      ))}
-    </SegmentedGroup>
-    <SegmentedGroup aria-label="Delimiter">
-      <SegmentedButton
-        active={!pipeDelimiter}
-        shortcutKey={getShortcutDisplayKey("customDelimiterSpace")}
-        onClick={() => onPipeDelimiterChange(false)}
-      >
-        Space
-      </SegmentedButton>
-      <SegmentedButton
-        active={pipeDelimiter}
-        shortcutKey={getShortcutDisplayKey("customDelimiterPipe")}
-        onClick={() => onPipeDelimiterChange(true)}
-      >
-        Pipe
-      </SegmentedButton>
-    </SegmentedGroup>
-  </div>
+  <Flex vertical gap={12}>
+    <AppSegmented<CustomTextFormMode>
+      aria-label="Mode"
+      value={formMode}
+      onChange={onFormModeChange}
+      options={CUSTOM_TEXT_MODE_OPTIONS.map(({ value, label }) => ({
+        value,
+        label,
+        shortcutKey: getShortcutDisplayKey(FORM_MODE_SHORTCUT_IDS[value]),
+      }))}
+    />
+    <AppSegmented<"space" | "pipe">
+      aria-label="Delimiter"
+      value={pipeDelimiter ? "pipe" : "space"}
+      onChange={(value) => onPipeDelimiterChange(value === "pipe")}
+      options={[
+        {
+          value: "space",
+          label: "Space",
+          shortcutKey: getShortcutDisplayKey("customDelimiterSpace"),
+        },
+        {
+          value: "pipe",
+          label: "Pipe",
+          shortcutKey: getShortcutDisplayKey("customDelimiterPipe"),
+        },
+      ]}
+    />
+  </Flex>
 );

@@ -21,6 +21,8 @@
     "pr-preflight": "pnpm type-check && pnpm format && pnpm lint:fix && pnpm test"
   },
   "dependencies": {
+    "@ant-design/nextjs-registry": "1.3.0",
+    "antd": "6.4.3",
     "chart.js": "4.5.1",
     "clsx": "2.1.1",
     "dayjs": "1.11.21",

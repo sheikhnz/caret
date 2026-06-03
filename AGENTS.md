@@ -29,7 +29,7 @@ Match Monkeytype behavior unless this project intentionally diverges (document t
   - `@/modules/typing/engine/generation/...`
   - `@/modules/typing/engine/input/...`
   - `@/modules/typing/engine/runtime/...`
-- Import shared UI from the barrel: `@/ui` (not `@/ui/Button` unless avoiding a circular dep).
+- Import shared UI from the barrel: `@/ui` (Ant Design wrappers; not `@/ui/Button` unless avoiding a circular dep).
 - Import typing hooks from `@/modules/typing/hooks` when consuming public hook APIs.
 
 ## Module layout (`modules/typing/`)

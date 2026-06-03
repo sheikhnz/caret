@@ -1,5 +1,7 @@
 "use client";
 
+import { Button, List, Typography } from "antd";
+
 type SavedTextsPanelProps = {
   savedNames: string[];
   showSaved: boolean;
@@ -15,30 +17,37 @@ export const SavedTextsPanel = ({
 }: SavedTextsPanelProps) => {
   if (!showSaved) return null;
 
+  if (savedNames.length === 0) {
+    return (
+      <Typography.Text type="secondary" className="text-xs">
+        No saved lessons
+      </Typography.Text>
+    );
+  }
+
   return (
-    <div className="space-y-1">
-      {savedNames.length === 0 ? (
-        <p className="text-xs text-text-muted">No saved lessons</p>
-      ) : (
-        savedNames.map((name) => (
-          <div key={name} className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => onLoad(name)}
-              className="min-w-0 flex-1 truncate text-left text-sm text-text-secondary transition-colors hover:text-accent"
-            >
-              {name}
-            </button>
-            <button
-              type="button"
+    <List
+      size="small"
+      dataSource={savedNames}
+      renderItem={(name) => (
+        <List.Item
+          actions={[
+            <Button
+              key="delete"
+              type="link"
+              size="small"
+              danger
               onClick={() => onDelete(name)}
-              className="text-xs text-text-muted transition-colors hover:text-error"
             >
               Delete
-            </button>
-          </div>
-        ))
+            </Button>,
+          ]}
+        >
+          <Button type="link" className="!p-0" onClick={() => onLoad(name)}>
+            {name}
+          </Button>
+        </List.Item>
       )}
-    </div>
+    />
   );
 };

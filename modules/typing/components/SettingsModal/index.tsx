@@ -4,6 +4,8 @@
 
 "use client";
 
+import { Typography } from "antd";
+
 import { Modal, Separator } from "@/ui";
 
 import { KEYBOARD_SHORTCUTS } from "@/modules/typing/constants/keyboard-shortcuts";
@@ -24,12 +26,12 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => (
     onClose={onClose}
     title="Settings"
     titleId={SETTINGS_MODAL_TITLE_ID}
-    className="max-w-md"
+    width={448}
   >
-    <p className="text-sm text-text-muted">
+    <Typography.Paragraph type="secondary" className="!mb-0">
       Press <ShortcutKeys shortcut={KEYBOARD_SHORTCUTS.openSettings} /> to open
       or close this panel.
-    </p>
+    </Typography.Paragraph>
 
     <Separator />
 

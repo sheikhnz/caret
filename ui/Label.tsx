@@ -1,28 +1,25 @@
-import { LabelHTMLAttributes } from "react";
-import { cn } from "@/utils";
+import type { LabelHTMLAttributes } from "react";
 
-export interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
+export type LabelProps = LabelHTMLAttributes<HTMLLabelElement> & {
   required?: boolean;
-}
+};
 
-export function Label({
+export const Label = ({
   className,
   required = false,
   children,
   ...props
-}: LabelProps) {
-  return (
-    <label
-      className={cn("block text-sm font-medium text-text-primary", className)}
-      {...props}
-    >
-      {children}
-      {required && (
-        <span className="text-error" aria-hidden="true">
-          {" "}
-          *
-        </span>
-      )}
-    </label>
-  );
-}
+}: LabelProps) => (
+  <label
+    className={["block text-sm font-medium", className].filter(Boolean).join(" ")}
+    {...props}
+  >
+    {children}
+    {required ? (
+      <span className="text-(--ant-color-error)" aria-hidden>
+        {" "}
+        *
+      </span>
+    ) : null}
+  </label>
+);

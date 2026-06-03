@@ -42,7 +42,7 @@ export const TypingPlayground = ({ playground }: TypingPlaygroundProps) => {
         />
       ) : (
         <div className="flex w-full max-w-[870px] flex-col">
-          <div className="mb-8 flex min-h-11 w-full items-center justify-center overflow-hidden">
+          <div className="mb-8 flex min-h-11 w-full items-center justify-center overflow-visible px-2">
             <div
               className="transition-opacity duration-125"
               style={{
@@ -50,7 +50,11 @@ export const TypingPlayground = ({ playground }: TypingPlaygroundProps) => {
                 pointerEvents: isTestFocused ? "none" : "auto",
               }}
             >
-              <TestConfig disabled={isTestFocused} dialogs={dialogs} />
+              <TestConfig
+                disabled={isTestFocused}
+                dialogs={dialogs}
+                onInteract={typing.focusInput}
+              />
             </div>
           </div>
 

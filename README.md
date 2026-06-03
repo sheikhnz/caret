@@ -83,7 +83,7 @@ Open [http://localhost:3000](http://localhost:3000).
 ```
 app/                    # Next.js app shell (layout, page → Home)
 views/home/             # Page-level layout and footer
-ui/                     # Shared UI primitives (buttons, modal, segmented controls)
+ui/                     # Ant Design wrappers + theme (import via @/ui)
 modules/typing/         # Typing product code
   components/           # TestConfig, TypingTest, Results, CustomTextModal, …
   hooks/                # useTypingPlayground, useTypingTest, typing-test/*

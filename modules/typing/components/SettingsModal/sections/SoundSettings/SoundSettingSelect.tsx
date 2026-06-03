@@ -4,7 +4,9 @@
 
 "use client";
 
-import { Label, Select } from "@/ui";
+import { Select, Typography } from "antd";
+
+import { Label } from "@/ui";
 
 type SoundSettingOption<T extends string> = {
   value: T;
@@ -31,18 +33,16 @@ export const SoundSettingSelect = <T extends string>({
   <div className="flex flex-col gap-1.5">
     <Label htmlFor={id}>{label}</Label>
     {description ? (
-      <p className="text-xs text-text-muted">{description}</p>
+      <Typography.Text type="secondary" className="text-xs">
+        {description}
+      </Typography.Text>
     ) : null}
-    <Select
+    <Select<T>
       id={id}
       value={value}
-      onChange={(event) => onChange(event.target.value as T)}
-    >
-      {options.map((option) => (
-        <option key={option.value} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </Select>
+      options={options}
+      onChange={onChange}
+      style={{ width: "100%" }}
+    />
   </div>
 );

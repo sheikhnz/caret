@@ -4,6 +4,8 @@
 
 "use client";
 
+import { Flex, Typography } from "antd";
+
 import { Modal } from "@/ui";
 
 import { listShortcutHelpGroups } from "@/modules/typing/constants/shortcut-help";
@@ -29,51 +31,56 @@ export const ShortcutsHelpModal = ({
       onClose={onClose}
       title="Keyboard shortcuts"
       titleId={SHORTCUTS_HELP_TITLE_ID}
-      className="max-w-md"
+      width={448}
     >
-      <p className="text-sm text-text-muted">
+      <Typography.Paragraph type="secondary" className="mb-0!">
         Press <ShortcutKeys shortcut={KEYBOARD_SHORTCUTS.openShortcutsHelp} />{" "}
         anytime to open or close this panel.
-      </p>
+      </Typography.Paragraph>
 
-      <div className="flex flex-col gap-6">
+      <Flex vertical gap={24} className="mt-2">
         {groups.map((group) => (
           <section key={group.id} aria-labelledby={`${group.id}-heading`}>
-            <h3
+            <Typography.Title
+              level={5}
               id={`${group.id}-heading`}
-              className="text-sm font-medium text-text-primary"
+              className="mb-0! text-sm!"
             >
               {group.title}
-            </h3>
-            <p className="mt-0.5 text-xs text-text-muted">
+            </Typography.Title>
+            <Typography.Text type="secondary" className="text-xs">
               {group.description}
-            </p>
+            </Typography.Text>
 
-            <ul className="mt-3 flex flex-col gap-2.5">
+            <Flex vertical gap={10} className="mt-3">
               {group.shortcuts.map((shortcut) => (
-                <li
+                <Flex
                   key={shortcut.id}
-                  className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1"
+                  justify="space-between"
+                  align="flex-start"
+                  gap={16}
+                  wrap="wrap"
                 >
                   <div className="min-w-0 flex-1">
-                    <span className="text-sm text-text-primary">
-                      {shortcut.label}
-                    </span>
+                    <Typography.Text>{shortcut.label}</Typography.Text>
                     {shortcut.helpNote ? (
-                      <p className="text-xs text-text-muted">
+                      <Typography.Paragraph
+                        type="secondary"
+                        className="mb-0! text-xs"
+                      >
                         {shortcut.helpNote}
-                      </p>
+                      </Typography.Paragraph>
                     ) : null}
                   </div>
-                  <div className="flex shrink-0 items-center gap-1 text-sm">
+                  <Flex align="center" gap={4} className="shrink-0">
                     <ShortcutKeys shortcut={shortcut} />
-                  </div>
-                </li>
+                  </Flex>
+                </Flex>
               ))}
-            </ul>
+            </Flex>
           </section>
         ))}
-      </div>
+      </Flex>
     </Modal>
   );
 };

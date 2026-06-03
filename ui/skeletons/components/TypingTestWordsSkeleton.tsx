@@ -4,8 +4,9 @@
 
 "use client";
 
+import { Skeleton } from "antd";
+
 import { TYPING_TEST_WORDS_SKELETON_CONFIG } from "@/ui/skeletons/configs/typing-test-words";
-import { Skeleton } from "@/ui/skeletons/Skeleton";
 import { cn } from "@/utils";
 
 type TypingTestWordsSkeletonProps = {
@@ -36,11 +37,13 @@ export const TypingTestWordsSkeleton = ({
             lineHeight: "1em",
           }}
         >
-          <Skeleton
+          <Skeleton.Input
+            active
             style={{
               display: "block",
               width,
               height: "1em",
+              minWidth: width,
             }}
           />
         </div>

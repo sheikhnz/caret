@@ -1,38 +1,30 @@
-import { cn } from "@/utils";
+import { Tag } from "antd";
+import type { ReactNode } from "react";
 
 type Tone = "neutral" | "accent" | "success" | "warning" | "error";
 
-interface BadgeProps {
+type BadgeProps = {
   tone?: Tone;
   className?: string;
   id?: string;
-  children: React.ReactNode;
-}
-
-const toneClasses: Record<Tone, string> = {
-  neutral: "bg-background text-text-secondary border-border",
-  accent: "bg-accent-muted text-accent border-transparent",
-  success: "bg-success-muted text-success border-transparent",
-  warning: "bg-warning-muted text-warning border-transparent",
-  error: "bg-error-muted text-error border-transparent",
+  children: ReactNode;
 };
 
-export function Badge({
+const toneToColor: Record<Tone, string | undefined> = {
+  neutral: "default",
+  accent: "purple",
+  success: "success",
+  warning: "warning",
+  error: "error",
+};
+
+export const Badge = ({
   tone = "neutral",
   className,
   id,
   children,
-}: BadgeProps) {
-  return (
-    <span
-      id={id}
-      className={cn(
-        "inline-flex items-center rounded-sm border px-3 py-1 text-xs font-medium uppercase tracking-wide",
-        toneClasses[tone],
-        className,
-      )}
-    >
-      {children}
-    </span>
-  );
-}
+}: BadgeProps) => (
+  <Tag id={id} className={className} color={toneToColor[tone]}>
+    {children}
+  </Tag>
+);

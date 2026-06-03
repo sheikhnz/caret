@@ -6,7 +6,9 @@
 
 import { useCallback, useMemo, useState } from "react";
 
-import { Button, Input, Modal, Textarea } from "@/ui";
+import { Button, Flex, Space, Typography } from "antd";
+
+import { Button as UiButton, Input, Modal, Textarea } from "@/ui";
 
 import { getKeyboardShortcut } from "@/modules/typing/constants/keyboard-shortcuts";
 import type { CustomTextModalShortcutAction } from "@/modules/typing/constants/keyboard-shortcuts";
@@ -159,8 +161,9 @@ export const CustomTextModalFormContent = ({
       onClose={onClose}
       title="Custom Text"
       titleId={CUSTOM_TEXT_MODAL_TITLE_ID}
+      width={560}
       footer={
-        <Button
+        <UiButton
           variant="primary"
           size="md"
           className="w-full"
@@ -170,81 +173,81 @@ export const CustomTextModalFormContent = ({
             Start
             <ShortcutKeys shortcut={getKeyboardShortcut("customTextStart")} />
           </span>
-        </Button>
+        </UiButton>
       }
     >
-      <div className="space-y-1.5">
-        <Textarea
-          id="custom-text"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Paste or type custom text"
-          className="min-h-28 px-3 py-3 text-sm"
-        />
-        <p className="text-xs text-text-muted">
-          {parsedPreview.length} {pipeDelimiter ? "Sections" : "Words"}
-        </p>
-      </div>
-
-      <ModeDelimiterFields
-        formMode={formMode}
-        pipeDelimiter={pipeDelimiter}
-        onFormModeChange={setFormMode}
-        onPipeDelimiterChange={setPipeDelimiter}
-      />
-
-      <LimitFields
-        limitWord={limitWord}
-        limitTime={limitTime}
-        limitSection={limitSection}
-        limitsDisabled={limitsDisabled}
-        pipeDelimiter={pipeDelimiter}
-        onLimitWordChange={setLimitWord}
-        onLimitTimeChange={setLimitTime}
-        onLimitSectionChange={setLimitSection}
-      />
-
-      <div className="space-y-2">
-        <div className="flex items-center gap-2">
-          <Input
-            id="save-name"
-            value={saveName}
-            onChange={(e) => setSaveName(e.target.value)}
-            placeholder="Save as…"
-            aria-label="Save lesson as"
-            className="h-9 min-h-9 flex-1 px-3 py-2 text-sm"
+      <Flex vertical gap={16}>
+        <Flex vertical gap={8}>
+          <Textarea
+            id="custom-text"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="Paste or type custom text"
+            rows={5}
           />
-          <Button variant="secondary" size="sm" onClick={handleSave}>
-            <span className="inline-flex items-center gap-1.5">
-              Save
-              <ShortcutKeys shortcut={getKeyboardShortcut("customTextSave")} />
-            </span>
-          </Button>
-          <button
-            type="button"
-            onClick={() => setShowSaved((prev) => !prev)}
-            className="inline-flex shrink-0 items-center gap-1.5 text-sm text-text-muted transition-colors hover:text-text-primary"
-          >
-            Saved ({savedNames.length})
-            <ShortcutKeys
-              shortcut={getKeyboardShortcut("customTextSavedPanel")}
-            />
-          </button>
-        </div>
+          <Typography.Text type="secondary" className="text-xs">
+            {parsedPreview.length} {pipeDelimiter ? "Sections" : "Words"}
+          </Typography.Text>
+        </Flex>
 
-        <SavedTextsPanel
-          savedNames={savedNames}
-          showSaved={showSaved}
-          onLoad={handleLoadSaved}
-          onDelete={deleteText}
+        <ModeDelimiterFields
+          formMode={formMode}
+          pipeDelimiter={pipeDelimiter}
+          onFormModeChange={setFormMode}
+          onPipeDelimiterChange={setPipeDelimiter}
         />
-      </div>
 
-      {error !== null && (
-        <p className="text-xs text-error" role="alert">
-          {error}
-        </p>
-      )}
+        <LimitFields
+          limitWord={limitWord}
+          limitTime={limitTime}
+          limitSection={limitSection}
+          limitsDisabled={limitsDisabled}
+          pipeDelimiter={pipeDelimiter}
+          onLimitWordChange={setLimitWord}
+          onLimitTimeChange={setLimitTime}
+          onLimitSectionChange={setLimitSection}
+        />
+
+        <Flex vertical gap={12}>
+          <Flex align="center" gap={12} wrap="wrap">
+            <Space.Compact block className="min-w-[200px] flex-1">
+              <Input
+                id="save-name"
+                value={saveName}
+                onChange={(e) => setSaveName(e.target.value)}
+                placeholder="Save as…"
+                aria-label="Save lesson as"
+                className="min-w-0! flex-1"
+              />
+              <Button className="inline-flex items-center gap-1.5" onClick={handleSave}>
+                Save
+                <ShortcutKeys shortcut={getKeyboardShortcut("customTextSave")} />
+              </Button>
+            </Space.Compact>
+            <Button type="link" onClick={() => setShowSaved((prev) => !prev)}>
+              <Flex align="center" gap={6}>
+                Saved ({savedNames.length})
+                <ShortcutKeys
+                  shortcut={getKeyboardShortcut("customTextSavedPanel")}
+                />
+              </Flex>
+            </Button>
+          </Flex>
+
+          <SavedTextsPanel
+            savedNames={savedNames}
+            showSaved={showSaved}
+            onLoad={handleLoadSaved}
+            onDelete={deleteText}
+          />
+        </Flex>
+
+        {error !== null ? (
+          <Typography.Text type="danger" className="text-xs" role="alert">
+            {error}
+          </Typography.Text>
+        ) : null}
+      </Flex>
     </Modal>
   );
 };

@@ -136,20 +136,120 @@
   }
 }
 
-@keyframes tp-skeleton-pulse {
-  0%,
-  100% {
-    opacity: 0.45;
-  }
-
-  50% {
-    opacity: 0.9;
-  }
+/* One pill shell — Segmented (single-select) and CheckableTagGroup (multi-toggle) */
+.tp-config-pill.ant-segmented,
+.tp-config-pill.ant-tag-checkable-group {
+  display: inline-flex;
+  width: max-content;
+  max-width: none;
+  flex-shrink: 0;
+  background: var(--tp-surface);
+  border: 1px solid var(--tp-border-subtle);
+  padding: 2px;
 }
 
-.tp-skeleton {
-  background-color: var(--tp-border-subtle);
-  animation: tp-skeleton-pulse 1.4s ease-in-out infinite;
+.tp-config-pill.ant-segmented .ant-segmented-group {
+  display: inline-flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+.tp-config-pill.ant-segmented .ant-segmented-item,
+.tp-config-pill.ant-segmented .ant-segmented-item-label {
+  white-space: nowrap;
+}
+
+.tp-config-pill.ant-segmented
+  .ant-segmented-item:not(.ant-segmented-item-selected) {
+  color: var(--tp-text-muted);
+}
+
+.tp-config-pill.ant-segmented .ant-segmented-item-selected {
+  color: var(--tp-accent);
+}
+
+/* Action chip (e.g. Change) — not a selection, keep muted like inactive segments */
+.tp-config-pill-action.ant-segmented .ant-segmented-thumb {
+  display: none;
+}
+
+.tp-config-pill-action.ant-segmented .ant-segmented-item,
+.tp-config-pill-action.ant-segmented .ant-segmented-item-selected {
+  color: var(--tp-text-muted);
+  background: transparent;
+}
+
+.tp-config-pill-action.ant-segmented
+  .ant-segmented-item:hover:not(.ant-segmented-item-disabled) {
+  color: var(--tp-text-primary);
+}
+
+.tp-config-pill-action.ant-segmented.ant-segmented-disabled .ant-segmented-item,
+.tp-config-pill-action.ant-segmented.ant-segmented-disabled .ant-segmented-item-selected {
+  color: var(--tp-color-text-disabled, var(--ant-color-text-disabled, rgb(0 0 0 / 25%)));
+  cursor: not-allowed;
+}
+
+/* Match Segmented item sizing for multi-toggle tags */
+.tp-config-pill.ant-tag-checkable-group {
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 0;
+}
+
+.tp-config-pill.ant-tag-checkable-group .ant-tag-checkable {
+  margin: 0;
+  padding-inline: 11px;
+  min-height: 28px;
+  line-height: 28px;
+  font-size: inherit;
+  border: none;
+  border-radius: var(--tp-radius-sm);
+  background: transparent;
+  color: var(--tp-text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.tp-config-pill.ant-tag-checkable-group .ant-tag-checkable:hover:not(.ant-tag-checkable-disabled) {
+  color: var(--tp-text-primary);
+}
+
+.tp-config-pill.ant-tag-checkable-group .ant-tag-checkable-checked {
+  background: var(--tp-accent-muted);
+  color: var(--tp-accent);
+}
+
+/* Disabled — match Segmented (muted label, no accent fill, not-allowed) */
+.tp-config-pill.ant-segmented.ant-segmented-disabled .ant-segmented-item,
+.tp-config-pill.ant-segmented.ant-segmented-disabled .ant-segmented-item-selected,
+.tp-config-pill.ant-segmented .ant-segmented-item-disabled {
+  color: var(--tp-color-text-disabled, var(--ant-color-text-disabled, rgb(0 0 0 / 25%)));
+  cursor: not-allowed;
+}
+
+.tp-config-pill.ant-segmented.ant-segmented-disabled .ant-segmented-thumb {
+  background: transparent;
+  box-shadow: none;
+}
+
+.tp-config-pill.ant-tag-checkable-group.ant-tag-checkable-group-disabled
+  .ant-tag-checkable,
+.tp-config-pill.ant-tag-checkable-group.ant-tag-checkable-group-disabled
+  .ant-tag-checkable-checked,
+.tp-config-pill.ant-tag-checkable-group .ant-tag-checkable-disabled,
+.tp-config-pill.ant-tag-checkable-group
+  .ant-tag-checkable-disabled.ant-tag-checkable-checked {
+  color: var(--tp-color-text-disabled, var(--ant-color-text-disabled, rgb(0 0 0 / 25%)));
+  background: transparent !important;
+  cursor: not-allowed;
+}
+
+.tp-config-pill.ant-tag-checkable-group.ant-tag-checkable-group-disabled
+  .ant-tag-checkable:hover,
+.tp-config-pill.ant-tag-checkable-group .ant-tag-checkable-disabled:hover {
+  color: var(--tp-color-text-disabled, var(--ant-color-text-disabled, rgb(0 0 0 / 25%)));
+  background: transparent !important;
 }
 
 @keyframes caretFlashSmooth {

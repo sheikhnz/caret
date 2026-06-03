@@ -23,7 +23,7 @@ export const LimitFields = ({
   onLimitTimeChange,
   onLimitSectionChange,
 }: LimitFieldsProps) => (
-  <div className="grid grid-cols-3 gap-2">
+  <div className="grid grid-cols-3 gap-3">
     <Input
       id="limit-word"
       type="number"
@@ -33,7 +33,6 @@ export const LimitFields = ({
       onChange={(e) => onLimitWordChange(e.target.value)}
       placeholder="Words"
       aria-label="Word limit"
-      className="h-9 min-h-9 px-3 py-2 text-sm"
     />
     <Input
       id="limit-time"
@@ -44,7 +43,6 @@ export const LimitFields = ({
       onChange={(e) => onLimitTimeChange(e.target.value)}
       placeholder="Seconds"
       aria-label="Time limit in seconds"
-      className="h-9 min-h-9 px-3 py-2 text-sm"
     />
     <Input
       id="limit-section"
@@ -55,7 +53,6 @@ export const LimitFields = ({
       onChange={(e) => onLimitSectionChange(e.target.value)}
       placeholder="Sections"
       aria-label="Section limit"
-      className="h-9 min-h-9 px-3 py-2 text-sm"
     />
   </div>
 );

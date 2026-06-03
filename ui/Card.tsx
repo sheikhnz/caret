@@ -1,24 +1,34 @@
-import { cn } from "@/utils";
+import { Card as AntCard } from "antd";
+import type { ReactNode } from "react";
 
-interface CardProps {
+type CardProps = {
   elevated?: boolean;
   className?: string;
   id?: string;
-  children: React.ReactNode;
-}
+  children: ReactNode;
+};
 
-export function Card({ elevated = false, className, id, children }: CardProps) {
-  return (
-    <div
-      id={id}
-      className={cn(
-        "rounded-md border border-border-subtle bg-surface p-5 md:p-6",
-        elevated &&
-          "border-border bg-surface-elevated shadow-(--tp-shadow-elevated)",
-        className,
-      )}
-    >
-      {children}
-    </div>
-  );
-}
+export const Card = ({
+  elevated = false,
+  className,
+  id,
+  children,
+}: CardProps) => (
+  <AntCard
+    id={id}
+    className={className}
+    variant={elevated ? "outlined" : "borderless"}
+    styles={
+      elevated
+        ? {
+            root: {
+              boxShadow: "var(--tp-shadow-elevated)",
+              borderColor: "var(--tp-border)",
+            },
+          }
+        : undefined
+    }
+  >
+    {children}
+  </AntCard>
+);
