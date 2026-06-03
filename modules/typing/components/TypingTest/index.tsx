@@ -11,6 +11,7 @@ import { useTypingTestView } from "@/modules/typing/hooks/use-typing-test-view";
 import { useCaretPosition } from "@/modules/typing/hooks/use-caret-position";
 import { useWordsRenderer } from "@/modules/typing/hooks/use-words-renderer";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
+import { SkeletonLoader, SKELETON_IDS } from "@/ui";
 
 import { Caret } from "./Caret";
 import {
@@ -92,9 +93,11 @@ export const TypingTest = ({
           style={{ height: `${TYPING_CONTAINER_HEIGHT_PX}px` }}
         >
           {store.isPreparingWords ? (
-            <div className="flex h-full items-center justify-center text-text-muted">
-              <span>Loading…</span>
-            </div>
+            <SkeletonLoader
+              id={SKELETON_IDS.typingTestWords}
+              className="h-full"
+              label="Loading words"
+            />
           ) : (
             <div
               ref={scrollWrapperRef}

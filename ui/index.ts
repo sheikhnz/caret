@@ -9,6 +9,14 @@ export { Modal } from "./Modal";
 export { SegmentedButton } from "./SegmentedButton";
 export { SegmentedGroup, SEGMENTED_GROUP_CLASS } from "./SegmentedGroup";
 export { Separator } from "./Separator";
+export {
+  Skeleton,
+  SkeletonLoader,
+  SKELETON_IDS,
+  SKELETON_REGISTRY,
+  isSkeletonId,
+  type SkeletonId,
+} from "./skeletons";
 
 export const UI_COMPONENTS = [
   "Badge",

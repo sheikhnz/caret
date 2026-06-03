@@ -126,6 +126,22 @@
   }
 }
 
+@keyframes tp-skeleton-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+
+  50% {
+    opacity: 0.9;
+  }
+}
+
+.tp-skeleton {
+  background-color: var(--tp-border-subtle);
+  animation: tp-skeleton-pulse 1.4s ease-in-out infinite;
+}
+
 @keyframes caretFlashSmooth {
   0%,
   100% {
