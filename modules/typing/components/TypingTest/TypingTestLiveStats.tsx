@@ -5,6 +5,7 @@
 "use client";
 
 import { useConfigStore } from "@/modules/typing/stores/config-store";
+import { useCustomTextStore } from "@/modules/typing/stores/custom-text-store";
 import { useTestStore } from "@/modules/typing/stores/test-store";
 import { useShallow } from "zustand/react/shallow";
 
@@ -36,6 +37,8 @@ export const TypingTestLiveStats = ({
     })),
   );
 
+  const customLimit = useCustomTextStore((state) => state.settings.limit);
+
   const showLiveStats = isTestFocused && timerConfig.showTimerProgress;
 
   return (
@@ -55,6 +58,9 @@ export const TypingTestLiveStats = ({
         phase={phase}
         wordIndex={wordIndex}
         totalWords={wordCount}
+        customLimit={
+          timerConfig.mode === "custom" ? customLimit : undefined
+        }
       />
     </div>
   );
