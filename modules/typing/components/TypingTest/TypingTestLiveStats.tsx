@@ -58,9 +58,7 @@ export const TypingTestLiveStats = ({
         phase={phase}
         wordIndex={wordIndex}
         totalWords={wordCount}
-        customLimit={
-          timerConfig.mode === "custom" ? customLimit : undefined
-        }
+        customLimit={timerConfig.mode === "custom" ? customLimit : undefined}
       />
     </div>
   );

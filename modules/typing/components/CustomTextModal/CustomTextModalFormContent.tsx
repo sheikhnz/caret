@@ -39,7 +39,8 @@ export const CustomTextModalFormContent = ({
   onApplied,
 }: CustomTextModalFormContentProps) => {
   const { setConfig } = useConfigStore();
-  const { savedTexts, setSettings, saveText, deleteText } = useCustomTextStore();
+  const { savedTexts, setSettings, saveText, deleteText } =
+    useCustomTextStore();
 
   const initialFormState = settingsToFormState(settings);
 
@@ -50,7 +51,9 @@ export const CustomTextModalFormContent = ({
   );
   const [limitWord, setLimitWord] = useState(initialFormState.limitWord);
   const [limitTime, setLimitTime] = useState(initialFormState.limitTime);
-  const [limitSection, setLimitSection] = useState(initialFormState.limitSection);
+  const [limitSection, setLimitSection] = useState(
+    initialFormState.limitSection,
+  );
   const [saveName, setSaveName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [showSaved, setShowSaved] = useState(false);
@@ -223,7 +226,9 @@ export const CustomTextModalFormContent = ({
             className="inline-flex shrink-0 items-center gap-1.5 text-sm text-text-muted transition-colors hover:text-text-primary"
           >
             Saved ({savedNames.length})
-            <ShortcutKeys shortcut={getKeyboardShortcut("customTextSavedPanel")} />
+            <ShortcutKeys
+              shortcut={getKeyboardShortcut("customTextSavedPanel")}
+            />
           </button>
         </div>
 

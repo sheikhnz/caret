@@ -11,7 +11,10 @@ import {
   type LiveStatsDisplayInput,
 } from "@/modules/typing/calculations/live-stats-display";
 
-export type { LiveStatsDisplayInput, LiveStatsTimerConfig } from "@/modules/typing/calculations/live-stats-display";
+export type {
+  LiveStatsDisplayInput,
+  LiveStatsTimerConfig,
+} from "@/modules/typing/calculations/live-stats-display";
 
 type LiveStatsProps = LiveStatsDisplayInput;
 

@@ -31,7 +31,10 @@ export const ShortcutsHelpModal = ({
       className="max-w-md"
     >
       <p className="text-sm text-text-muted">
-        Press <kbd className="rounded border border-border-subtle bg-surface px-1.5 py-0.5 font-sans text-xs">?</kbd>{" "}
+        Press{" "}
+        <kbd className="rounded border border-border-subtle bg-surface px-1.5 py-0.5 font-sans text-xs">
+          ?
+        </kbd>{" "}
         anytime the word area is not focused to open or close this panel.
       </p>
 
@@ -44,7 +47,9 @@ export const ShortcutsHelpModal = ({
             >
               {group.title}
             </h3>
-            <p className="mt-0.5 text-xs text-text-muted">{group.description}</p>
+            <p className="mt-0.5 text-xs text-text-muted">
+              {group.description}
+            </p>
 
             <ul className="mt-3 flex flex-col gap-2.5">
               {group.shortcuts.map((shortcut) => (
@@ -57,7 +62,9 @@ export const ShortcutsHelpModal = ({
                       {shortcut.label}
                     </span>
                     {shortcut.helpNote ? (
-                      <p className="text-xs text-text-muted">{shortcut.helpNote}</p>
+                      <p className="text-xs text-text-muted">
+                        {shortcut.helpNote}
+                      </p>
                     ) : null}
                   </div>
                   <div className="flex shrink-0 items-center gap-1 text-sm">

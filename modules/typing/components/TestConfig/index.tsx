@@ -40,50 +40,50 @@ export const TestConfig = ({
 
   return (
     <LayoutGroup id="test-config">
-        <motion.nav
-          layout
-          className="relative mx-auto hidden w-max justify-center text-[0.875rem] md:flex"
-          aria-label="Test configuration"
-          transition={LAYOUT_TRANSITION}
-        >
-          <ModeSelector
-            activeMode={config.mode}
-            disabled={disabled}
-            onModeChange={(mode) => interact(() => setConfig("mode", mode))}
-          />
+      <motion.nav
+        layout
+        className="relative mx-auto hidden w-max justify-center text-[0.875rem] md:flex"
+        aria-label="Test configuration"
+        transition={LAYOUT_TRANSITION}
+      >
+        <ModeSelector
+          activeMode={config.mode}
+          disabled={disabled}
+          onModeChange={(mode) => interact(() => setConfig("mode", mode))}
+        />
 
-          <PunctuationNumbers
-            visible={showPuncNum}
-            mode={config.mode}
-            punctuation={config.punctuation}
-            numbers={config.numbers}
-            disabled={disabled}
-            onPunctuationChange={() =>
-              interact(() => setConfig("punctuation", !config.punctuation))
-            }
-            onNumbersChange={() =>
-              interact(() => setConfig("numbers", !config.numbers))
-            }
-          />
+        <PunctuationNumbers
+          visible={showPuncNum}
+          mode={config.mode}
+          punctuation={config.punctuation}
+          numbers={config.numbers}
+          disabled={disabled}
+          onPunctuationChange={() =>
+            interact(() => setConfig("punctuation", !config.punctuation))
+          }
+          onNumbersChange={() =>
+            interact(() => setConfig("numbers", !config.numbers))
+          }
+        />
 
-          <ModePresets
-            visible={showPresets}
-            mode={config.mode}
-            time={config.time}
-            words={config.words}
-            disabled={disabled}
-            onTimeChange={(time) => interact(() => setConfig("time", time))}
-            onWordsChange={(words) => interact(() => setConfig("words", words))}
-          />
+        <ModePresets
+          visible={showPresets}
+          mode={config.mode}
+          time={config.time}
+          words={config.words}
+          disabled={disabled}
+          onTimeChange={(time) => interact(() => setConfig("time", time))}
+          onWordsChange={(words) => interact(() => setConfig("words", words))}
+        />
 
-          <CustomModeControls
-            visible={showCustomControls}
-            disabled={disabled}
-            onOpenEditor={() =>
-              interact(() => dialogs.open(PLAYGROUND_DIALOGS.customText))
-            }
-          />
-        </motion.nav>
+        <CustomModeControls
+          visible={showCustomControls}
+          disabled={disabled}
+          onOpenEditor={() =>
+            interact(() => dialogs.open(PLAYGROUND_DIALOGS.customText))
+          }
+        />
+      </motion.nav>
     </LayoutGroup>
   );
 };
