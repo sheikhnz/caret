@@ -33,8 +33,9 @@
   --tp-focus-offset: 2px;
   --tp-shadow-elevated:
     0 1px 2px rgb(17 17 19 / 0.04), 0 4px 12px rgb(17 17 19 / 0.06);
-  --tp-scrollbar-thumb: rgb(63 63 70 / 0.35);
-  --tp-scrollbar-thumb-hover: rgb(63 63 70 / 0.55);
+  --tp-scrollbar-size: 4px;
+  --tp-scrollbar-thumb: rgb(63 63 70 / 0.22);
+  --tp-scrollbar-thumb-hover: rgb(63 63 70 / 0.42);
 
   --tp-radius-sm: 2px;
   --tp-radius-md: 4px;
@@ -73,8 +74,8 @@
     --tp-focus-ring: #818cf8;
     --tp-shadow-elevated:
       0 1px 2px rgb(0 0 0 / 0.24), 0 8px 24px rgb(0 0 0 / 0.32);
-    --tp-scrollbar-thumb: rgb(161 161 170 / 0.3);
-    --tp-scrollbar-thumb-hover: rgb(161 161 170 / 0.5);
+    --tp-scrollbar-thumb: rgb(161 161 170 / 0.2);
+    --tp-scrollbar-thumb-hover: rgb(161 161 170 / 0.38);
 
     --tp-caret: var(--tp-accent);
   }
@@ -109,8 +110,8 @@
   --tp-focus-ring: #818cf8;
   --tp-shadow-elevated:
     0 1px 2px rgb(0 0 0 / 0.24), 0 8px 24px rgb(0 0 0 / 0.32);
-  --tp-scrollbar-thumb: rgb(161 161 170 / 0.3);
-  --tp-scrollbar-thumb-hover: rgb(161 161 170 / 0.5);
+  --tp-scrollbar-thumb: rgb(161 161 170 / 0.2);
+  --tp-scrollbar-thumb-hover: rgb(161 161 170 / 0.38);
 
   --tp-caret: var(--tp-accent);
 }
