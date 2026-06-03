@@ -17,6 +17,7 @@ type CustomTextStore = {
   settings: CustomTextSettings;
   savedTexts: SavedCustomText;
   revision: number;
+  hasHydrated: boolean;
   setSettings: (settings: CustomTextSettings) => void;
   saveText: (args: { name: string; text: string }) => void;
   deleteText: (name: string) => void;
@@ -29,6 +30,7 @@ export const useCustomTextStore = create<CustomTextStore>()(
       settings: DEFAULT_CUSTOM_TEXT,
       savedTexts: {},
       revision: 0,
+      hasHydrated: false,
       setSettings: (settings) =>
         set((state) => ({
           settings,
@@ -49,6 +51,15 @@ export const useCustomTextStore = create<CustomTextStore>()(
     {
       name: "typing-playground-custom-text",
       storage: createJSONStorage(() => localStorage),
+      skipHydration: true,
+      onRehydrateStorage: () => () => {
+        useCustomTextStore.setState({ hasHydrated: true });
+      },
+      partialize: (state) => ({
+        settings: state.settings,
+        savedTexts: state.savedTexts,
+        revision: state.revision,
+      }),
       merge: (persisted, current) => {
         const persistedState = persisted as
           | Partial<CustomTextStore>

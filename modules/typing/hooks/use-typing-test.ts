@@ -15,6 +15,8 @@ import { useCustomTextStore } from "@/modules/typing/stores/custom-text-store";
 import { useTestStore } from "@/modules/typing/stores/test-store";
 import type { LanguageObject } from "@/modules/typing/types/language";
 
+import { usePersistedStoresHydrated } from "@/modules/typing/hooks/use-persisted-stores-hydrated";
+
 import { runFailTest, runFinishTest } from "./typing-test/finish-test";
 import { runInitTest, runRestartTest } from "./typing-test/init-test";
 import { processKeyDown } from "./typing-test/process-keydown";
@@ -46,6 +48,7 @@ export const useTypingTest = (
   const { config } = useConfigStore();
   const customText = useCustomTextStore((state) => state.settings);
   const customTextRevision = useCustomTextStore((state) => state.revision);
+  const persistedStoresHydrated = usePersistedStoresHydrated();
 
   const languageRef = useRef<LanguageObject | null>(null);
   const wordsRef = useRef<string[]>([]);
@@ -79,7 +82,7 @@ export const useTypingTest = (
       await runInitTest({
         config,
         store,
-        customText: customTextRef.current,
+        customText: useCustomTextStore.getState().settings,
         refs: { languageRef, wordsRef, isInitializingRef },
         withSameWords,
       });
@@ -189,9 +192,14 @@ export const useTypingTest = (
   }, []);
 
   useEffect(() => {
+    if (!persistedStoresHydrated) {
+      store.setIsLoadingWords(true);
+      return;
+    }
     void initTest();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    persistedStoresHydrated,
     config.mode,
     config.time,
     config.words,

@@ -12,6 +12,7 @@ import type { TypingConfig } from "@/modules/typing/types/config";
 
 type ConfigStore = {
   config: TypingConfig;
+  hasHydrated: boolean;
   setConfig: <K extends keyof TypingConfig>(
     key: K,
     value: TypingConfig[K],
@@ -30,6 +31,7 @@ export const useConfigStore = create<ConfigStore>()(
   persist(
     (set) => ({
       config: DEFAULT_CONFIG,
+      hasHydrated: false,
       setConfig: (key, value) =>
         set((state) => ({
           config: normalizeConfig({ ...state.config, [key]: value }),
@@ -39,6 +41,11 @@ export const useConfigStore = create<ConfigStore>()(
     {
       name: "typing-playground-config",
       storage: createJSONStorage(() => localStorage),
+      skipHydration: true,
+      partialize: (state) => ({ config: state.config }),
+      onRehydrateStorage: () => () => {
+        useConfigStore.setState({ hasHydrated: true });
+      },
       merge: (persisted, current) => {
         const persistedState = persisted as Partial<ConfigStore> | undefined;
         return {
