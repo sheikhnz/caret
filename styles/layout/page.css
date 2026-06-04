@@ -1,0 +1,29 @@
+/* Page shell — plain div/main/footer (not Ant Layout; Content flex is unreliable) */
+.tp-page-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background: var(--tp-page-bg);
+}
+
+.tp-page-content {
+  display: flex;
+  flex: 1 1 0;
+  min-height: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.tp-page-footer {
+  flex-shrink: 0;
+  padding: 16px 24px;
+  text-align: center;
+  background: transparent;
+  transition: opacity 0.125s ease;
+}
+
+.tp-page-footer--dimmed {
+  opacity: 0;
+}

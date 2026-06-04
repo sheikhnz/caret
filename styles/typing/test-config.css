@@ -1,0 +1,65 @@
+/* Test config bar */
+.tp-test-config-nav {
+  position: relative;
+  display: none;
+  width: max-content;
+  max-width: 100%;
+  margin-inline: auto;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+  overflow: visible;
+  font-size: 0.875rem;
+}
+
+@media (min-width: 768px) {
+  .tp-test-config-nav {
+    display: flex;
+  }
+}
+
+.tp-mode-presets-stack {
+  position: relative;
+  display: grid;
+  width: max-content;
+}
+
+.tp-mode-presets-stack > * {
+  grid-column-start: 1;
+  grid-row-start: 1;
+}
+
+.tp-mode-presets-layer {
+  flex-shrink: 0;
+}
+
+.tp-mode-presets-layer--active {
+  opacity: 1;
+  position: relative;
+  pointer-events: auto;
+}
+
+.tp-mode-presets-layer--inactive {
+  opacity: 0;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.tp-mode-selector {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+.tp-segment-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.tp-segment-label .tp-kbd {
+  margin-left: 4px;
+  font-size: 0.65rem;
+}

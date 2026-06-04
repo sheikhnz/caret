@@ -1,0 +1,28 @@
+/* SSR-safe typing skeleton — palette vars; see ui/skeletons/README.md */
+.tp-skeleton-word-bar {
+  display: block;
+  height: 1em;
+  border-radius: var(--tp-radius-sm);
+  background: var(--tp-skeleton-from);
+}
+
+.tp-skeleton-word-bar--active {
+  background: linear-gradient(
+    90deg,
+    var(--tp-skeleton-from) 25%,
+    var(--tp-skeleton-to) 37%,
+    var(--tp-skeleton-from) 63%
+  );
+  background-size: 400% 100%;
+  animation: tp-skeleton-shimmer 1.4s ease infinite;
+}
+
+@keyframes tp-skeleton-shimmer {
+  0% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0 50%;
+  }
+}

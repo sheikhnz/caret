@@ -1,0 +1,37 @@
+.tp-live-stats {
+  display: flex;
+  margin-left: 0.25em;
+  min-height: 1.25em;
+  align-items: flex-end;
+  font-family: var(--tp-font-mono);
+  font-size: 1em;
+  line-height: 1;
+  color: var(--tp-text-muted);
+  pointer-events: none;
+  user-select: none;
+}
+
+.tp-live-stats--hidden {
+  visibility: hidden;
+}
+
+.tp-live-stats__time,
+.tp-live-stats__acc {
+  font-variant-numeric: tabular-nums;
+}
+
+.tp-live-stats__acc {
+  margin-left: 0.5em;
+}
+
+.tp-live-stats-wrapper {
+  min-height: 1.25em;
+  margin-top: -1.25em;
+  margin-bottom: 0.25em;
+  pointer-events: none;
+  transition: opacity 0.125s ease;
+}
+
+.tp-live-stats-wrapper--hidden {
+  opacity: 0;
+}

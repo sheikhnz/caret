@@ -1,0 +1,26 @@
+/* Letter status (typing test) — use tokens.css, not Ant vars (no dark fallbacks) */
+.letter-pending {
+  color: var(--tp-text-muted);
+}
+
+.letter-correct {
+  color: var(--tp-text-primary);
+}
+
+.letter-incorrect {
+  color: var(--tp-error);
+}
+
+.letter-extra {
+  color: var(--tp-error);
+  background: var(--tp-error-muted);
+  border-radius: var(--tp-radius-sm);
+}
+
+.letter-missed {
+  color: var(--tp-error);
+  opacity: 0.55;
+  text-decoration: underline;
+  text-decoration-color: var(--tp-error);
+  text-underline-offset: 0.15em;
+}

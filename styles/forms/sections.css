@@ -1,0 +1,26 @@
+.tp-form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--tp-text-primary);
+}
+
+.tp-form-label-required {
+  color: var(--tp-error);
+}
+
+/* Drawer / section headings — avoid default Title bottom margin */
+.tp-section-title.ant-typography {
+  margin-bottom: 0;
+  font-size: 14px;
+}
+
+.tp-section-lead.ant-typography {
+  margin-bottom: 0;
+}
+
+.tp-section-note.ant-typography {
+  margin-bottom: 0;
+  font-size: 12px;
+}

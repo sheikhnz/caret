@@ -1,0 +1,13 @@
+/* Shortcuts help drawer */
+.tp-shortcut-group-list {
+  margin-top: 12px;
+}
+
+.tp-shortcut-row-label {
+  min-width: 0;
+  flex: 1;
+}
+
+.tp-shortcut-row-keys {
+  flex-shrink: 0;
+}

@@ -1,0 +1,107 @@
+/* Test-config pill shell — tp tokens (CSS-first; correct before React hydrates) */
+.tp-config-pill.ant-segmented,
+.tp-config-pill.ant-tag-checkable-group {
+  display: inline-flex;
+  width: max-content;
+  max-width: none;
+  flex-shrink: 0;
+  padding: 2px;
+  background: var(--tp-color-bg-container);
+  border: 1px solid var(--tp-color-border);
+  border-radius: var(--tp-radius-md);
+}
+
+.tp-config-pill.ant-segmented .ant-segmented-group {
+  display: inline-flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+.tp-config-pill.ant-segmented .ant-segmented-item,
+.tp-config-pill.ant-segmented .ant-segmented-item-label {
+  white-space: nowrap;
+}
+
+.tp-config-pill.ant-segmented
+  .ant-segmented-item:not(.ant-segmented-item-selected) {
+  color: var(--tp-color-text-description);
+  background: transparent;
+}
+
+.tp-config-pill.ant-segmented .ant-segmented-item-selected {
+  color: var(--tp-color-text);
+  background: var(--tp-color-fill-secondary);
+}
+
+.tp-config-pill.ant-segmented .ant-segmented-thumb {
+  background: var(--tp-color-fill-secondary);
+  box-shadow: none;
+}
+
+.tp-config-pill-action.ant-segmented .ant-segmented-thumb {
+  display: none;
+}
+
+.tp-config-pill-action.ant-segmented .ant-segmented-item,
+.tp-config-pill-action.ant-segmented .ant-segmented-item-selected {
+  color: var(--tp-color-text-description);
+  background: transparent;
+}
+
+.tp-config-pill-action.ant-segmented
+  .ant-segmented-item:hover:not(.ant-segmented-item-disabled) {
+  color: var(--tp-color-text);
+}
+
+.tp-config-pill.ant-tag-checkable-group {
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 0;
+}
+
+.tp-config-pill.ant-tag-checkable-group .ant-tag-checkable {
+  margin: 0;
+  padding-inline: 11px;
+  min-height: 28px;
+  line-height: 28px;
+  font-size: inherit;
+  white-space: nowrap;
+  border: none;
+  border-radius: var(--tp-radius-sm);
+  background: transparent;
+  color: var(--tp-color-text-description);
+  cursor: pointer;
+}
+
+.tp-config-pill.ant-tag-checkable-group
+  .ant-tag-checkable:hover:not(.ant-tag-checkable-disabled) {
+  color: var(--tp-color-text);
+}
+
+.tp-config-pill.ant-tag-checkable-group .ant-tag-checkable-checked {
+  background: var(--tp-color-fill-secondary);
+  color: var(--tp-color-text);
+}
+
+.tp-config-pill.ant-segmented.ant-segmented-disabled .ant-segmented-item,
+.tp-config-pill.ant-segmented.ant-segmented-disabled
+  .ant-segmented-item-selected,
+.tp-config-pill.ant-segmented .ant-segmented-item-disabled {
+  color: var(--tp-text-disabled);
+  cursor: not-allowed;
+}
+
+.tp-config-pill.ant-segmented.ant-segmented-disabled .ant-segmented-thumb {
+  background: transparent;
+  box-shadow: none;
+}
+
+.tp-config-pill.ant-tag-checkable-group.ant-tag-checkable-group-disabled
+  .ant-tag-checkable,
+.tp-config-pill.ant-tag-checkable-group .ant-tag-checkable-disabled,
+.tp-config-pill.ant-tag-checkable-group
+  .ant-tag-checkable-disabled.ant-tag-checkable-checked {
+  color: var(--tp-text-disabled);
+  background-color: transparent;
+  cursor: not-allowed;
+}

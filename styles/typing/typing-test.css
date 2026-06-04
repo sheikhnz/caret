@@ -1,0 +1,54 @@
+/* Typing test */
+.tp-typing-mono {
+  font-family: var(--tp-font-mono);
+}
+
+/* Keep in sync with modules/typing/components/TypingTest/scroll-constants.ts */
+.tp-typing-root {
+  font-size: 2rem;
+}
+
+.tp-typing-viewport {
+  position: relative;
+  height: 144px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.tp-typing-scroll {
+  position: relative;
+  transition: transform 0.125s ease;
+}
+
+.tp-words-display {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tp-word {
+  position: relative;
+  margin: 0.25em 0.3em;
+  font-size: 1em;
+  line-height: 1em;
+  font-variant: no-common-ligatures;
+  border-bottom: 2px solid transparent;
+}
+
+.tp-word--active-error {
+  border-bottom-color: var(--tp-error);
+}
+
+.tp-letter {
+  display: inline-block;
+}
+
+@keyframes caretFlashSmooth {
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,52 @@
+/* Keyboard hint chip */
+.tp-kbd {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1em 0.45em;
+  font-family: var(--tp-font-mono);
+  font-size: 0.85em;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--tp-text-muted);
+  background: var(--tp-fill-secondary);
+  border: 1px solid var(--tp-border);
+  border-radius: var(--tp-radius-sm);
+  box-shadow: none;
+}
+
+.ant-drawer-close {
+  width: auto;
+  white-space: nowrap;
+}
+
+/* Kbd inside solid primary buttons — contrast with button label (currentColor) */
+.ant-btn-primary .tp-kbd {
+  color: inherit;
+  background: color-mix(in srgb, currentColor 14%, transparent);
+  border-color: color-mix(in srgb, currentColor 28%, transparent);
+}
+
+.tp-shortcut-keys.ant-flex {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.tp-kbd-separator.ant-typography {
+  margin: 0;
+  color: var(--tp-text-muted);
+}
+
+.tp-kbd-separator {
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
+  font-size: 0.85em;
+  line-height: 1;
+  user-select: none;
+}
+
+/* Match .tp-kbd on primary buttons — Ant typography tokens are page-themed, not button-aware */
+.ant-btn-primary .tp-kbd-separator.ant-typography {
+  color: inherit;
+  opacity: 0.55;
+}
