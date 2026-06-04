@@ -26,12 +26,11 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => (
     onClose={onClose}
     title="Settings"
     titleId={SETTINGS_MODAL_TITLE_ID}
-    width={448}
+    width={560}
   >
     <Flex vertical gap={16}>
       <Typography.Paragraph type="secondary" className="tp-section-lead">
-        Press <ShortcutKeys shortcut={KEYBOARD_SHORTCUTS.openSettings} /> to
-        open or close this panel.
+        Press <ShortcutKeys shortcut={KEYBOARD_SHORTCUTS.openSettings} /> to open or close this panel.
       </Typography.Paragraph>
 
       <Separator />

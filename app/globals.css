@@ -616,22 +616,27 @@ button:focus-visible,
   border-color: color-mix(in srgb, currentColor 28%, transparent);
 }
 
-.tp-shortcut-keys {
+.tp-shortcut-keys.ant-flex {
   display: inline-flex;
   vertical-align: middle;
+}
+
+.tp-kbd-separator.ant-typography {
+  margin: 0;
+  color: var(--tp-text-muted);
 }
 
 .tp-kbd-separator {
   display: inline-flex;
   align-items: center;
   align-self: center;
-  color: var(--tp-text-muted);
   font-size: 0.85em;
   line-height: 1;
   user-select: none;
 }
 
-.ant-btn-primary .tp-kbd-separator {
+/* Match .tp-kbd on primary buttons — Ant typography tokens are page-themed, not button-aware */
+.ant-btn-primary .tp-kbd-separator.ant-typography {
   color: inherit;
   opacity: 0.55;
 }
