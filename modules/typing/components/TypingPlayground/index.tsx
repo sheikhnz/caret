@@ -84,9 +84,7 @@ export const TypingPlayground = ({
               className={joinClassNames(
                 isolateOnFocus && "tp-pg-focus-dim",
                 !isolateOnFocus && "tp-focus-fade",
-                !isolateOnFocus &&
-                  isTestFocused &&
-                  "tp-focus-fade--dimmed",
+                !isolateOnFocus && isTestFocused && "tp-focus-fade--dimmed",
               )}
             >
               <TestConfig

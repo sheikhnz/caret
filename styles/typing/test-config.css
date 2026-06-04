@@ -1,21 +1,41 @@
-/* Test config bar */
+/* Test config bar — stable center column; sides animate in without shifting modes */
+
 .tp-test-config-nav {
-  position: relative;
   display: none;
-  width: max-content;
-  max-width: 100%;
+  width: 100%;
+  max-width: 870px;
   margin-inline: auto;
-  align-items: center;
-  justify-content: center;
-  gap: 1em;
-  overflow: visible;
   font-size: 0.875rem;
 }
 
 @media (min-width: 768px) {
   .tp-test-config-nav {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    column-gap: 1em;
+    align-items: center;
   }
+}
+
+.tp-test-config-side {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.tp-test-config-side--start {
+  justify-content: flex-end;
+}
+
+.tp-test-config-side--end {
+  justify-content: flex-start;
+}
+
+.tp-test-config-core {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .tp-mode-presets-stack {

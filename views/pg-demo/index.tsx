@@ -21,7 +21,7 @@ export const PgDemo = () => {
         </p>
       </header>
 
-      <TypingPlayground playground={playground}  />
+      <TypingPlayground playground={playground} />
 
       <section className="tp-pg-demo__block" aria-label="Tips">
         <h2 className="tp-pg-demo__subtitle">Tips</h2>

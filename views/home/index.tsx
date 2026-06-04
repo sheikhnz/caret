@@ -10,7 +10,5 @@ import { useTypingPlayground } from "@/modules/typing/hooks/use-typing-playgroun
 export const Home = () => {
   const playground = useTypingPlayground();
 
-  return (
-    <TypingPlayground playground={playground} isolateOnFocus />
-  );
+  return <TypingPlayground playground={playground} isolateOnFocus />;
 };
