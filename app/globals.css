@@ -306,7 +306,9 @@ button:focus-visible,
   min-height: 20px;
   justify-content: center;
   font-size: 14px;
+  font-weight: 400;
   color: var(--tp-text-muted);
+  opacity: 0.62;
   transition: opacity 0.125s ease;
 }
 
@@ -319,14 +321,49 @@ button:focus-visible,
   color: inherit;
 }
 
+.tp-shortcuts-bar .tp-shortcut-keys {
+  opacity: 1;
+}
+
+.tp-shortcuts-bar .tp-kbd {
+  padding: 0;
+  font-size: 0.9em;
+  font-weight: 400;
+  line-height: 1.2;
+  color: inherit;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.tp-shortcuts-bar .tp-kbd-separator.ant-typography {
+  color: inherit;
+  opacity: 0.65;
+}
+
+.tp-shortcuts-bar .ant-btn.tp-shortcuts-action {
+  padding-inline: 0;
+  min-height: auto;
+  height: auto;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.tp-shortcuts-bar .ant-btn.tp-shortcuts-action:hover {
+  color: var(--tp-text-primary);
+  background: transparent;
+}
+
 .tp-shortcuts-bar--dimmed {
   opacity: 0;
   pointer-events: none;
 }
 
 .tp-shortcuts-divider.ant-divider-vertical {
-  height: 16px;
+  height: 14px;
   margin: 0;
+  opacity: 0.55;
 }
 
 .tp-chart-fallback {
