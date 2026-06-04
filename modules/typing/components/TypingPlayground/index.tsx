@@ -8,6 +8,7 @@
 import { useCallback } from "react";
 
 import { TP_PG_FOCUS_ATTR } from "@/layout";
+import { joinClassNames } from "@/utils";
 import { PlaygroundDrawers } from "@/modules/typing/components/PlaygroundDrawers";
 import { handlePlaygroundDrawerAction } from "@/modules/typing/components/PlaygroundDrawers/handle-playground-drawer-action";
 import { Results } from "@/modules/typing/components/Results";
@@ -18,9 +19,17 @@ import type { TypingPlaygroundState } from "@/modules/typing/hooks/use-typing-pl
 
 type TypingPlaygroundProps = {
   playground: TypingPlaygroundState;
+  /**
+   * When true, typing focus hides site chrome, page siblings, and the config bar
+   * (data-tp-pg-focus + CSS). When false, only the config bar fades on focus.
+   */
+  isolateOnFocus?: boolean;
 };
 
-export const TypingPlayground = ({ playground }: TypingPlaygroundProps) => {
+export const TypingPlayground = ({
+  playground,
+  isolateOnFocus = false,
+}: TypingPlaygroundProps) => {
   const { phase, isTestFocused, typing, dialogs } = playground;
   const { restart, focusInput } = typing;
 
@@ -49,12 +58,14 @@ export const TypingPlayground = ({ playground }: TypingPlaygroundProps) => {
     dialogs.open(PLAYGROUND_DIALOGS.shortcutsHelp);
   }, [dialogs]);
 
+  const isFocusIsolateActive =
+    isolateOnFocus && isTestFocused && phase !== "finished";
+
   return (
     <div
       className="tp-playground-root"
       {...{
-        [TP_PG_FOCUS_ATTR]:
-          isTestFocused && phase !== "finished" ? true : undefined,
+        [TP_PG_FOCUS_ATTR]: isFocusIsolateActive ? true : undefined,
       }}
     >
       <PlaygroundDrawers
@@ -69,7 +80,15 @@ export const TypingPlayground = ({ playground }: TypingPlaygroundProps) => {
       ) : (
         <div className="tp-content-column">
           <div className="tp-playground-config-slot">
-            <div className="tp-pg-focus-dim">
+            <div
+              className={joinClassNames(
+                isolateOnFocus && "tp-pg-focus-dim",
+                !isolateOnFocus && "tp-focus-fade",
+                !isolateOnFocus &&
+                  isTestFocused &&
+                  "tp-focus-fade--dimmed",
+              )}
+            >
               <TestConfig
                 disabled={isTestFocused}
                 dialogs={dialogs}

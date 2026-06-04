@@ -1,6 +1,6 @@
 /**
  * Default page shell (Server Component) — same header and footer on every route.
- * Playground focus: data-tp-pg-focus hides chrome, main siblings, and .tp-pg-focus-dim (config).
+ * Playground focus isolate: opt-in via TypingPlayground isolateOnFocus (data-tp-pg-focus).
  */
 
 import type { ReactNode } from "react";

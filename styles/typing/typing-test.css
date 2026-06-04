@@ -5,6 +5,7 @@
 
 /* Keep in sync with modules/typing/components/TypingTest/scroll-constants.ts */
 .tp-typing-root {
+  width: 100%;
   font-size: 2rem;
 }
 

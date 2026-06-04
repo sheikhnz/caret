@@ -1,5 +1,6 @@
 .tp-shortcuts-bar {
   display: flex;
+  width: 100%;
   margin-top: 40px;
   min-height: 20px;
   justify-content: center;

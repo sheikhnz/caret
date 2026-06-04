@@ -65,7 +65,7 @@ Follows [Ant Design theme](https://ant.design/docs/react/customize-theme) + [CSS
 - Shortcut keys: `ShortcutKeys` + `Kbd`; inside primary buttons, `Kbd` / separators inherit contrast via `.tp-kbd` / `.tp-kbd-separator` in `globals.css`.
 - Form focus: keep rings light via `controlFocus` in `ui/theme.ts` only (do not duplicate in `globals.css`).
 - Shared layout/CSS utilities in `app/globals.css` — prefer these over inline layout styles:
-  - Page: `tp-page-shell`, `tp-page-content`, `tp-page-chrome`, `data-tp-pg-focus` (focus → hide all except `.tp-playground-root`), `tp-pg-focus-dim` (config, etc.)
+  - Page: `tp-page-shell`, `tp-page-content`, `tp-page-chrome`, `data-tp-pg-focus` (opt-in via `TypingPlayground` `isolateOnFocus`), `tp-pg-focus-dim`
   - Results: `tp-results-card`, `tp-results-top`, `tp-results-chart-col` (use Flex, not `Row` gutter inside cards)
   - Sections: `tp-section-*`, `tp-stat-card*`, `tp-shortcuts-*`
 - Results card layout: Flex only inside `tp-results-card` — Ant `Row` gutter negative margins break card padding.

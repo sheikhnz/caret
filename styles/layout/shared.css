@@ -1,12 +1,28 @@
-/* Shared content width */
+/* Shared content width — centered column (matches Monkeytype / demo copy) */
 .tp-playground-root {
   width: 100%;
   max-width: 870px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .tp-content-column {
   width: 100%;
   max-width: 870px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tp-focus-fade {
+  transition: opacity 0.125s ease;
+}
+
+.tp-focus-fade--dimmed {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .tp-playground-config-slot {
@@ -18,4 +34,12 @@
   justify-content: center;
   overflow: visible;
   padding: 0 8px;
+}
+
+/* Config fade wrappers span the column so nav + shortcuts can center */
+.tp-pg-focus-dim,
+.tp-focus-fade {
+  display: flex;
+  width: 100%;
+  justify-content: center;
 }
