@@ -35,7 +35,7 @@ export const Modal = ({
     onCancel={onClose}
     title={<span id={titleId}>{title}</span>}
     footer={footer ?? null}
-    maskClosable={false}
+    mask={{ closable: false }}
     keyboard
     destroyOnHidden
     className={className}

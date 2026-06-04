@@ -6,5 +6,5 @@ type SeparatorProps = {
 };
 
 export const Separator = ({ vertical = false, className }: SeparatorProps) => (
-  <Divider type={vertical ? "vertical" : "horizontal"} className={className} />
+  <Divider orientation={vertical ? "vertical" : "horizontal"} className={className} />
 );

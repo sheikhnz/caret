@@ -111,7 +111,9 @@ export const TypingTestShortcuts = memo(
           size={SHORTCUT_BAR_GAP}
           align="center"
           wrap
-          split={<Divider type="vertical" className="tp-shortcuts-divider" />}
+          separator={
+            <Divider orientation="vertical" className="tp-shortcuts-divider" />
+          }
         >
           {groups}
         </Space>

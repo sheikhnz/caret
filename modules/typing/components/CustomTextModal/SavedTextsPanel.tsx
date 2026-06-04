@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, List, Typography } from "antd";
+import { Button, Flex, Typography } from "antd";
 
 type SavedTextsPanelProps = {
   savedNames: string[];
@@ -22,28 +22,17 @@ export const SavedTextsPanel = ({
   }
 
   return (
-    <List
-      size="small"
-      dataSource={savedNames}
-      renderItem={(name) => (
-        <List.Item
-          actions={[
-            <Button
-              key="delete"
-              type="link"
-              size="small"
-              danger
-              onClick={() => onDelete(name)}
-            >
-              Delete
-            </Button>,
-          ]}
-        >
+    <Flex vertical gap={4}>
+      {savedNames.map((name) => (
+        <Flex key={name} justify="space-between" align="center">
           <Button type="link" size="small" onClick={() => onLoad(name)}>
             {name}
           </Button>
-        </List.Item>
-      )}
-    />
+          <Button type="link" size="small" danger onClick={() => onDelete(name)}>
+            Delete
+          </Button>
+        </Flex>
+      ))}
+    </Flex>
   );
 };

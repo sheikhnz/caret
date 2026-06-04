@@ -27,7 +27,7 @@ export {
   type SkeletonId,
 } from "./skeletons";
 
-export { Divider, Space, Typography, Slider, Checkbox, Flex, List } from "antd";
+export { Divider, Space, Typography, Slider, Checkbox, Flex } from "antd";
 
 export const UI_COMPONENTS = [
   "Badge",
