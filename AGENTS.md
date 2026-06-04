@@ -43,8 +43,9 @@ Follows [Ant Design theme](https://ant.design/docs/react/customize-theme) + [CSS
 | Layer | File | Standard pattern |
 | ----- | ---- | ---------------- |
 | Tokens | `ui/theme/palette.ts` | Single source of color values |
-| Ant | `ui/theme.ts` → `AppProviders` | `ConfigProvider` + `algorithm` + `token` + `cssVar: { prefix: 'tp', key: 'tp' }` |
-| OS sync | `ui/AppProviders.tsx` | `useSyncExternalStore` + `matchMedia('(prefers-color-scheme: dark)')` ([React](https://react.dev/reference/react/useSyncExternalStore)) |
+| Ant | `ui/theme.ts` → `providers/antd/` | `ConfigProvider` + `algorithm` + `token` + `cssVar: { prefix: 'tp', key: 'tp' }` |
+| OS sync | `providers/theme/` | `useSyncExternalStore` + `matchMedia('(prefers-color-scheme: dark)')` ([React](https://react.dev/reference/react/useSyncExternalStore)) |
+| Provider shell | `providers/AppProviders.tsx` | `composeProviders` chain — add `providers/<name>/` + append to `APP_PROVIDER_CHAIN`; wire in `app/layout.tsx` |
 | Custom CSS | `styles/theme-vars.css` | `:root` vars + `@media (prefers-color-scheme: dark)` — keep in sync with `palette.ts`; imported from `globals.css` |
 | Aliases | `styles/tokens.css` | Fonts, radii; `--tp-text-primary` → `var(--tp-color-text)` |
 

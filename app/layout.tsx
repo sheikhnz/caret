@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { AppProviders } from "@/ui/AppProviders";
+import { AppProviders } from "@/providers";
 import { ThemeStyle } from "@/ui/ThemeStyle";
 
 import "./globals.css";

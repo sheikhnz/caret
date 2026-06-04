@@ -1,12 +1,12 @@
 /**
- * Chart colors from the shared theme palette (via AppProviders).
+ * Chart colors from the shared theme palette (via ThemeProvider).
  */
 
 "use client";
 
 import { useMemo } from "react";
 
-import { useAppTheme } from "@/ui/AppProviders";
+import { useAppTheme } from "@/providers";
 
 export type ChartThemeColors = {
   plotBg: string;
