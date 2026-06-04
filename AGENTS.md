@@ -46,6 +46,8 @@ Follows [Ant Design theme](https://ant.design/docs/react/customize-theme) + [CSS
 | Ant | `ui/theme.ts` → `providers/antd/` | `ConfigProvider` + `algorithm` + `token` + `cssVar: { prefix: 'tp', key: 'tp' }` |
 | OS sync | `providers/theme/` | `useSyncExternalStore` + `matchMedia('(prefers-color-scheme: dark)')` ([React](https://react.dev/reference/react/useSyncExternalStore)) |
 | Provider shell | `providers/AppProviders.tsx` | `composeProviders` chain — add `providers/<name>/` + append to `APP_PROVIDER_CHAIN`; wire in `app/layout.tsx` |
+| Document head | `app-head/AppHead.tsx` | `composeHead` chain — add `app-head/<name>/` + append to `APP_HEAD_CHAIN`; wire in `app/layout.tsx` `<head>` |
+| Root theme CSS | `app-head/theme/ThemeStyle.tsx` | Inline `:root` vars from `palette.ts` (before paint; complements `styles/theme-vars.css`) |
 | Custom CSS | `styles/theme-vars.css` | `:root` vars + `@media (prefers-color-scheme: dark)` — keep in sync with `palette.ts`; imported from `globals.css` |
 | Aliases | `styles/tokens.css` | Fonts, radii; `--tp-text-primary` → `var(--tp-color-text)` |
 

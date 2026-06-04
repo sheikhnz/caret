@@ -1,4 +1,4 @@
-import { buildRootThemeCss } from "./theme/palette";
+import { buildRootThemeCss } from "@/ui/theme/palette";
 
 export const ThemeStyle = () => (
   <style
