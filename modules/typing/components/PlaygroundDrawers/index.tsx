@@ -25,20 +25,26 @@ export const PlaygroundDrawers = ({
   onDrawerAction,
 }: PlaygroundDrawersProps) => (
   <>
-    <CustomTextDrawer
-      open={dialogs.isOpen(PLAYGROUND_DIALOGS.customText)}
-      onClose={() => dialogs.close(PLAYGROUND_DIALOGS.customText)}
-      onApplied={() => onDrawerAction?.({ type: "customTextApplied" })}
-    />
+    {dialogs.isOpen(PLAYGROUND_DIALOGS.customText) ? (
+      <CustomTextDrawer
+        open
+        onClose={() => dialogs.close(PLAYGROUND_DIALOGS.customText)}
+        onApplied={() => onDrawerAction?.({ type: "customTextApplied" })}
+      />
+    ) : null}
 
-    <ShortcutsHelpDrawer
-      open={dialogs.isOpen(PLAYGROUND_DIALOGS.shortcutsHelp)}
-      onClose={() => dialogs.close(PLAYGROUND_DIALOGS.shortcutsHelp)}
-    />
+    {dialogs.isOpen(PLAYGROUND_DIALOGS.shortcutsHelp) ? (
+      <ShortcutsHelpDrawer
+        open
+        onClose={() => dialogs.close(PLAYGROUND_DIALOGS.shortcutsHelp)}
+      />
+    ) : null}
 
-    <SettingsDrawer
-      open={dialogs.isOpen(PLAYGROUND_DIALOGS.settings)}
-      onClose={() => dialogs.close(PLAYGROUND_DIALOGS.settings)}
-    />
+    {dialogs.isOpen(PLAYGROUND_DIALOGS.settings) ? (
+      <SettingsDrawer
+        open
+        onClose={() => dialogs.close(PLAYGROUND_DIALOGS.settings)}
+      />
+    ) : null}
   </>
 );
