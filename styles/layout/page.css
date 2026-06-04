@@ -1,4 +1,15 @@
 /* Page shell — plain div/main/footer (not Ant Layout; Content flex is unreliable) */
+
+/* Shared site chrome — header, footer, and future bars; dimmed while playground has focus */
+.tp-page-chrome {
+  flex-shrink: 0;
+  transition: opacity 0.125s ease;
+}
+
+.tp-page-header:empty {
+  display: none;
+}
+
 .tp-page-shell {
   display: flex;
   flex-direction: column;
@@ -17,13 +28,18 @@
 }
 
 .tp-page-footer {
-  flex-shrink: 0;
   padding: 16px 24px;
   text-align: center;
   background: transparent;
-  transition: opacity 0.125s ease;
 }
 
-.tp-page-footer--dimmed {
+.tp-page-footer-note {
+  margin: 0;
+  font-size: 14px;
+  color: var(--tp-text-muted);
+}
+
+/* Playground pages set data-tp-pg-focus on main content when the test has focus */
+.tp-page-shell:has([data-tp-pg-focus]) .tp-page-chrome {
   opacity: 0;
 }

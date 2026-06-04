@@ -7,6 +7,7 @@
 
 import { useCallback, useMemo } from "react";
 
+import { TP_PG_FOCUS_ATTR } from "@/layout";
 import { joinClassNames } from "@/utils";
 import { PlaygroundDrawers } from "@/modules/typing/components/PlaygroundDrawers";
 import { handlePlaygroundDrawerAction } from "@/modules/typing/components/PlaygroundDrawers/handle-playground-drawer-action";
@@ -56,7 +57,10 @@ export const TypingPlayground = ({ playground }: TypingPlaygroundProps) => {
   );
 
   return (
-    <>
+    <div
+      className="tp-playground-root"
+      {...{ [TP_PG_FOCUS_ATTR]: isTestFocused || undefined }}
+    >
       <PlaygroundDrawers
         dialogs={dialogs}
         onDrawerAction={handleDrawerAction}
@@ -84,6 +88,6 @@ export const TypingPlayground = ({ playground }: TypingPlaygroundProps) => {
           />
         </div>
       )}
-    </>
+    </div>
   );
 };
