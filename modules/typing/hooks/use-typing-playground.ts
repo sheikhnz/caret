@@ -7,6 +7,7 @@
 
 import { useEffect, useRef } from "react";
 
+import { usePlaygroundDrawerFocusRestore } from "@/modules/typing/hooks/use-playground-drawer-focus-restore";
 import { usePlaygroundKeyboardShortcuts } from "@/modules/typing/hooks/keyboard-shortcuts";
 import type { PlaygroundDialogsApi } from "@/modules/typing/hooks/use-playground-dialogs";
 import { usePlaygroundDialogs } from "@/modules/typing/hooks/use-playground-dialogs";
@@ -51,7 +52,12 @@ export const useTypingPlayground = (): TypingPlaygroundState => {
 
   const dialogs = usePlaygroundDialogs();
 
-  // Keyboard shortcuts for the playground shell
+  usePlaygroundDrawerFocusRestore({
+    isAnyDrawerOpen: dialogs.isAnyOpen,
+    phase,
+    focusInput,
+  });
+
   usePlaygroundKeyboardShortcuts({ phase, typing, dialogs });
 
   return { phase, isTestFocused, typing, dialogs };

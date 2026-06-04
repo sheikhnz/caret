@@ -53,7 +53,10 @@ export const TypingPlayground = ({ playground }: TypingPlaygroundProps) => {
 
   return (
     <>
-      <PlaygroundDrawers dialogs={dialogs} onDrawerAction={handleDrawerAction} />
+      <PlaygroundDrawers
+        dialogs={dialogs}
+        onDrawerAction={handleDrawerAction}
+      />
 
       {phase === "finished" ? (
         <Results onRestart={handleRestart} onRepeat={handleRepeat} />

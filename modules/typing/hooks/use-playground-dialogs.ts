@@ -1,5 +1,5 @@
 /**
- * Reusable open/close state for typing playground drawers (custom text, settings, …).
+ * Open/close state for playground drawers (custom text, settings, shortcuts help).
  */
 
 "use client";
@@ -7,6 +7,9 @@
 import { useCallback, useMemo, useState } from "react";
 
 import type { PlaygroundDialogId } from "@/modules/typing/constants/playground-dialogs";
+import { applyPlaygroundDrawerMap } from "@/modules/typing/utils/playground-drawer-open";
+
+type OpenMap = Partial<Record<PlaygroundDialogId, boolean>>;
 
 export type PlaygroundDialogsApi = {
   isOpen: (id: PlaygroundDialogId) => boolean;
@@ -16,8 +19,6 @@ export type PlaygroundDialogsApi = {
   closeAll: () => void;
   toggle: (id: PlaygroundDialogId) => void;
 };
-
-type OpenMap = Partial<Record<PlaygroundDialogId, boolean>>;
 
 export const usePlaygroundDialogs = (): PlaygroundDialogsApi => {
   const [openMap, setOpenMap] = useState<OpenMap>({});
@@ -36,7 +37,7 @@ export const usePlaygroundDialogs = (): PlaygroundDialogsApi => {
     (id: PlaygroundDialogId, options?: { keepOthers?: boolean }) => {
       setOpenMap((prev) => {
         const base = options?.keepOthers === true ? { ...prev } : {};
-        return { ...base, [id]: true };
+        return applyPlaygroundDrawerMap({ ...base, [id]: true });
       });
     },
     [],
@@ -47,12 +48,15 @@ export const usePlaygroundDialogs = (): PlaygroundDialogsApi => {
       if (prev[id] !== true) return prev;
       const next = { ...prev };
       delete next[id];
-      return next;
+      return applyPlaygroundDrawerMap(next);
     });
   }, []);
 
   const closeAll = useCallback(() => {
-    setOpenMap({});
+    setOpenMap((prev) => {
+      if (Object.keys(prev).length === 0) return prev;
+      return applyPlaygroundDrawerMap({});
+    });
   }, []);
 
   const toggle = useCallback((id: PlaygroundDialogId) => {
@@ -60,9 +64,9 @@ export const usePlaygroundDialogs = (): PlaygroundDialogsApi => {
       if (prev[id] === true) {
         const next = { ...prev };
         delete next[id];
-        return next;
+        return applyPlaygroundDrawerMap(next);
       }
-      return { [id]: true };
+      return applyPlaygroundDrawerMap({ [id]: true });
     });
   }, []);
 

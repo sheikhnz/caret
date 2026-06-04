@@ -37,7 +37,7 @@ export const Drawer = ({
     title={<span id={titleId}>{title}</span>}
     footer={footer}
     mask={{ closable: false }}
-    keyboard
+    keyboard={false}
     className={className}
     closable={{ placement: "end" }}
     size={width}
