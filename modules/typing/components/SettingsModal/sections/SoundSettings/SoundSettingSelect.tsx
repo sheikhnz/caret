@@ -4,7 +4,7 @@
 
 "use client";
 
-import { Select, Typography } from "antd";
+import { Flex, Select, Typography } from "antd";
 
 import { Label } from "@/ui";
 
@@ -30,19 +30,17 @@ export const SoundSettingSelect = <T extends string>({
   options,
   onChange,
 }: SoundSettingSelectProps<T>) => (
-  <div className="flex flex-col gap-1.5">
+  <Flex vertical gap={6}>
     <Label htmlFor={id}>{label}</Label>
     {description ? (
-      <Typography.Text type="secondary" className="text-xs">
-        {description}
-      </Typography.Text>
+      <Typography.Text type="secondary">{description}</Typography.Text>
     ) : null}
     <Select<T>
       id={id}
+      className="tp-field-full-width"
       value={value}
       options={options}
       onChange={onChange}
-      style={{ width: "100%" }}
     />
-  </div>
+  </Flex>
 );

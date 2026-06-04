@@ -46,7 +46,7 @@ Sound, difficulty, blind mode, and many other options exist in the persisted con
 ## Tech stack
 
 - **Next.js 16** (App Router), **React 19**, **TypeScript**
-- **Tailwind CSS 4** for styling
+- **Ant Design 6** for UI components and layout
 - **Zustand** for config, custom text, and test UI state
 - **Framer Motion** for config bar layout
 - **Chart.js** / **react-chartjs-2** for results

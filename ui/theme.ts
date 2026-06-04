@@ -1,50 +1,109 @@
 import { theme as antTheme, type ThemeConfig } from "antd";
 
-const readCssVar = (name: string, fallback: string): string => {
-  if (typeof document === "undefined") return fallback;
-  const value = getComputedStyle(document.documentElement)
-    .getPropertyValue(name)
-    .trim();
-  return value || fallback;
-};
+const FONT_FAMILY =
+  'ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif, "Apple Color Emoji", "Segoe UI Emoji"';
 
-export const buildAntdTheme = (isDark: boolean): ThemeConfig => ({
-  cssVar: { key: "tp" },
-  algorithm: isDark ? antTheme.darkAlgorithm : antTheme.defaultAlgorithm,
-  token: {
-    colorPrimary: readCssVar("--tp-accent", "#4f46e5"),
-    colorBgBase: readCssVar("--tp-background", "#f6f6f7"),
-    colorBgContainer: readCssVar("--tp-surface", "#ffffff"),
-    colorBgElevated: readCssVar("--tp-surface-elevated", "#ffffff"),
-    colorBorder: readCssVar("--tp-border", "#e3e3e8"),
-    colorText: readCssVar("--tp-text-primary", "#111113"),
-    colorTextSecondary: readCssVar("--tp-text-secondary", "#3f3f46"),
-    colorTextDescription: readCssVar("--tp-text-muted", "#71717a"),
-    colorError: readCssVar("--tp-error", "#b91c1c"),
-    colorSuccess: readCssVar("--tp-success", "#15803d"),
-    colorWarning: readCssVar("--tp-warning", "#a16207"),
-    borderRadius: 4,
-    fontSize: 15,
-    fontFamily:
-      'ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
-  },
-  components: {
-    Modal: {
-      contentBg: readCssVar("--tp-surface", "#ffffff"),
-    },
-    Card: {
-      colorBgContainer: readCssVar("--tp-surface", "#ffffff"),
-    },
-    Segmented: {
-      trackBg: readCssVar("--tp-surface", "#ffffff"),
-      itemColor: readCssVar("--tp-text-muted", "#71717a"),
-      itemHoverColor: readCssVar("--tp-text-primary", "#111113"),
-      itemSelectedBg: readCssVar("--tp-accent-muted", "rgb(79 70 229 / 0.12)"),
-      itemSelectedColor: readCssVar("--tp-accent", "#4f46e5"),
-    },
-    Tag: {
-      defaultBg: "transparent",
-      defaultColor: readCssVar("--tp-text-muted", "#71717a"),
-    },
-  },
+/** Monochrome palette — no brand blue; light = black on white, dark = white on black. */
+const MONO_LIGHT = {
+  colorPrimary: "#171717",
+  colorPrimaryHover: "#404040",
+  colorPrimaryActive: "#262626",
+  colorTextLightSolid: "#ffffff",
+  colorLink: "rgba(0, 0, 0, 0.45)",
+  colorLinkHover: "rgba(0, 0, 0, 0.88)",
+  colorBgContainer: "#ffffff",
+  colorBgLayout: "#f5f5f5",
+  colorBorder: "#d9d9d9",
+  colorFillSecondary: "rgba(0, 0, 0, 0.06)",
+} as const;
+
+const MONO_DARK = {
+  colorPrimary: "#fafafa",
+  colorPrimaryHover: "#d4d4d4",
+  colorPrimaryActive: "#e4e4e7",
+  colorTextLightSolid: "#171717",
+  colorLink: "rgba(255, 255, 255, 0.45)",
+  colorLinkHover: "rgba(255, 255, 255, 0.88)",
+  colorBgContainer: "#141414",
+  colorBgLayout: "#000000",
+  colorBorder: "#424242",
+  colorFillSecondary: "rgba(255, 255, 255, 0.08)",
+} as const;
+
+const focusRing = (isDark: boolean) =>
+  isDark
+    ? "0 0 0 1px rgba(255, 255, 255, 0.14)"
+    : "0 0 0 1px rgba(0, 0, 0, 0.08)";
+
+const focusBorder = (isDark: boolean) => (isDark ? "#52525b" : "#a3a3a3");
+
+type MonoPalette = typeof MONO_LIGHT | typeof MONO_DARK;
+
+const buildControlFocus = (isDark: boolean, mono: MonoPalette) => ({
+  activeShadow: focusRing(isDark),
+  activeBorderColor: focusBorder(isDark),
+  hoverBorderColor: mono.colorBorder,
 });
+
+export const buildAntdTheme = (isDark: boolean): ThemeConfig => {
+  const mono = isDark ? MONO_DARK : MONO_LIGHT;
+  const controlFocus = buildControlFocus(isDark, mono);
+  const controlOutline = isDark
+    ? "rgba(255, 255, 255, 0.12)"
+    : "rgba(0, 0, 0, 0.08)";
+
+  return {
+    algorithm: isDark ? antTheme.darkAlgorithm : antTheme.defaultAlgorithm,
+    token: {
+      ...mono,
+      fontSize: 15,
+      fontFamily: FONT_FAMILY,
+      borderRadius: 6,
+      controlOutlineWidth: 1,
+      lineWidthFocus: 1,
+      controlOutline,
+    },
+    components: {
+      Layout: {
+        footerBg: "transparent",
+        bodyBg: "transparent",
+        headerBg: "transparent",
+      },
+      Button: {
+        primaryColor: mono.colorTextLightSolid,
+        defaultBorderColor: mono.colorBorder,
+        defaultColor: mono.colorPrimary,
+        colorLink: mono.colorLink,
+        colorLinkHover: mono.colorLinkHover,
+        colorLinkActive: mono.colorLinkHover,
+        textTextColor: mono.colorLink,
+      },
+      Segmented: {
+        trackBg: "transparent",
+        itemColor: mono.colorLink,
+        itemHoverColor: mono.colorLinkHover,
+        itemSelectedBg: mono.colorFillSecondary,
+        itemSelectedColor: mono.colorPrimary,
+      },
+      Tag: {
+        defaultBg: "transparent",
+        defaultColor: mono.colorLink,
+      },
+      Input: controlFocus,
+      InputNumber: controlFocus,
+      Select: {
+        ...controlFocus,
+        activeOutlineColor: controlOutline,
+        optionActiveBg: mono.colorFillSecondary,
+        optionSelectedBg: mono.colorFillSecondary,
+        optionSelectedColor: mono.colorPrimary,
+      },
+      Slider: {
+        trackBg: mono.colorFillSecondary,
+        trackHoverBg: mono.colorFillSecondary,
+        handleColor: mono.colorPrimary,
+        handleActiveColor: mono.colorPrimary,
+      },
+    },
+  };
+};

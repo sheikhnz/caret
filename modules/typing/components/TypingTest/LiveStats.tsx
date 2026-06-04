@@ -4,6 +4,8 @@
 
 "use client";
 
+import { joinClassNames } from "@/utils";
+
 import {
   getLiveStatsTimerLabel,
   isLiveStatsBarHidden,
@@ -21,22 +23,21 @@ type LiveStatsProps = LiveStatsDisplayInput;
 export const LiveStats = (props: LiveStatsProps) => {
   const timerLabel = getLiveStatsTimerLabel(props);
   const showAccuracy = shouldShowLiveAccuracy(props);
+  const hidden = isLiveStatsBarHidden({ timerLabel, showAccuracy });
 
   return (
     <div
-      className="timerMain pointer-events-none ml-[0.25em] flex min-h-[1.25em] select-none items-end font-mono text-[1em] leading-none text-accent"
-      style={{
-        visibility: isLiveStatsBarHidden({ timerLabel, showAccuracy })
-          ? "hidden"
-          : "visible",
-      }}
+      className={joinClassNames(
+        "tp-live-stats",
+        hidden && "tp-live-stats--hidden",
+      )}
     >
       {timerLabel !== null && (
-        <span className="time tabular-nums">{timerLabel}</span>
+        <span className="tp-live-stats__time">{timerLabel}</span>
       )}
 
       {showAccuracy && (
-        <span className="acc ml-[0.5em] tabular-nums">{props.stats.acc}%</span>
+        <span className="tp-live-stats__acc">{props.stats.acc}%</span>
       )}
     </div>
   );

@@ -4,7 +4,7 @@
 
 "use client";
 
-import { cn } from "@/utils";
+import type { CSSProperties } from "react";
 
 import { SKELETON_REGISTRY, type SkeletonId } from "./registry";
 
@@ -12,6 +12,7 @@ const DEFAULT_LOADING_LABEL = "Loading";
 
 type SkeletonLoaderProps = {
   id: SkeletonId;
+  style?: CSSProperties;
   className?: string;
   /** Accessible name for the loading region (defaults to "Loading"). */
   label?: string;
@@ -19,6 +20,7 @@ type SkeletonLoaderProps = {
 
 export const SkeletonLoader = ({
   id,
+  style,
   className,
   label = DEFAULT_LOADING_LABEL,
 }: SkeletonLoaderProps) => {
@@ -29,7 +31,8 @@ export const SkeletonLoader = ({
       role="status"
       aria-busy="true"
       aria-label={label}
-      className={cn("w-full", className)}
+      className={className ?? "tp-skeleton-full"}
+      style={style}
     >
       <Placeholder />
     </div>

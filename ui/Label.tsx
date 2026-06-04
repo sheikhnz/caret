@@ -1,5 +1,7 @@
 import type { LabelHTMLAttributes } from "react";
 
+import { joinClassNames } from "@/utils";
+
 export type LabelProps = LabelHTMLAttributes<HTMLLabelElement> & {
   required?: boolean;
 };
@@ -10,13 +12,10 @@ export const Label = ({
   children,
   ...props
 }: LabelProps) => (
-  <label
-    className={["block text-sm font-medium", className].filter(Boolean).join(" ")}
-    {...props}
-  >
+  <label className={joinClassNames("tp-form-label", className)} {...props}>
     {children}
     {required ? (
-      <span className="text-(--ant-color-error)" aria-hidden>
+      <span className="tp-form-label-required" aria-hidden>
         {" "}
         *
       </span>

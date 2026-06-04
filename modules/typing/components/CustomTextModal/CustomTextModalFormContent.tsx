@@ -163,16 +163,11 @@ export const CustomTextModalFormContent = ({
       titleId={CUSTOM_TEXT_MODAL_TITLE_ID}
       width={560}
       footer={
-        <UiButton
-          variant="primary"
-          size="md"
-          className="w-full"
-          onClick={handleSubmit}
-        >
-          <span className="inline-flex items-center justify-center gap-2">
+        <UiButton variant="primary" size="md" block onClick={handleSubmit}>
+          <Space size={8} align="center">
             Start
             <ShortcutKeys shortcut={getKeyboardShortcut("customTextStart")} />
-          </span>
+          </Space>
         </UiButton>
       }
     >
@@ -185,7 +180,7 @@ export const CustomTextModalFormContent = ({
             placeholder="Paste or type custom text"
             rows={5}
           />
-          <Typography.Text type="secondary" className="text-xs">
+          <Typography.Text type="secondary">
             {parsedPreview.length} {pipeDelimiter ? "Sections" : "Words"}
           </Typography.Text>
         </Flex>
@@ -210,27 +205,30 @@ export const CustomTextModalFormContent = ({
 
         <Flex vertical gap={12}>
           <Flex align="center" gap={12} wrap="wrap">
-            <Space.Compact block className="min-w-[200px] flex-1">
+            <Space.Compact block className="tp-save-compact">
               <Input
                 id="save-name"
                 value={saveName}
                 onChange={(e) => setSaveName(e.target.value)}
                 placeholder="Save as…"
                 aria-label="Save lesson as"
-                className="min-w-0! flex-1"
               />
-              <Button className="inline-flex items-center gap-1.5" onClick={handleSave}>
-                Save
-                <ShortcutKeys shortcut={getKeyboardShortcut("customTextSave")} />
+              <Button onClick={handleSave}>
+                <Space size={6} align="center">
+                  Save
+                  <ShortcutKeys
+                    shortcut={getKeyboardShortcut("customTextSave")}
+                  />
+                </Space>
               </Button>
             </Space.Compact>
             <Button type="link" onClick={() => setShowSaved((prev) => !prev)}>
-              <Flex align="center" gap={6}>
+              <Space size={6} align="center">
                 Saved ({savedNames.length})
                 <ShortcutKeys
                   shortcut={getKeyboardShortcut("customTextSavedPanel")}
                 />
-              </Flex>
+              </Space>
             </Button>
           </Flex>
 
@@ -243,7 +241,7 @@ export const CustomTextModalFormContent = ({
         </Flex>
 
         {error !== null ? (
-          <Typography.Text type="danger" className="text-xs" role="alert">
+          <Typography.Text type="danger" role="alert">
             {error}
           </Typography.Text>
         ) : null}

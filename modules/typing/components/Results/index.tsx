@@ -4,6 +4,8 @@
 
 "use client";
 
+import { Flex, Space, Typography } from "antd";
+
 import { Badge, Button, Card, Separator } from "@/ui";
 
 import { ShortcutKeys } from "@/modules/typing/components/ShortcutKeys";
@@ -11,6 +13,7 @@ import { KEYBOARD_SHORTCUTS } from "@/modules/typing/constants/keyboard-shortcut
 import { roundTo2 } from "@/modules/typing/calculations/numbers";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
 import { useTestStore } from "@/modules/typing/stores/test-store";
+import { CharStatsBreakdown } from "./CharStatsBreakdown";
 import { StatCard } from "./StatCard";
 import { getModeLabel } from "./mode-label";
 import { WpmChart } from "./WpmChart";
@@ -50,72 +53,82 @@ export const Results = ({
   ].filter(Boolean) as string[];
 
   return (
-    <div className="flex w-full max-w-[870px] flex-col gap-4">
-      <Card elevated className="p-5 md:p-6">
-        <div className="grid gap-6 md:grid-cols-[auto_1fr] md:items-start md:[grid-template-areas:'stats_chart''morestats_morestats']">
-          <div className="grid gap-4 md:pr-8 md:[grid-area:stats] md:[grid-template-areas:'wpm''acc']">
-            <StatCard
-              label="WPM"
-              value={result.wpm}
-              sub={result.rawWpm !== undefined ? `${result.rawWpm}` : undefined}
-              subLabel="Raw"
-              size="hero"
-              className="md:[grid-area:wpm]"
-            />
-            <StatCard
-              label="Acc"
-              value={`${result.acc}%`}
-              size="hero"
-              className="md:[grid-area:acc]"
-            />
-          </div>
+    <Flex vertical gap={16} className="tp-content-column">
+      <Card elevated className="tp-results-card">
+        <Flex vertical gap={24} className="tp-results-card-inner">
+          <Flex
+            className="tp-results-top"
+            gap={24}
+            align="flex-start"
+            wrap="wrap"
+          >
+            <Flex vertical gap={16} className="tp-results-hero-col">
+              <StatCard
+                label="WPM"
+                value={result.wpm}
+                sub={
+                  result.rawWpm !== undefined ? `${result.rawWpm}` : undefined
+                }
+                subLabel="Raw"
+                size="hero"
+              />
+              <StatCard label="Acc" value={`${result.acc}%`} size="hero" />
+            </Flex>
 
-          <div className="min-w-0 md:[grid-area:chart]">
-            {result.chartData !== "toolong" ? (
-              <WpmChart data={result.chartData} />
-            ) : (
-              <div className="flex h-[200px] items-center justify-center text-sm text-text-muted">
-                Test too long to display chart
-              </div>
-            )}
-          </div>
+            <div className="tp-results-chart-col">
+              {result.chartData !== "toolong" ? (
+                <WpmChart data={result.chartData} />
+              ) : (
+                <Flex
+                  align="center"
+                  justify="center"
+                  className="tp-chart-fallback tp-results-chart"
+                >
+                  <Typography.Text type="secondary">
+                    Test too long to display chart
+                  </Typography.Text>
+                </Flex>
+              )}
+            </div>
+          </Flex>
 
-          <div className="flex flex-wrap gap-x-8 gap-y-4 md:[grid-area:morestats] md:justify-between">
-            <StatCard label="Raw" value={result.rawWpm} />
-            <StatCard label="Consistency" value={`${result.consistency}%`} />
-            <StatCard label="Time" value={timeLabel} sub={afkLabel} />
-            <StatCard
-              label="Chars"
-              value={`${correct}/${incorrect}/${extra}/${missed}`}
-            />
-            <StatCard label="Test Type" value={modeLabel} size="compact" />
+          <div className="tp-results-stats-row">
+            <Flex wrap gap="32px 16px" justify="space-between">
+              <StatCard label="Raw" value={result.rawWpm} />
+              <StatCard label="Consistency" value={`${result.consistency}%`} />
+              <StatCard label="Time" value={timeLabel} sub={afkLabel} />
+              <CharStatsBreakdown stats={[correct, incorrect, extra, missed]} />
+              <StatCard label="Test Type" value={modeLabel} size="compact" />
+            </Flex>
           </div>
-        </div>
+        </Flex>
       </Card>
 
       {(testInvalid || result.bailedOut) && (
-        <div className="flex flex-wrap gap-2">
-          {testInvalid && <Badge tone="error">Invalid — too short</Badge>}
+        <Space size={8} wrap>
+          {testInvalid && <Badge tone="error">Invalid: too short</Badge>}
           {result.bailedOut && <Badge tone="neutral">Bailed out</Badge>}
-        </div>
+        </Space>
       )}
 
       {configTags.length > 0 && (
-        <div className="flex flex-wrap gap-2">
+        <Space size={8} wrap>
           {configTags.map((tag) => (
             <Badge key={tag} tone="neutral">
               {tag}
             </Badge>
           ))}
-        </div>
+        </Space>
       )}
 
       <Separator />
 
-      <div className="flex flex-wrap justify-center gap-3">
+      <Flex justify="center" wrap gap={12}>
         <Button variant="primary" size="md" onClick={onRestart}>
-          <span>Next test</span>
-          <ShortcutKeys shortcut={KEYBOARD_SHORTCUTS.nextTest} />
+          <Space size={4}>
+            <span>Next test</span>
+            <ShortcutKeys shortcut={KEYBOARD_SHORTCUTS.nextTest} />
+          </Space>
         </Button>
         <Button
           variant="secondary"
@@ -126,12 +139,14 @@ export const Results = ({
             isZenMode ? "Repeat (not available in Zen mode)" : "Repeat test"
           }
         >
-          <span>Repeat</span>
-          {!isZenMode ? (
-            <ShortcutKeys shortcut={KEYBOARD_SHORTCUTS.repeatTest} />
-          ) : null}
+          <Space size={4}>
+            <span>Repeat</span>
+            {!isZenMode ? (
+              <ShortcutKeys shortcut={KEYBOARD_SHORTCUTS.repeatTest} />
+            ) : null}
+          </Space>
         </Button>
-      </div>
-    </div>
+      </Flex>
+    </Flex>
   );
 };

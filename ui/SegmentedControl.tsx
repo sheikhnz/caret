@@ -8,7 +8,7 @@ import { Segmented, Tag } from "antd";
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
-import { cn } from "@/utils";
+import { joinClassNames } from "@/utils";
 
 import { Kbd } from "./Kbd";
 
@@ -34,12 +34,10 @@ const renderSegmentLabel = ({
   icon?: LucideIcon;
   shortcutKey?: string;
 }) => (
-  <span className="inline-flex items-center gap-1 whitespace-nowrap">
+  <span className="tp-segment-label">
     {Icon ? <Icon size={12} aria-hidden /> : null}
     {label}
-    {shortcutKey ? (
-      <Kbd style={{ fontSize: "0.65rem", marginLeft: 4 }}>{shortcutKey}</Kbd>
-    ) : null}
+    {shortcutKey ? <Kbd>{shortcutKey}</Kbd> : null}
   </span>
 );
 
@@ -75,7 +73,7 @@ export const AppSegmented = <T extends string | number>({
   onClick,
 }: AppSegmentedProps<T>) => (
   <Segmented<T>
-    className={cn(TEST_CONFIG_PILL_CLASS, className)}
+    className={joinClassNames(TEST_CONFIG_PILL_CLASS, className)}
     aria-label={ariaLabel}
     size={size}
     disabled={disabled}
@@ -116,7 +114,7 @@ export const AppToggleGroup = <T extends string>({
       multiple
       disabled={disabled}
       aria-label={ariaLabel}
-      className={cn(TEST_CONFIG_PILL_CLASS, className)}
+      className={joinClassNames(TEST_CONFIG_PILL_CLASS, className)}
       value={activeValues}
       options={options.map((option) => ({
         value: option.value,
@@ -155,7 +153,7 @@ export const AppPillAction = ({
   "aria-label": ariaLabel,
 }: AppPillActionProps) => (
   <AppSegmented
-    className={cn("tp-config-pill-action", className)}
+    className={joinClassNames("tp-config-pill-action", className)}
     aria-label={ariaLabel}
     disabled={disabled}
     value={PILL_ACTION_VALUE}

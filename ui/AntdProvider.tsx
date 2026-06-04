@@ -1,24 +1,22 @@
 /**
- * Ant Design ConfigProvider — syncs theme with app CSS tokens and color scheme.
+ * Ant Design ConfigProvider — follows OS light/dark via prefers-color-scheme only.
  */
 
 "use client";
 
 import { ConfigProvider } from "antd";
-import { useEffect, useState, type ReactNode } from "react";
+import { useSyncExternalStore, type ReactNode } from "react";
 
 import { buildAntdTheme } from "./theme";
 
-const prefersDark = (): boolean =>
+const getIsDark = (): boolean =>
   typeof window !== "undefined" &&
   window.matchMedia("(prefers-color-scheme: dark)").matches;
 
-const resolveIsDark = (): boolean => {
-  if (typeof document === "undefined") return false;
-  const dataTheme = document.documentElement.getAttribute("data-theme");
-  if (dataTheme === "dark") return true;
-  if (dataTheme === "light") return false;
-  return prefersDark();
+const subscribeColorScheme = (onStoreChange: () => void): (() => void) => {
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  media.addEventListener("change", onStoreChange);
+  return () => media.removeEventListener("change", onStoreChange);
 };
 
 type AntdProviderProps = {
@@ -26,29 +24,16 @@ type AntdProviderProps = {
 };
 
 export const AntdProvider = ({ children }: AntdProviderProps) => {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    const updateTheme = () => setIsDark(resolveIsDark());
-
-    updateTheme();
-
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    media.addEventListener("change", updateTheme);
-
-    const observer = new MutationObserver(updateTheme);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["data-theme"],
-    });
-
-    return () => {
-      media.removeEventListener("change", updateTheme);
-      observer.disconnect();
-    };
-  }, []);
+  const isDark = useSyncExternalStore(
+    subscribeColorScheme,
+    getIsDark,
+    () => false,
+  );
 
   return (
     <ConfigProvider theme={buildAntdTheme(isDark)}>{children}</ConfigProvider>
   );
 };
+
+/** Shared OS theme subscription for hooks that must re-render on scheme change. */
+export { getIsDark, subscribeColorScheme };

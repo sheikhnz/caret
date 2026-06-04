@@ -4,7 +4,7 @@
 
 "use client";
 
-import { Modal as AntModal } from "antd";
+import { Modal as AntModal, Typography } from "antd";
 import type { ReactNode } from "react";
 
 type ModalProps = {
@@ -44,7 +44,7 @@ export const Modal = ({
       body: { maxHeight: "min(70vh, 560px)", overflowY: "auto" },
       footer: { paddingTop: 16 },
     }}
-    closeIcon={<span className="text-sm">{closeLabel}</span>}
+    closeIcon={<Typography.Text type="secondary">{closeLabel}</Typography.Text>}
   >
     {children}
   </AntModal>

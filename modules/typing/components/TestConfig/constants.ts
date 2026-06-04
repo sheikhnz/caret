@@ -17,8 +17,6 @@ import type { TestMode } from "@/modules/typing/types/config";
 export const CONFIG_TRANSITION = { duration: 0.25, ease: "easeInOut" as const };
 export const LAYOUT_TRANSITION = { layout: CONFIG_TRANSITION };
 
-export const TEST_CONFIG_SIDE_GAP = "1em";
-
 export const TEST_CONFIG_MODES: {
   key: TestMode;
   label: string;

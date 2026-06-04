@@ -1,1 +1,1 @@
-export * from "./cn";
+export * from "./class-names";

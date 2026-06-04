@@ -1,12 +1,21 @@
 "use client";
 
-import { Separator } from "@/ui";
+import { Button, Divider, Space } from "antd";
+import type { ReactNode } from "react";
 
-import { KEYBOARD_SHORTCUTS } from "@/modules/typing/constants/keyboard-shortcuts";
+import { joinClassNames } from "@/utils";
+
+import {
+  KEYBOARD_SHORTCUTS,
+  type ShortcutDefinition,
+} from "@/modules/typing/constants/keyboard-shortcuts";
 import type { TestMode } from "@/modules/typing/types/config";
 import type { TestPhase } from "@/modules/typing/types/engine";
 
 import { ShortcutKeys } from "../ShortcutKeys";
+
+const SHORTCUT_GROUP_GAP = 8;
+const SHORTCUT_BAR_GAP = 16;
 
 type TypingTestShortcutsProps = {
   mode: TestMode;
@@ -16,6 +25,23 @@ type TypingTestShortcutsProps = {
   onBailOut: () => void;
   onOpenShortcutsHelp: () => void;
 };
+
+const ShortcutAction = ({
+  shortcut,
+  label,
+  onClick,
+}: {
+  shortcut: ShortcutDefinition;
+  label: string;
+  onClick: (event: React.MouseEvent<HTMLElement>) => void;
+}) => (
+  <Space size={SHORTCUT_GROUP_GAP} align="center">
+    <ShortcutKeys shortcut={shortcut} />
+    <Button type="text" size="small" onClick={onClick}>
+      {label}
+    </Button>
+  </Space>
+);
 
 export const TypingTestShortcuts = ({
   mode,
@@ -28,55 +54,59 @@ export const TypingTestShortcuts = ({
   const restartShortcut =
     mode === "zen" ? KEYBOARD_SHORTCUTS.restartZen : KEYBOARD_SHORTCUTS.restart;
 
+  const groups: ReactNode[] = [
+    <ShortcutAction
+      key="restart"
+      shortcut={restartShortcut}
+      label={restartShortcut.label}
+      onClick={(e) => {
+        e.stopPropagation();
+        onRestart();
+      }}
+    />,
+  ];
+
+  if (phase === "active") {
+    groups.push(
+      <ShortcutAction
+        key="bail-out"
+        shortcut={KEYBOARD_SHORTCUTS.bailOut}
+        label={KEYBOARD_SHORTCUTS.bailOut.label}
+        onClick={(e) => {
+          e.stopPropagation();
+          onBailOut();
+        }}
+      />,
+    );
+  }
+
+  groups.push(
+    <ShortcutAction
+      key="help"
+      shortcut={KEYBOARD_SHORTCUTS.openShortcutsHelp}
+      label="All shortcuts"
+      onClick={(e) => {
+        e.stopPropagation();
+        onOpenShortcutsHelp();
+      }}
+    />,
+  );
+
   return (
     <div
-      className="mt-10 flex min-h-5 flex-wrap items-center justify-center gap-2 text-sm text-text-muted transition-opacity duration-125"
-      style={{
-        opacity: isTestFocused ? 0 : 1,
-        pointerEvents: isTestFocused ? "none" : "auto",
-      }}
-    >
-      <ShortcutKeys shortcut={restartShortcut} />
-      <button
-        type="button"
-        className="text-text-muted cursor-pointer transition-colors hover:text-text-primary hover:underline"
-        onClick={(e) => {
-          e.stopPropagation();
-          onRestart();
-        }}
-      >
-        {restartShortcut.label}
-      </button>
-
-      {phase === "active" && (
-        <>
-          <Separator vertical className="mx-1 h-4" />
-          <ShortcutKeys shortcut={KEYBOARD_SHORTCUTS.bailOut} />
-          <button
-            type="button"
-            className="text-text-muted cursor-pointer transition-colors hover:text-text-primary hover:underline"
-            onClick={(e) => {
-              e.stopPropagation();
-              onBailOut();
-            }}
-          >
-            {KEYBOARD_SHORTCUTS.bailOut.label}
-          </button>
-        </>
+      className={joinClassNames(
+        "tp-shortcuts-bar",
+        isTestFocused && "tp-shortcuts-bar--dimmed",
       )}
-
-      <Separator vertical className="mx-1 h-4" />
-      <ShortcutKeys shortcut={KEYBOARD_SHORTCUTS.openShortcutsHelp} />
-      <button
-        type="button"
-        className="text-text-muted cursor-pointer transition-colors hover:text-text-primary hover:underline"
-        onClick={(e) => {
-          e.stopPropagation();
-          onOpenShortcutsHelp();
-        }}
+    >
+      <Space
+        size={SHORTCUT_BAR_GAP}
+        align="center"
+        wrap
+        split={<Divider type="vertical" className="tp-shortcuts-divider" />}
       >
-        All shortcuts
-      </button>
+        {groups}
+      </Space>
     </div>
   );
 };

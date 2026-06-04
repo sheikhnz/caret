@@ -35,9 +35,7 @@ export const PunctuationNumbers = ({
         { value: "punctuation", label: "Punctuation", icon: AtSign },
         { value: "numbers", label: "Numbers", icon: Hash },
       ]}
-      isActive={(value) =>
-        value === "punctuation" ? punctuation : numbers
-      }
+      isActive={(value) => (value === "punctuation" ? punctuation : numbers)}
       onToggle={(value) => {
         if (value === "punctuation") onPunctuationChange();
         else onNumbersChange();

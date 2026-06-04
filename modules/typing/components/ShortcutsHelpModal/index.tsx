@@ -33,53 +33,59 @@ export const ShortcutsHelpModal = ({
       titleId={SHORTCUTS_HELP_TITLE_ID}
       width={448}
     >
-      <Typography.Paragraph type="secondary" className="mb-0!">
-        Press <ShortcutKeys shortcut={KEYBOARD_SHORTCUTS.openShortcutsHelp} />{" "}
-        anytime to open or close this panel.
-      </Typography.Paragraph>
+      <Flex vertical gap={16}>
+        <Typography.Paragraph type="secondary" className="tp-section-lead">
+          Press <ShortcutKeys shortcut={KEYBOARD_SHORTCUTS.openShortcutsHelp} />{" "}
+          anytime to open or close this panel.
+        </Typography.Paragraph>
 
-      <Flex vertical gap={24} className="mt-2">
-        {groups.map((group) => (
-          <section key={group.id} aria-labelledby={`${group.id}-heading`}>
-            <Typography.Title
-              level={5}
-              id={`${group.id}-heading`}
-              className="mb-0! text-sm!"
-            >
-              {group.title}
-            </Typography.Title>
-            <Typography.Text type="secondary" className="text-xs">
-              {group.description}
-            </Typography.Text>
+        <Flex vertical gap={24}>
+          {groups.map((group) => (
+            <section key={group.id} aria-labelledby={`${group.id}-heading`}>
+              <Typography.Title
+                level={5}
+                id={`${group.id}-heading`}
+                className="tp-section-title"
+              >
+                {group.title}
+              </Typography.Title>
+              <Typography.Text type="secondary">
+                {group.description}
+              </Typography.Text>
 
-            <Flex vertical gap={10} className="mt-3">
-              {group.shortcuts.map((shortcut) => (
-                <Flex
-                  key={shortcut.id}
-                  justify="space-between"
-                  align="flex-start"
-                  gap={16}
-                  wrap="wrap"
-                >
-                  <div className="min-w-0 flex-1">
-                    <Typography.Text>{shortcut.label}</Typography.Text>
-                    {shortcut.helpNote ? (
-                      <Typography.Paragraph
-                        type="secondary"
-                        className="mb-0! text-xs"
-                      >
-                        {shortcut.helpNote}
-                      </Typography.Paragraph>
-                    ) : null}
-                  </div>
-                  <Flex align="center" gap={4} className="shrink-0">
-                    <ShortcutKeys shortcut={shortcut} />
+              <Flex vertical gap={10} className="tp-shortcut-group-list">
+                {group.shortcuts.map((shortcut) => (
+                  <Flex
+                    key={shortcut.id}
+                    justify="space-between"
+                    align="flex-start"
+                    gap={16}
+                    wrap="wrap"
+                  >
+                    <Flex vertical className="tp-shortcut-row-label">
+                      <Typography.Text>{shortcut.label}</Typography.Text>
+                      {shortcut.helpNote ? (
+                        <Typography.Paragraph
+                          type="secondary"
+                          className="tp-section-note"
+                        >
+                          {shortcut.helpNote}
+                        </Typography.Paragraph>
+                      ) : null}
+                    </Flex>
+                    <Flex
+                      align="center"
+                      gap={4}
+                      className="tp-shortcut-row-keys"
+                    >
+                      <ShortcutKeys shortcut={shortcut} />
+                    </Flex>
                   </Flex>
-                </Flex>
-              ))}
-            </Flex>
-          </section>
-        ))}
+                ))}
+              </Flex>
+            </section>
+          ))}
+        </Flex>
       </Flex>
     </Modal>
   );

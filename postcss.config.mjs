@@ -1,7 +1,6 @@
+/** PostCSS — no Tailwind; Ant Design + plain CSS tokens only. */
 const config = {
-  plugins: {
-    "@tailwindcss/postcss": {},
-  },
+  plugins: {},
 };
 
 export default config;

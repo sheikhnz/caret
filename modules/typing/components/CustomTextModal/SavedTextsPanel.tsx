@@ -18,11 +18,7 @@ export const SavedTextsPanel = ({
   if (!showSaved) return null;
 
   if (savedNames.length === 0) {
-    return (
-      <Typography.Text type="secondary" className="text-xs">
-        No saved lessons
-      </Typography.Text>
-    );
+    return <Typography.Text type="secondary">No saved lessons</Typography.Text>;
   }
 
   return (
@@ -43,7 +39,7 @@ export const SavedTextsPanel = ({
             </Button>,
           ]}
         >
-          <Button type="link" className="!p-0" onClick={() => onLoad(name)}>
+          <Button type="link" size="small" onClick={() => onLoad(name)}>
             {name}
           </Button>
         </List.Item>

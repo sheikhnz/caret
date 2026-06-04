@@ -1,55 +1,56 @@
 /**
- * Reads design-token CSS variables for theme-aware chart colors.
+ * Chart colors from dedicated tokens — high contrast vs results card in both themes.
  */
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
-const readCssVar = (name: string) => {
-  if (typeof window === "undefined") return "";
-  return getComputedStyle(document.documentElement)
-    .getPropertyValue(name)
-    .trim();
+import { getIsDark, subscribeColorScheme } from "@/ui/AntdProvider";
+
+const readCssVar = (name: string, fallback: string) => {
+  if (typeof window === "undefined") return fallback;
+  return (
+    getComputedStyle(document.documentElement).getPropertyValue(name).trim() ||
+    fallback
+  );
 };
 
 export type ChartThemeColors = {
-  primary: string;
-  muted: string;
+  plotBg: string;
+  plotBorder: string;
+  grid: string;
+  axis: string;
+  wpmLine: string;
+  wpmFill: string;
+  rawLine: string;
+  errorBar: string;
   error: string;
-  surface: string;
-  border: string;
+  tooltipBg: string;
+  tooltipBorder: string;
+  tooltipTitle: string;
+  tooltipBody: string;
 };
 
 const readChartTheme = (): ChartThemeColors => ({
-  primary: readCssVar("--tp-text-primary") || "#fafafa",
-  muted: readCssVar("--tp-text-muted") || "#71717a",
-  error: readCssVar("--tp-error") || "#f87171",
-  surface: readCssVar("--tp-surface-elevated") || "#18181b",
-  border: readCssVar("--tp-border") || "#27272a",
+  plotBg: readCssVar("--tp-chart-plot-bg", "#f0f0f0"),
+  plotBorder: readCssVar("--tp-chart-plot-border", "#e5e5e5"),
+  grid: readCssVar("--tp-chart-grid", "rgba(0, 0, 0, 0.1)"),
+  axis: readCssVar("--tp-chart-axis", "rgba(0, 0, 0, 0.45)"),
+  wpmLine: readCssVar("--tp-chart-wpm-line", "#171717"),
+  wpmFill: readCssVar("--tp-chart-wpm-fill", "rgba(23, 23, 23, 0.14)"),
+  rawLine: readCssVar("--tp-chart-raw-line", "#737373"),
+  errorBar: readCssVar("--tp-chart-error-bar", "rgba(220, 38, 38, 0.55)"),
+  error: readCssVar("--tp-error", "#ff4d4f"),
+  tooltipBg: readCssVar("--tp-page-bg", "#ffffff"),
+  tooltipBorder: readCssVar("--tp-chart-plot-border", "#d9d9d9"),
+  tooltipTitle: readCssVar("--tp-text-muted", "rgba(0, 0, 0, 0.45)"),
+  tooltipBody: readCssVar("--tp-text-primary", "rgba(0, 0, 0, 0.88)"),
 });
 
 export const useChartTheme = (): ChartThemeColors => {
-  const [colors, setColors] = useState<ChartThemeColors>(readChartTheme);
+  // Re-render when OS color scheme changes so CSS variables are re-read.
+  useSyncExternalStore(subscribeColorScheme, getIsDark, () => false);
 
-  useEffect(() => {
-    const update = () => setColors(readChartTheme());
-    update();
-
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    media.addEventListener("change", update);
-
-    const observer = new MutationObserver(update);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["data-theme"],
-    });
-
-    return () => {
-      media.removeEventListener("change", update);
-      observer.disconnect();
-    };
-  }, []);
-
-  return colors;
+  return readChartTheme();
 };

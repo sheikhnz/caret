@@ -29,11 +29,13 @@ export const WpmChart = ({ data }: Props) => {
           type: "line" as const,
           label: "WPM",
           data: prepared.wpmDataset.map((p) => p.y),
-          borderColor: theme.primary,
-          backgroundColor: `${theme.primary}1a`,
-          borderWidth: 2,
+          borderColor: theme.wpmLine,
+          backgroundColor: theme.wpmFill,
+          borderWidth: 2.5,
           pointRadius: 0,
-          tension: 0.3,
+          pointHoverRadius: 4,
+          pointHoverBackgroundColor: theme.wpmLine,
+          tension: 0.35,
           fill: true,
           yAxisID: "y",
           order: 2,
@@ -42,11 +44,11 @@ export const WpmChart = ({ data }: Props) => {
           type: "line" as const,
           label: "Raw",
           data: prepared.rawDataset.map((p) => p.y),
-          borderColor: theme.muted,
+          borderColor: theme.rawLine,
           borderWidth: 1.5,
-          borderDash: [4, 4],
+          borderDash: [5, 4],
           pointRadius: 0,
-          tension: 0.3,
+          tension: 0.35,
           fill: false,
           yAxisID: "y",
           order: 3,
@@ -55,8 +57,10 @@ export const WpmChart = ({ data }: Props) => {
           type: "bar" as const,
           label: "Errors",
           data: prepared.errDataset.map((p) => p.y),
-          backgroundColor: `${theme.error}99`,
+          backgroundColor: theme.errorBar,
+          hoverBackgroundColor: theme.error,
           borderWidth: 0,
+          borderRadius: 2,
           yAxisID: "y1",
           order: 1,
         },
@@ -77,11 +81,12 @@ export const WpmChart = ({ data }: Props) => {
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: theme.surface,
-          titleColor: theme.muted,
-          bodyColor: theme.primary,
-          borderColor: `${theme.border}66`,
+          backgroundColor: theme.tooltipBg,
+          titleColor: theme.tooltipTitle,
+          bodyColor: theme.tooltipBody,
+          borderColor: theme.tooltipBorder,
           borderWidth: 1,
+          padding: 10,
           callbacks: {
             title: (items) => `${items[0]?.label ?? ""}s`,
           },
@@ -89,20 +94,24 @@ export const WpmChart = ({ data }: Props) => {
       },
       scales: {
         x: {
-          border: { color: `${theme.border}66` },
-          grid: { color: `${theme.muted}33` },
-          ticks: { color: theme.muted, maxTicksLimit: 12, font: { size: 11 } },
+          border: { color: theme.plotBorder },
+          grid: { color: theme.grid, drawTicks: false },
+          ticks: {
+            color: theme.axis,
+            maxTicksLimit: 12,
+            font: { size: 11 },
+          },
         },
         y: {
           position: "left",
-          border: { color: `${theme.border}66` },
-          grid: { color: `${theme.muted}33` },
-          ticks: { color: theme.muted, font: { size: 11 } },
+          border: { color: theme.plotBorder },
+          grid: { color: theme.grid },
+          ticks: { color: theme.axis, font: { size: 11 } },
           title: {
             display: true,
             text: "WPM",
-            color: theme.muted,
-            font: { size: 11 },
+            color: theme.axis,
+            font: { size: 11, weight: 500 },
           },
         },
         y1: {
@@ -118,7 +127,7 @@ export const WpmChart = ({ data }: Props) => {
             display: true,
             text: "Errors",
             color: theme.error,
-            font: { size: 11 },
+            font: { size: 11, weight: 500 },
           },
         },
       },
@@ -127,7 +136,7 @@ export const WpmChart = ({ data }: Props) => {
   );
 
   return (
-    <div className="h-[200px] w-full">
+    <div className="tp-results-chart">
       <Chart
         type="line"
         data={chartData as CJSChartData<"line", number[], number>}

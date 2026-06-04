@@ -1,5 +1,6 @@
 "use client";
 
+import { joinClassNames } from "@/utils";
 import { AppSegmented } from "@/ui";
 
 import {
@@ -19,6 +20,14 @@ type ModePresetsProps = {
   onWordsChange: (words: number) => void;
 };
 
+const layerClass = (active: boolean) =>
+  joinClassNames(
+    "tp-mode-presets-layer",
+    active
+      ? "tp-mode-presets-layer--active"
+      : "tp-mode-presets-layer--inactive",
+  );
+
 export const ModePresets = ({
   mode,
   time,
@@ -27,16 +36,8 @@ export const ModePresets = ({
   onTimeChange,
   onWordsChange,
 }: ModePresetsProps) => (
-  <div className="relative grid w-max *:col-start-1 *:row-start-1">
-    <div
-      className="shrink-0"
-      style={{
-        opacity: mode === "time" ? 1 : 0,
-        position: mode === "time" ? "relative" : "absolute",
-        inset: mode === "time" ? undefined : 0,
-        pointerEvents: mode === "time" ? "auto" : "none",
-      }}
-    >
+  <div className="tp-mode-presets-stack">
+    <div className={layerClass(mode === "time")}>
       <AppSegmented<number>
         value={time}
         disabled={disabled}
@@ -49,15 +50,7 @@ export const ModePresets = ({
       />
     </div>
 
-    <div
-      className="shrink-0"
-      style={{
-        opacity: mode === "words" ? 1 : 0,
-        position: mode === "words" ? "relative" : "absolute",
-        inset: mode === "words" ? undefined : 0,
-        pointerEvents: mode === "words" ? "auto" : "none",
-      }}
-    >
+    <div className={layerClass(mode === "words")}>
       <AppSegmented<number>
         value={words}
         disabled={disabled}

@@ -4,7 +4,7 @@
 
 "use client";
 
-import { Slider, Typography } from "antd";
+import { Flex, Slider, Typography } from "antd";
 
 import { Label } from "@/ui";
 
@@ -24,13 +24,13 @@ export const VolumeControl = ({
   onChange,
   onPreview,
 }: VolumeControlProps) => (
-  <div className="flex flex-col gap-1.5">
-    <div className="flex items-center justify-between gap-3">
+  <Flex vertical gap={6}>
+    <Flex align="center" justify="space-between" gap={12}>
       <Label htmlFor="sound-volume-slider">Volume</Label>
       <Typography.Text type="secondary" aria-live="polite">
         {formatVolumePercent(value)}
       </Typography.Text>
-    </div>
+    </Flex>
 
     <Slider
       id="sound-volume-slider"
@@ -40,8 +40,10 @@ export const VolumeControl = ({
       value={value}
       onChange={onChange}
       onChangeComplete={onPreview}
-      tooltip={{ formatter: (v) => formatVolumePercent((v ?? 0) as SoundVolume) }}
+      tooltip={{
+        formatter: (v) => formatVolumePercent((v ?? 0) as SoundVolume),
+      }}
       aria-valuetext={formatVolumePercent(value)}
     />
-  </div>
+  </Flex>
 );

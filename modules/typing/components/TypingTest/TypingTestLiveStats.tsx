@@ -4,6 +4,7 @@
 
 "use client";
 
+import { joinClassNames } from "@/utils";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
 import { useCustomTextStore } from "@/modules/typing/stores/custom-text-store";
 import { useTestStore } from "@/modules/typing/stores/test-store";
@@ -44,13 +45,10 @@ export const TypingTestLiveStats = ({
   return (
     <div
       aria-hidden={!showLiveStats}
-      className="pointer-events-none transition-opacity duration-125"
-      style={{
-        minHeight: "1.25em",
-        marginTop: "-1.25em",
-        marginBottom: "0.25em",
-        opacity: showLiveStats ? 1 : 0,
-      }}
+      className={joinClassNames(
+        "tp-live-stats-wrapper",
+        !showLiveStats && "tp-live-stats-wrapper--hidden",
+      )}
     >
       <LiveStats
         stats={liveStats}

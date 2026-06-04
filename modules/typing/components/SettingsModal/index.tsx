@@ -4,7 +4,7 @@
 
 "use client";
 
-import { Typography } from "antd";
+import { Flex, Typography } from "antd";
 
 import { Modal, Separator } from "@/ui";
 
@@ -28,13 +28,15 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => (
     titleId={SETTINGS_MODAL_TITLE_ID}
     width={448}
   >
-    <Typography.Paragraph type="secondary" className="!mb-0">
-      Press <ShortcutKeys shortcut={KEYBOARD_SHORTCUTS.openSettings} /> to open
-      or close this panel.
-    </Typography.Paragraph>
+    <Flex vertical gap={16}>
+      <Typography.Paragraph type="secondary" className="tp-section-lead">
+        Press <ShortcutKeys shortcut={KEYBOARD_SHORTCUTS.openSettings} /> to
+        open or close this panel.
+      </Typography.Paragraph>
 
-    <Separator />
+      <Separator />
 
-    <SoundSettings />
+      <SoundSettings />
+    </Flex>
   </Modal>
 );

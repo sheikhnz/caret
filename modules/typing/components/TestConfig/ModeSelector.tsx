@@ -19,7 +19,11 @@ export const ModeSelector = ({
   disabled,
   onModeChange,
 }: ModeSelectorProps) => (
-  <motion.div layout className="z-2 shrink-0" transition={LAYOUT_TRANSITION}>
+  <motion.div
+    layout
+    className="tp-mode-selector"
+    transition={LAYOUT_TRANSITION}
+  >
     <AppSegmented<TestMode>
       value={activeMode}
       disabled={disabled}

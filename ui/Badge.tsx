@@ -1,10 +1,11 @@
 import { Tag } from "antd";
 import type { ReactNode } from "react";
 
-type Tone = "neutral" | "accent" | "success" | "warning" | "error";
+type Tone = "neutral" | "success" | "warning" | "error";
 
 type BadgeProps = {
-  tone?: Tone;
+  /** @deprecated Use `neutral` — accent tone removed for monochrome theme */
+  tone?: Tone | "accent";
   className?: string;
   id?: string;
   children: ReactNode;
@@ -12,7 +13,6 @@ type BadgeProps = {
 
 const toneToColor: Record<Tone, string | undefined> = {
   neutral: "default",
-  accent: "purple",
   success: "success",
   warning: "warning",
   error: "error",
@@ -23,8 +23,12 @@ export const Badge = ({
   className,
   id,
   children,
-}: BadgeProps) => (
-  <Tag id={id} className={className} color={toneToColor[tone]}>
-    {children}
-  </Tag>
-);
+}: BadgeProps) => {
+  const resolvedTone: Tone = tone === "accent" ? "neutral" : tone;
+
+  return (
+    <Tag id={id} className={className} color={toneToColor[resolvedTone]}>
+      {children}
+    </Tag>
+  );
+};

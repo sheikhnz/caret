@@ -5,19 +5,16 @@
  * Does NOT own the outer container — parent (TypingTest) owns the
  * overflow-clipped div and the caret. This component only renders
  * the flex-wrap word list.
- *
- * Font size, line-height, and word margin exactly match the original:
- *   .word { font-size: 1em; line-height: 1em; margin: 0.25em 0.3em; }
- * The parent sets font-size: 1.5rem.
  */
 
 "use client";
 
 import { memo } from "react";
 
+import { joinClassNames } from "@/utils";
+
 import type { CharStatus, RenderedWord } from "../../types/engine";
 
-/* Map char status → CSS class defined in globals.css */
 const STATUS_CLASS: Record<CharStatus, string> = {
   correct: "letter-correct",
   incorrect: "letter-incorrect",
@@ -31,47 +28,42 @@ type WordsDisplayProps = {
 };
 
 export const WordsDisplay = memo(({ renderedWords }: WordsDisplayProps) => (
-  <div className="flex flex-wrap">
-    {renderedWords.map((word, wi) => (
-      <div
-        key={wi}
-        data-word-index={wi}
-        className="relative"
-        style={{
-          /* Match original: .word { font-size:1em; line-height:1em; margin:0.25em 0.3em } */
-          fontSize: "1em",
-          lineHeight: "1em",
-          margin: "0.25em 0.3em",
-          fontVariant: "no-common-ligatures",
-          borderBottom:
-            word.isActive && word.chars.some((c) => c.status === "incorrect")
-              ? "2px solid var(--tp-error)"
-              : "2px solid transparent",
-        }}
-      >
-        {word.chars.length === 0 && word.isActive ? (
-          <span
-            data-char-index={0}
-            className={STATUS_CLASS.correct}
-            style={{ display: "inline-block" }}
-            aria-hidden
-          >
-            {"\u200b"}
-          </span>
-        ) : (
-          word.chars.map((ch, ci) => (
+  <div className="tp-words-display">
+    {renderedWords.map((word, wi) => {
+      const hasActiveError =
+        word.isActive && word.chars.some((c) => c.status === "incorrect");
+
+      return (
+        <div
+          key={wi}
+          data-word-index={wi}
+          className={joinClassNames(
+            "tp-word",
+            hasActiveError && "tp-word--active-error",
+          )}
+        >
+          {word.chars.length === 0 && word.isActive ? (
             <span
-              key={ci}
-              data-char-index={ci}
-              className={STATUS_CLASS[ch.status]}
-              style={{ display: "inline-block" }}
+              data-char-index={0}
+              className={joinClassNames("tp-letter", STATUS_CLASS.correct)}
+              aria-hidden
             >
-              {ch.char}
+              {"\u200b"}
             </span>
-          ))
-        )}
-      </div>
-    ))}
+          ) : (
+            word.chars.map((ch, ci) => (
+              <span
+                key={ci}
+                data-char-index={ci}
+                className={joinClassNames("tp-letter", STATUS_CLASS[ch.status])}
+              >
+                {ch.char}
+              </span>
+            ))
+          )}
+        </div>
+      );
+    })}
   </div>
 ));
 

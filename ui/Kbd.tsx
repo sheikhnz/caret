@@ -1,10 +1,11 @@
-import { Typography } from "antd";
 import type { HTMLAttributes } from "react";
+
+import { joinClassNames } from "@/utils";
 
 export type KbdProps = HTMLAttributes<HTMLElement>;
 
 export const Kbd = ({ className, children, ...props }: KbdProps) => (
-  <Typography.Text keyboard className={className} {...props}>
+  <kbd className={joinClassNames("tp-kbd", className)} {...props}>
     {children}
-  </Typography.Text>
+  </kbd>
 );

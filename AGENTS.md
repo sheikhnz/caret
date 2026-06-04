@@ -32,6 +32,38 @@ Match Monkeytype behavior unless this project intentionally diverges (document t
 - Import shared UI from the barrel: `@/ui` (Ant Design wrappers; not `@/ui/Button` unless avoiding a circular dep).
 - Import typing hooks from `@/modules/typing/hooks` when consuming public hook APIs.
 
+## UI and theming
+
+**Stack:** Ant Design 6 only for UI chrome. No Tailwind. Layout and spacing use Ant components (`Flex`, `Row`, `Col`, `Space`, `Layout`) — not utility-class grids.
+
+**Theme entry points:**
+
+| File                  | Role                                                                                      |
+| --------------------- | ----------------------------------------------------------------------------------------- |
+| `ui/theme.ts`         | `buildAntdTheme(isDark)` — single source for Ant token overrides                          |
+| `ui/AntdProvider.tsx` | `ConfigProvider` + `prefers-color-scheme` only (do not read/write `data-theme` in JS)   |
+| `styles/tokens.css`   | Non-Ant tokens: page shell, typing text (`--tp-text-*`), errors, chart                  |
+| `app/globals.css`     | Typing-specific CSS (letter states, test-config pill shell, `Kbd`)                        |
+
+**Palette:** Monochrome minimal — no brand purple/blue accent. Light mode primary ≈ black on white; dark mode primary ≈ white on black. Muted grays for secondary text, links, and shortcuts. **Do not** reintroduce `--tp-accent` or colorful `colorPrimary` overrides.
+
+**When adding UI:**
+
+- Prefer Ant components and `@/ui` wrappers (`Button`, `Modal`, `Card`, `Input`, `Kbd`, `AppSegmented`).
+- Read colors from `--ant-color-*` (set by ConfigProvider) for Ant components, or Ant `Typography` `type="secondary"`.
+- Typing letters, caret, live stats, shortcuts bar: use `--tp-text-primary` / `--tp-text-muted` from `tokens.css` (never `--ant-color-*` with light-only fallbacks).
+- Primary actions: `Button` `variant="primary"` (monochrome fill via theme). Quiet actions: `type="text"` or `type="default"`, not loud link-blue.
+- Shortcut keys: `ShortcutKeys` + `Kbd`; inside primary buttons, `Kbd` / separators inherit contrast via `.tp-kbd` / `.tp-kbd-separator` in `globals.css`.
+- Form focus: keep rings light via `controlFocus` in `ui/theme.ts` only (do not duplicate in `globals.css`).
+- Shared layout/CSS utilities in `app/globals.css` — prefer these over inline layout styles:
+  - Page: `tp-page-shell`, `tp-page-content`, `tp-page-footer`
+  - Results: `tp-results-card`, `tp-results-top`, `tp-results-chart-col` (use Flex, not `Row` gutter inside cards)
+  - Sections: `tp-section-*`, `tp-stat-card*`, `tp-shortcuts-*`
+- Results card layout: Flex only inside `tp-results-card` — Ant `Row` gutter negative margins break card padding.
+- Test-config chips: keep `TEST_CONFIG_PILL_CLASS` (`tp-config-pill`) for the bordered pill container; do not strip the shell back to ghost segments.
+
+**Intentional color exceptions:** Letter status classes (`.letter-correct`, `.letter-incorrect`, etc.) and results chart series (`--tp-chart-*` in `styles/tokens.css`, rendered via `useChartTheme`) — functional feedback and readable data viz, not decorative accent.
+
 ## Module layout (`modules/typing/`)
 
 | Area              | Path                            | Role                                          |

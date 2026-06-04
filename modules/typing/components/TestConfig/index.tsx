@@ -11,7 +11,7 @@ import type { PlaygroundDialogsApi } from "@/modules/typing/hooks/use-playground
 import { useConfigStore } from "@/modules/typing/stores/config-store";
 
 import { CustomModeControls } from "./CustomModeControls";
-import { CONFIG_TRANSITION, LAYOUT_TRANSITION, TEST_CONFIG_SIDE_GAP } from "./constants";
+import { CONFIG_TRANSITION, LAYOUT_TRANSITION } from "./constants";
 import { ModePresets } from "./ModePresets";
 import { ModeSelector } from "./ModeSelector";
 import { PunctuationNumbers } from "./PunctuationNumbers";
@@ -49,8 +49,7 @@ export const TestConfig = ({
     <LayoutGroup id="test-config">
       <motion.nav
         layout
-        className="relative mx-auto hidden w-max max-w-full items-center justify-center gap-[1em] overflow-visible text-[0.875rem] md:flex"
-        style={{ gap: TEST_CONFIG_SIDE_GAP }}
+        className="tp-test-config-nav"
         aria-label="Test configuration"
         transition={LAYOUT_TRANSITION}
       >

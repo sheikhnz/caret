@@ -14,10 +14,6 @@ import { useConfigStore } from "@/modules/typing/stores/config-store";
 import { SkeletonLoader, SKELETON_IDS } from "@/ui";
 
 import { Caret } from "./Caret";
-import {
-  TYPING_CONTAINER_HEIGHT_PX,
-  TYPING_FONT_SIZE_REM,
-} from "./scroll-constants";
 import { TypingTestLiveStats } from "./TypingTestLiveStats";
 import { TypingTestShortcuts } from "./TypingTestShortcuts";
 import { useWordScroll } from "./use-word-scroll";
@@ -83,31 +79,21 @@ export const TypingTest = ({
   if (store.phase === "finished") return null;
 
   return (
-    <div
-      className="flex w-full max-w-[870px] flex-col"
-      onClick={handleContainerClick}
-    >
-      <div
-        className="font-mono"
-        style={{ fontSize: `${TYPING_FONT_SIZE_REM}rem` }}
-      >
+    <div className="tp-content-column" onClick={handleContainerClick}>
+      <div className="tp-typing-mono tp-typing-root">
         <TypingTestLiveStats isTestFocused={isTestFocused} />
 
-        <div
-          ref={wordsContainerRef}
-          className="relative cursor-pointer overflow-hidden"
-          style={{ height: `${TYPING_CONTAINER_HEIGHT_PX}px` }}
-        >
+        <div ref={wordsContainerRef} className="tp-typing-viewport">
           {store.isPreparingWords ? (
             <SkeletonLoader
               id={SKELETON_IDS.typingTestWords}
-              className="h-full"
+              className="tp-skeleton-fill"
               label="Loading words"
             />
           ) : (
             <div
               ref={scrollWrapperRef}
-              className="relative transition-transform duration-125"
+              className="tp-typing-scroll"
               style={{ transform: `translateY(-${scrollOffset}px)` }}
             >
               <WordsDisplay renderedWords={renderedWords} />
@@ -138,7 +124,7 @@ export const TypingTest = ({
         ref={inputRef}
         type="text"
         aria-label="Typing input"
-        className="sr-only"
+        className="tp-sr-only"
         onKeyDown={handleKeyDown}
         autoComplete="off"
         autoCorrect="off"

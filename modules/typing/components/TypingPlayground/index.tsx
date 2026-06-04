@@ -5,6 +5,7 @@
 
 "use client";
 
+import { joinClassNames } from "@/utils";
 import { PlaygroundModals } from "@/modules/typing/components/PlaygroundModals";
 import { handlePlaygroundModalAction } from "@/modules/typing/components/PlaygroundModals/handle-playground-modal-action";
 import { Results } from "@/modules/typing/components/Results";
@@ -41,14 +42,13 @@ export const TypingPlayground = ({ playground }: TypingPlaygroundProps) => {
           }}
         />
       ) : (
-        <div className="flex w-full max-w-[870px] flex-col">
-          <div className="mb-8 flex min-h-11 w-full items-center justify-center overflow-visible px-2">
+        <div className="tp-content-column">
+          <div className="tp-playground-config-slot">
             <div
-              className="transition-opacity duration-125"
-              style={{
-                opacity: isTestFocused ? 0 : 1,
-                pointerEvents: isTestFocused ? "none" : "auto",
-              }}
+              className={joinClassNames(
+                "tp-focus-fade",
+                isTestFocused && "tp-focus-fade--dimmed",
+              )}
             >
               <TestConfig
                 disabled={isTestFocused}

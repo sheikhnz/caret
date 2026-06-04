@@ -41,9 +41,11 @@ export const Caret = ({
         pointerEvents: "none",
         borderRadius: "var(--tp-radius-md)",
         backgroundColor:
-          style === "outline" ? "transparent" : "var(--tp-caret)",
+          style === "outline" ? "transparent" : "var(--tp-caret, currentColor)",
         border:
-          style === "outline" ? "0.05em solid var(--tp-caret)" : undefined,
+          style === "outline"
+            ? "0.05em solid var(--tp-caret, currentColor)"
+            : undefined,
         width:
           style === "default"
             ? "0.1em"

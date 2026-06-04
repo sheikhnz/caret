@@ -14,6 +14,7 @@ type Size = "sm" | "md";
 type ButtonProps = {
   variant?: Variant;
   size?: Size;
+  block?: boolean;
   htmlType?: "button" | "submit" | "reset";
   href?: string;
   disabled?: boolean;
@@ -32,6 +33,7 @@ const sizeToAntSize: Record<Size, AntButtonProps["size"]> = {
 export const Button = ({
   variant = "secondary",
   size = "md",
+  block = false,
   htmlType = "button",
   href,
   disabled = false,
@@ -47,6 +49,7 @@ export const Button = ({
     onClick,
     "aria-label": ariaLabel,
     className,
+    block,
     size: sizeToAntSize[size],
     htmlType: href ? undefined : htmlType,
   };
