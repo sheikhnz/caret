@@ -41,6 +41,10 @@ export const TypingPlayground = ({ playground }: TypingPlaygroundProps) => {
     void restart(true);
   }, [restart]);
 
+  const handleOpenSettings = useCallback(() => {
+    dialogs.open(PLAYGROUND_DIALOGS.settings);
+  }, [dialogs]);
+
   const handleOpenShortcutsHelp = useCallback(() => {
     dialogs.open(PLAYGROUND_DIALOGS.shortcutsHelp);
   }, [dialogs]);
@@ -75,6 +79,7 @@ export const TypingPlayground = ({ playground }: TypingPlaygroundProps) => {
           <TypingTest
             typing={typing}
             isTestFocused={isTestFocused}
+            onOpenSettings={handleOpenSettings}
             onOpenShortcutsHelp={handleOpenShortcutsHelp}
           />
         </div>

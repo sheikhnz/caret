@@ -22,12 +22,14 @@ import { WordsDisplay } from "./WordsDisplay";
 type TypingTestProps = {
   typing: UseTypingTestReturn;
   isTestFocused: boolean;
+  onOpenSettings: () => void;
   onOpenShortcutsHelp: () => void;
 };
 
 export const TypingTest = ({
   typing,
   isTestFocused,
+  onOpenSettings,
   onOpenShortcutsHelp,
 }: TypingTestProps) => {
   const store = useTypingTestView();
@@ -124,6 +126,7 @@ export const TypingTest = ({
         isTestFocused={isTestFocused}
         onRestart={handleRestart}
         onBailOut={handleBailOut}
+        onOpenSettings={onOpenSettings}
         onOpenShortcutsHelp={onOpenShortcutsHelp}
       />
 
