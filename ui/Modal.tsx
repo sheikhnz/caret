@@ -41,7 +41,12 @@ export const Modal = ({
     className={className}
     width={width}
     styles={{
-      body: { maxHeight: "min(70vh, 560px)", overflowY: "auto" },
+      body: {
+        maxHeight: "min(70vh, 560px)",
+        overflowY: "auto",
+        overflowX: "hidden",
+        scrollbarGutter: "stable",
+      },
       footer: { paddingTop: 16 },
     }}
     closeIcon={<Typography.Text type="secondary">{closeLabel}</Typography.Text>}
