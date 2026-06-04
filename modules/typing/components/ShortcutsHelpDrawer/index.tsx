@@ -5,11 +5,9 @@
 "use client";
 
 import { Flex, Typography } from "antd";
-
 import { Drawer } from "@/ui";
 
 import { listShortcutHelpGroups } from "@/modules/typing/constants/shortcut-help";
-import { KEYBOARD_SHORTCUTS } from "@/modules/typing/constants/keyboard-shortcuts";
 import { ShortcutKeys } from "@/modules/typing/components/ShortcutKeys";
 
 const SHORTCUTS_HELP_TITLE_ID = "shortcuts-help-title";
@@ -33,59 +31,48 @@ export const ShortcutsHelpDrawer = ({
       titleId={SHORTCUTS_HELP_TITLE_ID}
       width={448}
     >
-      <Flex vertical gap={16}>
-        <Typography.Paragraph type="secondary" className="tp-section-lead">
-          Press <ShortcutKeys shortcut={KEYBOARD_SHORTCUTS.openShortcutsHelp} />{" "}
-          anytime to open or close this panel.
-        </Typography.Paragraph>
+      <Flex vertical gap={24}>
+        {groups.map((group) => (
+          <section key={group.id} aria-labelledby={`${group.id}-heading`}>
+            <Typography.Title
+              level={5}
+              id={`${group.id}-heading`}
+              className="tp-section-title"
+            >
+              {group.title}
+            </Typography.Title>
+            <Typography.Text type="secondary">
+              {group.description}
+            </Typography.Text>
 
-        <Flex vertical gap={24}>
-          {groups.map((group) => (
-            <section key={group.id} aria-labelledby={`${group.id}-heading`}>
-              <Typography.Title
-                level={5}
-                id={`${group.id}-heading`}
-                className="tp-section-title"
-              >
-                {group.title}
-              </Typography.Title>
-              <Typography.Text type="secondary">
-                {group.description}
-              </Typography.Text>
-
-              <Flex vertical gap={10} className="tp-shortcut-group-list">
-                {group.shortcuts.map((shortcut) => (
-                  <Flex
-                    key={shortcut.id}
-                    justify="space-between"
-                    align="flex-start"
-                    gap={16}
-                    wrap="wrap"
-                  >
-                    <Flex vertical className="tp-shortcut-row-label">
-                      <Typography.Text>{shortcut.label}</Typography.Text>
-                      {shortcut.helpNote ? (
-                        <Typography.Paragraph
-                          type="secondary"
-                          className="tp-section-note"
-                        >
-                          {shortcut.helpNote}
-                        </Typography.Paragraph>
-                      ) : null}
-                    </Flex>
-                    <Flex
-                      align="center"
-                      gap={4}
-                      className="tp-shortcut-row-keys"
-                    >
-                      <ShortcutKeys shortcut={shortcut} />
-                    </Flex>
+            <Flex vertical gap={10} className="tp-shortcut-group-list">
+              {group.shortcuts.map((shortcut) => (
+                <Flex
+                  key={shortcut.id}
+                  justify="space-between"
+                  align="flex-start"
+                  gap={16}
+                  wrap="wrap"
+                >
+                  <Flex vertical className="tp-shortcut-row-label">
+                    <Typography.Text>{shortcut.label}</Typography.Text>
+                    {shortcut.helpNote ? (
+                      <Typography.Paragraph
+                        type="secondary"
+                        className="tp-section-note"
+                      >
+                        {shortcut.helpNote}
+                      </Typography.Paragraph>
+                    ) : null}
                   </Flex>
-                ))}
-              </Flex>
-            </section>
-          ))}
-        </Flex>
+                  <Flex align="center" gap={4} className="tp-shortcut-row-keys">
+                    <ShortcutKeys shortcut={shortcut} />
+                  </Flex>
+                </Flex>
+              ))}
+            </Flex>
+          </section>
+        ))}
       </Flex>
     </Drawer>
   );
