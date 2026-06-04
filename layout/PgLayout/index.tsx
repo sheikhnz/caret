@@ -1,6 +1,6 @@
 /**
  * Default page shell (Server Component) — same header and footer on every route.
- * Playground focus: TypingPlayground sets data-tp-pg-focus; .tp-page-chrome dims via CSS :has.
+ * Playground focus: data-tp-pg-focus hides chrome, main siblings, and .tp-pg-focus-dim (config).
  */
 
 import type { ReactNode } from "react";

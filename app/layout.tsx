@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 /**
  * Root layout: document shell + global providers + default page chrome.
  * Shared header/footer live in PgLayout (server); edit layout/PgLayout/* to change them for all routes.
- * Playground focus dims .tp-page-chrome via data-tp-pg-focus on TypingPlayground + CSS :has.
+ * Playground focus hides everything except .tp-playground-root (see page.css :has rules).
  * A second shell later: use a route-group layout (e.g. app/(minimal)/layout.tsx) and move or
  * swap PgLayout there — keep this file limited to html/body/providers unless every route shares it.
  */

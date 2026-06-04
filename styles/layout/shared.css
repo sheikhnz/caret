@@ -1,4 +1,9 @@
 /* Shared content width */
+.tp-playground-root {
+  width: 100%;
+  max-width: 870px;
+}
+
 .tp-content-column {
   width: 100%;
   max-width: 870px;
@@ -13,13 +18,4 @@
   justify-content: center;
   overflow: visible;
   padding: 0 8px;
-}
-
-.tp-focus-fade {
-  transition: opacity 0.125s ease;
-}
-
-.tp-focus-fade--dimmed {
-  opacity: 0;
-  pointer-events: none;
 }

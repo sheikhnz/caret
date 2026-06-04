@@ -1,6 +1,6 @@
 /* Page shell — plain div/main/footer (not Ant Layout; Content flex is unreliable) */
 
-/* Shared site chrome — header, footer, and future bars; dimmed while playground has focus */
+/* Shared site chrome — header, footer, and future bars */
 .tp-page-chrome {
   flex-shrink: 0;
   transition: opacity 0.125s ease;
@@ -39,7 +39,35 @@
   color: var(--tp-text-muted);
 }
 
-/* Playground pages set data-tp-pg-focus on main content when the test has focus */
+/*
+ * Playground focus (data-tp-pg-focus on .tp-playground-root):
+ * hide everything except the playground — chrome, page copy, config bar.
+ */
+
 .tp-page-shell:has([data-tp-pg-focus]) .tp-page-chrome {
   opacity: 0;
+  pointer-events: none;
+}
+
+/* Main: hide all nodes, then restore only the playground subtree */
+.tp-page-shell:has([data-tp-pg-focus]) .tp-page-content * {
+  visibility: hidden;
+}
+
+.tp-page-shell:has([data-tp-pg-focus]) .tp-playground-root,
+.tp-page-shell:has([data-tp-pg-focus]) .tp-playground-root * {
+  visibility: visible;
+}
+
+/* Inside playground: still hide regions marked for focus mode (e.g. test config) */
+.tp-page-shell:has([data-tp-pg-focus]) .tp-pg-focus-dim {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tp-pg-focus-dim {
+  transition:
+    opacity 0.125s ease,
+    visibility 0.125s ease;
 }

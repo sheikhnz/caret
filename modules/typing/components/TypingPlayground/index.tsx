@@ -5,10 +5,9 @@
 
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 
 import { TP_PG_FOCUS_ATTR } from "@/layout";
-import { joinClassNames } from "@/utils";
 import { PlaygroundDrawers } from "@/modules/typing/components/PlaygroundDrawers";
 import { handlePlaygroundDrawerAction } from "@/modules/typing/components/PlaygroundDrawers/handle-playground-drawer-action";
 import { Results } from "@/modules/typing/components/Results";
@@ -50,16 +49,13 @@ export const TypingPlayground = ({ playground }: TypingPlaygroundProps) => {
     dialogs.open(PLAYGROUND_DIALOGS.shortcutsHelp);
   }, [dialogs]);
 
-  const configFadeClass = useMemo(
-    () =>
-      joinClassNames("tp-focus-fade", isTestFocused && "tp-focus-fade--dimmed"),
-    [isTestFocused],
-  );
-
   return (
     <div
       className="tp-playground-root"
-      {...{ [TP_PG_FOCUS_ATTR]: isTestFocused || undefined }}
+      {...{
+        [TP_PG_FOCUS_ATTR]:
+          isTestFocused && phase !== "finished" ? true : undefined,
+      }}
     >
       <PlaygroundDrawers
         dialogs={dialogs}
@@ -67,11 +63,13 @@ export const TypingPlayground = ({ playground }: TypingPlaygroundProps) => {
       />
 
       {phase === "finished" ? (
-        <Results onRestart={handleRestart} onRepeat={handleRepeat} />
+        <div className="tp-content-column">
+          <Results onRestart={handleRestart} onRepeat={handleRepeat} />
+        </div>
       ) : (
         <div className="tp-content-column">
           <div className="tp-playground-config-slot">
-            <div className={configFadeClass}>
+            <div className="tp-pg-focus-dim">
               <TestConfig
                 disabled={isTestFocused}
                 dialogs={dialogs}
