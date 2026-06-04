@@ -51,7 +51,9 @@ export const ThemeProvider = ({ children }: ProviderProps) => {
   );
 
   return (
-    <AppThemeContext.Provider value={value}>{children}</AppThemeContext.Provider>
+    <AppThemeContext.Provider value={value}>
+      {children}
+    </AppThemeContext.Provider>
   );
 };
 

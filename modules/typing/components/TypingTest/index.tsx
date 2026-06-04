@@ -31,7 +31,8 @@ export const TypingTest = ({
   onOpenShortcutsHelp,
 }: TypingTestProps) => {
   const store = useTypingTestView();
-  const { mode, blindMode, caretStyle, smoothCaret } = useTypingTestDisplayConfig();
+  const { mode, blindMode, caretStyle, smoothCaret } =
+    useTypingTestDisplayConfig();
   const {
     inputRef,
     wordsContainerRef,

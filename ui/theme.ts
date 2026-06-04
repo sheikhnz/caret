@@ -1,6 +1,10 @@
 import { theme as antTheme, type ThemeConfig } from "antd";
 
-import { DARK_PALETTE, LIGHT_PALETTE, type ThemePalette } from "./theme/palette";
+import {
+  DARK_PALETTE,
+  LIGHT_PALETTE,
+  type ThemePalette,
+} from "./theme/palette";
 
 const CSS_VAR_PREFIX = "tp";
 

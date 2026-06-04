@@ -2,10 +2,10 @@
 
 ## When to use what
 
-| Context | Use |
-| -------- | ----- |
-| **First paint** — e.g. typing area on `/` (home) | Palette CSS vars + custom markup (see `TypingTestWordsSkeleton`) |
-| **Later routes / after client is up** | Ant `Skeleton` via `@/ui` is fine — `ConfigProvider` already has the correct theme |
+| Context                                          | Use                                                                                |
+| ------------------------------------------------ | ---------------------------------------------------------------------------------- |
+| **First paint** — e.g. typing area on `/` (home) | Palette CSS vars + custom markup (see `TypingTestWordsSkeleton`)                   |
+| **Later routes / after client is up**            | Ant `Skeleton` via `@/ui` is fine — `ConfigProvider` already has the correct theme |
 
 On the home page, Ant SSR always injects **light** skeleton tokens before `ThemeProvider` hydrates, so dark-mode bars can be invisible on first paint. Other pages load after the app shell and Ant theme are ready, so Ant Skeleton behaves correctly there.
 

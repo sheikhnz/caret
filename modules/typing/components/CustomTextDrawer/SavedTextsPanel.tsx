@@ -28,7 +28,12 @@ export const SavedTextsPanel = ({
           <Button type="link" size="small" onClick={() => onLoad(name)}>
             {name}
           </Button>
-          <Button type="link" size="small" danger onClick={() => onDelete(name)}>
+          <Button
+            type="link"
+            size="small"
+            danger
+            onClick={() => onDelete(name)}
+          >
             Delete
           </Button>
         </Flex>
