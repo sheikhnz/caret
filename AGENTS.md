@@ -40,13 +40,16 @@ Match Monkeytype behavior unless this project intentionally diverges (document t
 
 Follows [Ant Design theme](https://ant.design/docs/react/customize-theme) + [CSS variables](https://ant.design/docs/react/css-variables) + platform `prefers-color-scheme`.
 
-| Layer | File | Standard pattern |
-| ----- | ---- | ---------------- |
-| Tokens | `ui/theme/palette.ts` | Single source of color values |
-| Ant | `ui/theme.ts` → `AppProviders` | `ConfigProvider` + `algorithm` + `token` + `cssVar: { prefix: 'tp', key: 'tp' }` |
-| OS sync | `ui/AppProviders.tsx` | `useSyncExternalStore` + `matchMedia('(prefers-color-scheme: dark)')` ([React](https://react.dev/reference/react/useSyncExternalStore)) |
-| Custom CSS | `styles/theme-vars.css` | `:root` vars + `@media (prefers-color-scheme: dark)` — keep in sync with `palette.ts`; imported from `globals.css` |
-| Aliases | `styles/tokens.css` | Fonts, radii; `--tp-text-primary` → `var(--tp-color-text)` |
+| Layer          | File                              | Standard pattern                                                                                                                        |
+| -------------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| Tokens         | `ui/theme/palette.ts`             | Single source of color values                                                                                                           |
+| Ant            | `ui/theme.ts` → `providers/antd/` | `ConfigProvider` + `algorithm` + `token` + `cssVar: { prefix: 'tp', key: 'tp' }`                                                        |
+| OS sync        | `providers/theme/`                | `useSyncExternalStore` + `matchMedia('(prefers-color-scheme: dark)')` ([React](https://react.dev/reference/react/useSyncExternalStore)) |
+| Provider shell | `providers/AppProviders.tsx`      | `composeProviders` chain — add `providers/<name>/` + append to `APP_PROVIDER_CHAIN`; wire in `app/layout.tsx`                           |
+| Document head  | `app-head/AppHead.tsx`            | `composeHead` chain — add `app-head/<name>/` + append to `APP_HEAD_CHAIN`; wire in `app/layout.tsx` `<head>`                            |
+| Root theme CSS | `app-head/theme/ThemeStyle.tsx`   | Inline `:root` vars from `palette.ts` (before paint; complements `styles/theme-vars.css`)                                               |
+| Custom CSS     | `styles/theme-vars.css`           | `:root` vars + `@media (prefers-color-scheme: dark)` — keep in sync with `palette.ts`; imported from `globals.css`                      |
+| Aliases        | `styles/tokens.css`               | Fonts, radii; `--tp-text-primary` → `var(--tp-color-text)`                                                                              |
 
 **Do not add:** blocking scripts, `data-theme` toggles, duplicate pill color CSS, or `inherit` Ant token hacks. For a user-controlled theme toggle later, use [`next-themes`](https://github.com/pacocoursey/next-themes) and drive `buildAntdTheme` from `resolvedTheme`.
 
@@ -114,7 +117,7 @@ Follows [Ant Design theme](https://ant.design/docs/react/customize-theme) + [CSS
 - **Memo where props are stable:** `WordsDisplay`, `TypingTestLiveStats`, `TypingTestShortcuts`, `LiveStats`. Do not memo `Caret` (tiny DOM, position updates every keystroke). Do not memo the whole `TypingTest` — words must update every keystroke.
 - **Callbacks:** Stable `useCallback` for handlers passed to memoized children (`restart`, `bailOut`, shortcut bar). `useTypingTest` returns a memoized API object.
 - **Avoid `useEffect` + `setState`** to mirror props/external CSS; derive during render or use `useSyncExternalStore` (see `useChartTheme`).
-- **Do not over-memo:** Modals, results, and config bar are cold paths; Framer layout on `TestConfig` only runs when config changes.
+- **Do not over-memo:** Drawers, results, and config bar are cold paths; Framer layout on `TestConfig` only runs when config changes.
 
 ## Naming
 

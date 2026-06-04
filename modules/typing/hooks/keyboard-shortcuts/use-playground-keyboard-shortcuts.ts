@@ -8,6 +8,7 @@
 import { useEffect } from "react";
 
 import {
+  isCloseDialogShortcut,
   isGlobalTypingCaptureKey,
   isNextTestShortcut,
   isOpenSettingsShortcut,
@@ -20,6 +21,7 @@ import type { PlaygroundDialogsApi } from "@/modules/typing/hooks/use-playground
 import type { UseTypingTestReturn } from "@/modules/typing/hooks/use-typing-test";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
 import type { TestPhase } from "@/modules/typing/types/engine";
+import { isPlaygroundDrawerOpen } from "@/modules/typing/utils/playground-drawer-open";
 import {
   shouldDeferGlobalTypingCapture,
   shouldDeferPlaygroundShortcuts,
@@ -51,6 +53,13 @@ export const usePlaygroundKeyboardShortcuts = ({
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
+      if (isCloseDialogShortcut(event) && isPlaygroundDrawerOpen()) {
+        event.preventDefault();
+        event.stopPropagation();
+        dialogs.closeAll();
+        return;
+      }
+
       for (const { dialogId, isMatch } of PLAYGROUND_DIALOG_SHORTCUTS) {
         const result = handlePlaygroundDialogShortcut({
           event,

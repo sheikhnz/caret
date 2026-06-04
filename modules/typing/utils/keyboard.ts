@@ -1,3 +1,5 @@
+import { isPlaygroundDrawerOpen } from "@/modules/typing/utils/playground-drawer-open";
+
 /** Matches TestConfig nav `aria-label` — chip focus here must not block typing capture. */
 export const TEST_CONFIG_NAV_ARIA_LABEL = "Test configuration";
 
@@ -17,15 +19,17 @@ const isTestConfigChipFocus = (element: HTMLElement): boolean => {
   );
 };
 
+const isDrawerBlockingShortcuts = (): boolean => isPlaygroundDrawerOpen();
+
 /**
  * Returns true when playground shortcuts should not run
- * (e.g. user is editing a form field or a dialog is open).
+ * (e.g. user is editing a form field or a drawer is open).
  * The hidden typing input is allowed so F9 works during a test.
  */
 export const shouldDeferPlaygroundShortcuts = (
   activeElement: Element | null,
 ): boolean => {
-  if (document.querySelector("[role='dialog']") !== null) {
+  if (isDrawerBlockingShortcuts()) {
     return true;
   }
 
@@ -55,12 +59,12 @@ export const shouldDeferPlaygroundShortcuts = (
 
 /**
  * Returns true when global typing capture should not run
- * (e.g. user is editing a form field or a dialog is open).
+ * (e.g. user is editing a form field or a drawer is open).
  */
 export const shouldDeferGlobalTypingCapture = (
   activeElement: Element | null,
 ): boolean => {
-  if (document.querySelector("[role='dialog']") !== null) {
+  if (isDrawerBlockingShortcuts()) {
     return true;
   }
 

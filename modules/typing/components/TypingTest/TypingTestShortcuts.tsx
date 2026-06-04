@@ -24,6 +24,7 @@ type TypingTestShortcutsProps = {
   isTestFocused: boolean;
   onRestart: () => void;
   onBailOut: () => void;
+  onOpenSettings: () => void;
   onOpenShortcutsHelp: () => void;
 };
 
@@ -60,6 +61,7 @@ export const TypingTestShortcuts = memo(
     isTestFocused,
     onRestart,
     onBailOut,
+    onOpenSettings,
     onOpenShortcutsHelp,
   }: TypingTestShortcutsProps) => {
     const restartShortcut =
@@ -90,6 +92,12 @@ export const TypingTestShortcuts = memo(
 
       items.push(
         <ShortcutAction
+          key="settings"
+          shortcut={KEYBOARD_SHORTCUTS.openSettings}
+          label={KEYBOARD_SHORTCUTS.openSettings.label}
+          onClick={onOpenSettings}
+        />,
+        <ShortcutAction
           key="help"
           shortcut={KEYBOARD_SHORTCUTS.openShortcutsHelp}
           label="All shortcuts"
@@ -98,7 +106,14 @@ export const TypingTestShortcuts = memo(
       );
 
       return items;
-    }, [phase, restartShortcut, onRestart, onBailOut, onOpenShortcutsHelp]);
+    }, [
+      phase,
+      restartShortcut,
+      onRestart,
+      onBailOut,
+      onOpenSettings,
+      onOpenShortcutsHelp,
+    ]);
 
     return (
       <div
@@ -111,7 +126,9 @@ export const TypingTestShortcuts = memo(
           size={SHORTCUT_BAR_GAP}
           align="center"
           wrap
-          split={<Divider type="vertical" className="tp-shortcuts-divider" />}
+          separator={
+            <Divider orientation="vertical" className="tp-shortcuts-divider" />
+          }
         >
           {groups}
         </Space>

@@ -22,7 +22,7 @@ export const SHORTCUT_HELP_SECTIONS: readonly ShortcutHelpSectionMeta[] = [
     id: "playground",
     title: "Playground",
     description:
-      "When the word area is not focused and no other modal is open.",
+      "When the word area is not focused and no other drawer is open.",
   },
   {
     id: "test",
@@ -38,13 +38,13 @@ export const SHORTCUT_HELP_SECTIONS: readonly ShortcutHelpSectionMeta[] = [
     id: "customText",
     title: "Custom text editor",
     description:
-      "When the custom text modal is open and focus is not in a text field.",
+      "When the custom text drawer is open and focus is not in a text field.",
   },
   {
     id: "dialogs",
     title: "Dialogs",
     description:
-      "While any modal (custom text, shortcuts help, settings, etc.) is open.",
+      "While any drawer (custom text, shortcuts help, settings, etc.) is open.",
   },
 ] as const;
 

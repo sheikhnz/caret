@@ -4,7 +4,7 @@
 
 import { Fragment } from "react";
 
-import { Flex } from "antd";
+import { Flex, Typography } from "antd";
 
 import { Kbd } from "@/ui";
 
@@ -14,14 +14,28 @@ type ShortcutKeysProps = {
   shortcut: ShortcutDefinition;
 };
 
+/**
+ * Inline shortcut chips — Ant Flex defaults to `display: flex` (block in <p>);
+ * override to `inline-flex` so text like "Press F10 to …" stays on one line.
+ */
 export const ShortcutKeys = ({ shortcut }: ShortcutKeysProps) => (
-  <Flex align="center" gap={4} component="span" className="tp-shortcut-keys">
+  <Flex
+    component="span"
+    align="center"
+    gap={4}
+    className="tp-shortcut-keys"
+    style={{ display: "inline-flex" }}
+  >
     {shortcut.displayKeys.map((key, index) => (
       <Fragment key={`${shortcut.id}-${key}`}>
         {index > 0 && shortcut.keySeparator ? (
-          <span className="tp-kbd-separator" aria-hidden>
+          <Typography.Text
+            component="span"
+            className="tp-kbd-separator"
+            aria-hidden
+          >
             {shortcut.keySeparator}
-          </span>
+          </Typography.Text>
         ) : null}
         <Kbd>{key}</Kbd>
       </Fragment>

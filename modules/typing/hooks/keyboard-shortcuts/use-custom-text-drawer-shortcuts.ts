@@ -1,13 +1,13 @@
 /**
- * Keyboard shortcuts for the custom text modal (when open).
+ * Keyboard shortcuts for the custom text drawer (when open).
  */
 
 "use client";
 
 import { useEffect } from "react";
 
-import type { CustomTextModalShortcutAction } from "@/modules/typing/constants/keyboard-shortcuts";
-import { resolveCustomTextModalShortcut } from "@/modules/typing/constants/keyboard-shortcuts";
+import type { CustomTextDrawerShortcutAction } from "@/modules/typing/constants/keyboard-shortcuts";
+import { resolveCustomTextDrawerShortcut } from "@/modules/typing/constants/keyboard-shortcuts";
 
 const isDialogFormField = (activeElement: Element | null): boolean => {
   if (!(activeElement instanceof HTMLElement)) return false;
@@ -15,22 +15,22 @@ const isDialogFormField = (activeElement: Element | null): boolean => {
   return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
 };
 
-type UseCustomTextModalShortcutsParams = {
+type UseCustomTextDrawerShortcutsParams = {
   open: boolean;
-  onAction: (action: CustomTextModalShortcutAction) => void;
+  onAction: (action: CustomTextDrawerShortcutAction) => void;
 };
 
-export const useCustomTextModalShortcuts = ({
+export const useCustomTextDrawerShortcuts = ({
   open,
   onAction,
-}: UseCustomTextModalShortcutsParams): void => {
+}: UseCustomTextDrawerShortcutsParams): void => {
   useEffect(() => {
     if (!open) return;
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (isDialogFormField(document.activeElement)) return;
 
-      const action = resolveCustomTextModalShortcut(event);
+      const action = resolveCustomTextDrawerShortcut(event);
       if (action === null) return;
 
       event.preventDefault();

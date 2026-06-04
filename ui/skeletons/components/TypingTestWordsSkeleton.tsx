@@ -1,10 +1,8 @@
 /**
  * Typing test word area placeholder — one flex-wrap flow like WordsDisplay.
+ * Palette-based bars for SSR-safe first paint on `/` (see ui/skeletons/README.md).
  */
 
-"use client";
-
-import { Skeleton } from "antd";
 import type { CSSProperties } from "react";
 
 import { TYPING_TEST_WORDS_SKELETON_CONFIG } from "@/ui/skeletons/configs/typing-test-words";
@@ -31,13 +29,10 @@ export const TypingTestWordsSkeleton = ({
     >
       {wordWidths.map((width, index) => (
         <div key={index} className="tp-word">
-          <Skeleton.Input
-            active
-            className="tp-skeleton-word-bar"
-            style={{
-              width,
-              minWidth: width,
-            }}
+          <span
+            className="tp-skeleton-word-bar tp-skeleton-word-bar--active"
+            style={{ width, minWidth: width }}
+            aria-hidden
           />
         </div>
       ))}

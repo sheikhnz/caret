@@ -9,7 +9,7 @@ import {
   ERROR_SOUND_OPTIONS,
   TIME_WARNING_OPTIONS,
 } from "@/modules/typing/constants/sound-option-labels";
-import { SettingsSection } from "@/modules/typing/components/SettingsModal/SettingsSection";
+import { SettingsSection } from "@/modules/typing/components/SettingsDrawer/SettingsSection";
 
 import { SoundSettingSelect } from "./SoundSettingSelect";
 import { useSoundSettings } from "./use-sound-settings";

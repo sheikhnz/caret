@@ -14,6 +14,8 @@ const COLORS = {
   colorBgLayout: ["#f5f5f5", "#000000"],
   colorBorder: ["#d9d9d9", "#424242"],
   colorFillSecondary: ["rgba(0, 0, 0, 0.06)", "rgba(255, 255, 255, 0.08)"],
+  skeletonFrom: ["rgba(0, 0, 0, 0.06)", "rgba(255, 255, 255, 0.12)"],
+  skeletonTo: ["rgba(0, 0, 0, 0.15)", "rgba(255, 255, 255, 0.24)"],
   colorText: ["rgba(0, 0, 0, 0.88)", "rgba(255, 255, 255, 0.88)"],
   colorTextDescription: ["rgba(0, 0, 0, 0.45)", "rgba(255, 255, 255, 0.45)"],
   colorTextDisabled: ["rgba(0, 0, 0, 0.25)", "rgba(255, 255, 255, 0.25)"],
@@ -54,6 +56,7 @@ const paletteCssVarName = (key: ColorKey | "error"): string => {
   if (key === "error") return "--tp-error";
   if (key === "errorMuted") return "--tp-error-muted";
   if (key.startsWith("chart")) return `--tp-chart-${toKebab(key.slice(5))}`;
+  if (key.startsWith("skeleton")) return `--tp-${toKebab(key)}`;
   if (key.startsWith("scrollbar")) return `--tp-${toKebab(key)}`;
   return `--tp-color-${toKebab(key.slice(5))}`;
 };
@@ -70,6 +73,8 @@ const ROOT_KEYS: (ColorKey | "error")[] = [
   "colorBgLayout",
   "colorBorder",
   "colorFillSecondary",
+  "skeletonFrom",
+  "skeletonTo",
   "colorText",
   "colorTextDescription",
   "colorTextDisabled",

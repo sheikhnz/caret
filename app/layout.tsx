@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
-import { AppProviders } from "@/ui/AppProviders";
-import { ThemeStyle } from "@/ui/ThemeStyle";
+import { AppHead } from "@/app-head";
+import { AppProviders } from "@/providers";
 
 import "./globals.css";
 
@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <ThemeStyle />
+        <AppHead />
       </head>
       <body>
         <AppProviders>{children}</AppProviders>

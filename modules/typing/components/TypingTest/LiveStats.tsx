@@ -29,7 +29,10 @@ export const LiveStats = memo((props: LiveStatsProps) => {
 
   return (
     <div
-      className={joinClassNames("tp-live-stats", hidden && "tp-live-stats--hidden")}
+      className={joinClassNames(
+        "tp-live-stats",
+        hidden && "tp-live-stats--hidden",
+      )}
     >
       {timerLabel !== null && (
         <span className="tp-live-stats__time">{timerLabel}</span>

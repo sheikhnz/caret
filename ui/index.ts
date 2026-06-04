@@ -1,4 +1,3 @@
-export { AppProviders, useAppTheme } from "./AppProviders";
 export { Badge } from "./Badge";
 export { Button } from "./Button";
 export { Card } from "./Card";
@@ -8,7 +7,7 @@ export type { SelectProps } from "antd";
 export { Textarea } from "./Textarea";
 export { Kbd } from "./Kbd";
 export { Label } from "./Label";
-export { Modal } from "./Modal";
+export { Drawer } from "./Drawer";
 export {
   AppPillAction,
   AppSegmented,
@@ -28,7 +27,7 @@ export {
   type SkeletonId,
 } from "./skeletons";
 
-export { Divider, Space, Typography, Slider, Checkbox, Flex, List } from "antd";
+export { Divider, Space, Typography, Slider, Checkbox, Flex } from "antd";
 
 export const UI_COMPONENTS = [
   "Badge",
@@ -40,7 +39,7 @@ export const UI_COMPONENTS = [
   "Textarea",
   "Kbd",
   "Label",
-  "Modal",
+  "Drawer",
   "Segmented",
 ] as const;
 

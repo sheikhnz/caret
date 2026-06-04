@@ -7,7 +7,7 @@
 import { useEffect } from "react";
 
 import { useConfigStore } from "@/modules/typing/stores/config-store";
-import { useCustomTextStore } from "@/modules/typing/stores/custom-text-store";
+import { useCustomTextStore } from "@/modules/typing/stores";
 
 export const usePersistedStoresHydrated = (): boolean => {
   const configHydrated = useConfigStore((state) => state.hasHydrated);

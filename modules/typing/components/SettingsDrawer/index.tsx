@@ -1,0 +1,27 @@
+/**
+ * Playground settings — composes independent setting modules.
+ */
+
+"use client";
+
+import { Drawer } from "@/ui";
+import { SoundSettings } from "./sections/SoundSettings";
+
+const SETTINGS_DRAWER_TITLE_ID = "settings-drawer-title";
+
+type SettingsDrawerProps = {
+  open: boolean;
+  onClose: () => void;
+};
+
+export const SettingsDrawer = ({ open, onClose }: SettingsDrawerProps) => (
+  <Drawer
+    open={open}
+    onClose={onClose}
+    title="Settings"
+    titleId={SETTINGS_DRAWER_TITLE_ID}
+    width={448}
+  >
+    <SoundSettings />
+  </Drawer>
+);

@@ -15,7 +15,7 @@ type HandlePlaygroundDialogShortcutParams = {
 };
 
 /**
- * Toggles a playground modal (F9 / F10). When the key matches but focus is in a
+ * Toggles a playground drawer (F9 / F10). When the key matches but focus is in a
  * form field or another dialog is open, returns "deferred" without side effects.
  */
 export const handlePlaygroundDialogShortcut = ({

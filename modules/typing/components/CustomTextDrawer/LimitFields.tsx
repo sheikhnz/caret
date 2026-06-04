@@ -1,6 +1,6 @@
 "use client";
 
-import { Col, Row } from "antd";
+import { Flex } from "antd";
 
 import { Input } from "@/ui";
 
@@ -25,8 +25,8 @@ export const LimitFields = ({
   onLimitTimeChange,
   onLimitSectionChange,
 }: LimitFieldsProps) => (
-  <Row gutter={12}>
-    <Col span={8}>
+  <Flex gap={12}>
+    <Flex flex={1} className="tp-min-w-0">
       <Input
         id="limit-word"
         type="number"
@@ -36,9 +36,10 @@ export const LimitFields = ({
         onChange={(e) => onLimitWordChange(e.target.value)}
         placeholder="Words"
         aria-label="Word limit"
+        className="tp-field-full-width"
       />
-    </Col>
-    <Col span={8}>
+    </Flex>
+    <Flex flex={1} className="tp-min-w-0">
       <Input
         id="limit-time"
         type="number"
@@ -48,9 +49,10 @@ export const LimitFields = ({
         onChange={(e) => onLimitTimeChange(e.target.value)}
         placeholder="Seconds"
         aria-label="Time limit in seconds"
+        className="tp-field-full-width"
       />
-    </Col>
-    <Col span={8}>
+    </Flex>
+    <Flex flex={1} className="tp-min-w-0">
       <Input
         id="limit-section"
         type="number"
@@ -60,7 +62,8 @@ export const LimitFields = ({
         onChange={(e) => onLimitSectionChange(e.target.value)}
         placeholder="Sections"
         aria-label="Section limit"
+        className="tp-field-full-width"
       />
-    </Col>
-  </Row>
+    </Flex>
+  </Flex>
 );

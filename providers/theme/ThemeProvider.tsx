@@ -1,23 +1,25 @@
 /**
- * App shell providers — Ant Design + system color scheme.
+ * System color scheme + shared palette for custom CSS and charts.
  */
 
 "use client";
 
-import { AntdRegistry } from "@ant-design/nextjs-registry";
-import { ConfigProvider } from "antd";
 import {
   createContext,
   useContext,
   useMemo,
   useSyncExternalStore,
-  type ReactNode,
 } from "react";
 
-import { buildAntdTheme } from "./theme";
-import { DARK_PALETTE, LIGHT_PALETTE, type ThemePalette } from "./theme/palette";
+import {
+  DARK_PALETTE,
+  LIGHT_PALETTE,
+  type ThemePalette,
+} from "@/ui/theme/palette";
 
-type AppThemeContextValue = {
+import type { ProviderProps } from "../types";
+
+export type AppThemeContextValue = {
   isDark: boolean;
   palette: ThemePalette;
 };
@@ -33,18 +35,14 @@ const subscribeColorScheme = (onStoreChange: () => void): (() => void) => {
   return () => media.removeEventListener("change", onStoreChange);
 };
 
-type AppProvidersProps = {
-  children: ReactNode;
-};
-
-export const AppProviders = ({ children }: AppProvidersProps) => {
+export const ThemeProvider = ({ children }: ProviderProps) => {
   const isDark = useSyncExternalStore(
     subscribeColorScheme,
     getIsDark,
     () => false,
   );
 
-  const theme = useMemo(
+  const value = useMemo(
     () => ({
       isDark,
       palette: isDark ? DARK_PALETTE : LIGHT_PALETTE,
@@ -53,10 +51,8 @@ export const AppProviders = ({ children }: AppProvidersProps) => {
   );
 
   return (
-    <AppThemeContext.Provider value={theme}>
-      <AntdRegistry>
-        <ConfigProvider theme={buildAntdTheme(isDark)}>{children}</ConfigProvider>
-      </AntdRegistry>
+    <AppThemeContext.Provider value={value}>
+      {children}
     </AppThemeContext.Provider>
   );
 };
@@ -64,7 +60,7 @@ export const AppProviders = ({ children }: AppProvidersProps) => {
 export const useAppTheme = (): AppThemeContextValue => {
   const context = useContext(AppThemeContext);
   if (!context) {
-    throw new Error("useAppTheme must be used within AppProviders");
+    throw new Error("useAppTheme must be used within ThemeProvider");
   }
   return context;
 };
