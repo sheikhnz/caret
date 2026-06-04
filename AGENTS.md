@@ -117,7 +117,7 @@ Follows [Ant Design theme](https://ant.design/docs/react/customize-theme) + [CSS
 - **Memo where props are stable:** `WordsDisplay`, `TypingTestLiveStats`, `TypingTestShortcuts`, `LiveStats`. Do not memo `Caret` (tiny DOM, position updates every keystroke). Do not memo the whole `TypingTest` — words must update every keystroke.
 - **Callbacks:** Stable `useCallback` for handlers passed to memoized children (`restart`, `bailOut`, shortcut bar). `useTypingTest` returns a memoized API object.
 - **Avoid `useEffect` + `setState`** to mirror props/external CSS; derive during render or use `useSyncExternalStore` (see `useChartTheme`).
-- **Do not over-memo:** Modals, results, and config bar are cold paths; Framer layout on `TestConfig` only runs when config changes.
+- **Do not over-memo:** Drawers, results, and config bar are cold paths; Framer layout on `TestConfig` only runs when config changes.
 
 ## Naming
 

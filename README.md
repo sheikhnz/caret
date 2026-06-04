@@ -23,7 +23,7 @@ A focused typing test built with Next.js and React. Gameplay, stats, and word ge
 
 **Quote mode** disables punctuation and numbers in config. Quotes load from `/public/quotes/{language}.json` (Monkeytype format). Only **english** is bundled today.
 
-**Custom mode** opens a modal to edit text and limits. Empty custom text cannot start a test.
+**Custom mode** opens a drawer to edit text and limits. Empty custom text cannot start a test.
 
 ## Using the app
 
@@ -85,7 +85,7 @@ app/                    # Next.js app shell (layout, page → Home)
 views/home/             # Page-level layout and footer
 ui/                     # Ant Design wrappers + theme (import via @/ui)
 modules/typing/         # Typing product code
-  components/           # TestConfig, TypingTest, Results, CustomTextModal, …
+  components/           # TestConfig, TypingTest, Results, CustomTextDrawer, …
   hooks/                # useTypingPlayground, useTypingTest, typing-test/*
   engine/               # Test engine (no React)
     generation/         # Words per mode + word-generator router

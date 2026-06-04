@@ -1,5 +1,5 @@
 /**
- * Custom text modal body — remounted when opened so form state matches persisted settings.
+ * Custom text drawer body — remounted when opened so form state matches persisted settings.
  */
 
 "use client";
@@ -8,18 +8,18 @@ import { useCallback, useMemo, useState } from "react";
 
 import { Button, Flex, Space, Typography } from "antd";
 
-import { Button as UiButton, Input, Modal, Textarea } from "@/ui";
+import { Button as UiButton, Drawer, Input, Textarea } from "@/ui";
 
 import { getKeyboardShortcut } from "@/modules/typing/constants/keyboard-shortcuts";
-import type { CustomTextModalShortcutAction } from "@/modules/typing/constants/keyboard-shortcuts";
+import type { CustomTextDrawerShortcutAction } from "@/modules/typing/constants/keyboard-shortcuts";
 import { ShortcutKeys } from "@/modules/typing/components/ShortcutKeys";
-import { useCustomTextModalShortcuts } from "@/modules/typing/hooks/keyboard-shortcuts";
+import { useCustomTextDrawerShortcuts } from "@/modules/typing/hooks/keyboard-shortcuts";
 
 import {
   buildSettingsFromForm,
   settingsToFormState,
 } from "@/modules/typing/custom-text/form-state";
-import { CUSTOM_TEXT_MODAL_TITLE_ID } from "@/modules/typing/custom-text/constants";
+import { CUSTOM_TEXT_DRAWER_TITLE_ID } from "@/modules/typing/custom-text/constants";
 import { cleanUpCustomText } from "@/modules/typing/custom-text/utils";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
 import { useCustomTextStore } from "@/modules/typing/stores";
@@ -29,17 +29,19 @@ import { LimitFields } from "./LimitFields";
 import { ModeDelimiterFields } from "./ModeDelimiterFields";
 import { SavedTextsPanel } from "./SavedTextsPanel";
 
-type CustomTextModalFormContentProps = {
+type CustomTextDrawerFormContentProps = {
+  open: boolean;
   settings: CustomTextSettings;
   onClose: () => void;
   onApplied?: () => void;
 };
 
-export const CustomTextModalFormContent = ({
+export const CustomTextDrawerFormContent = ({
+  open,
   settings,
   onClose,
   onApplied,
-}: CustomTextModalFormContentProps) => {
+}: CustomTextDrawerFormContentProps) => {
   const { setConfig } = useConfigStore();
   const { savedTexts, setSettings, saveText, deleteText } =
     useCustomTextStore();
@@ -130,8 +132,8 @@ export const CustomTextModalFormContent = ({
 
   const limitsDisabled = formMode === "simple";
 
-  const handleModalShortcut = useCallback(
-    (action: CustomTextModalShortcutAction) => {
+  const handleDrawerShortcut = useCallback(
+    (action: CustomTextDrawerShortcutAction) => {
       switch (action.type) {
         case "start":
           handleSubmit();
@@ -153,14 +155,14 @@ export const CustomTextModalFormContent = ({
     [handleSave, handleSubmit],
   );
 
-  useCustomTextModalShortcuts({ open: true, onAction: handleModalShortcut });
+  useCustomTextDrawerShortcuts({ open, onAction: handleDrawerShortcut });
 
   return (
-    <Modal
-      open
+    <Drawer
+      open={open}
       onClose={onClose}
       title="Custom Text"
-      titleId={CUSTOM_TEXT_MODAL_TITLE_ID}
+      titleId={CUSTOM_TEXT_DRAWER_TITLE_ID}
       width={560}
       footer={
         <UiButton variant="primary" size="md" block onClick={handleSubmit}>
@@ -246,6 +248,6 @@ export const CustomTextModalFormContent = ({
           </Typography.Text>
         ) : null}
       </Flex>
-    </Modal>
+    </Drawer>
   );
 };

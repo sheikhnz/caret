@@ -6,26 +6,26 @@
 
 import { Flex, Typography } from "antd";
 
-import { Modal, Separator } from "@/ui";
+import { Drawer, Separator } from "@/ui";
 
 import { KEYBOARD_SHORTCUTS } from "@/modules/typing/constants/keyboard-shortcuts";
 import { ShortcutKeys } from "@/modules/typing/components/ShortcutKeys";
 
 import { SoundSettings } from "./sections/SoundSettings";
 
-const SETTINGS_MODAL_TITLE_ID = "settings-modal-title";
+const SETTINGS_DRAWER_TITLE_ID = "settings-drawer-title";
 
-type SettingsModalProps = {
+type SettingsDrawerProps = {
   open: boolean;
   onClose: () => void;
 };
 
-export const SettingsModal = ({ open, onClose }: SettingsModalProps) => (
-  <Modal
+export const SettingsDrawer = ({ open, onClose }: SettingsDrawerProps) => (
+  <Drawer
     open={open}
     onClose={onClose}
     title="Settings"
-    titleId={SETTINGS_MODAL_TITLE_ID}
+    titleId={SETTINGS_DRAWER_TITLE_ID}
     width={560}
   >
     <Flex vertical gap={16}>
@@ -37,5 +37,5 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => (
 
       <SoundSettings />
     </Flex>
-  </Modal>
+  </Drawer>
 );

@@ -578,7 +578,7 @@ button:focus-visible,
   color: var(--tp-error);
 }
 
-/* Modal / section headings — avoid default Title bottom margin */
+/* Drawer / section headings — avoid default Title bottom margin */
 .tp-section-title.ant-typography {
   margin-bottom: 0;
   font-size: 14px;
@@ -607,6 +607,11 @@ button:focus-visible,
   border: 1px solid var(--tp-border);
   border-radius: var(--tp-radius-sm);
   box-shadow: none;
+}
+
+.ant-drawer-close {
+  width: auto;
+  white-space: nowrap;
 }
 
 /* Kbd inside solid primary buttons — contrast with button label (currentColor) */
@@ -776,7 +781,7 @@ button:focus-visible,
   cursor: not-allowed;
 }
 
-/* Shortcuts help modal */
+/* Shortcuts help drawer */
 .tp-shortcut-group-list {
   margin-top: 12px;
 }

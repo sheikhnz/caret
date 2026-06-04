@@ -1,6 +1,6 @@
 /**
- * Registry of modal/dialog ids for the typing playground shell.
- * Add new entries here when introducing another PG modal.
+ * Registry of drawer/dialog ids for the typing playground shell.
+ * Add new entries here when introducing another PG drawer.
  */
 
 export const PLAYGROUND_DIALOGS = {

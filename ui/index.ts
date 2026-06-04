@@ -7,7 +7,7 @@ export type { SelectProps } from "antd";
 export { Textarea } from "./Textarea";
 export { Kbd } from "./Kbd";
 export { Label } from "./Label";
-export { Modal } from "./Modal";
+export { Drawer } from "./Drawer";
 export {
   AppPillAction,
   AppSegmented,
@@ -39,7 +39,7 @@ export const UI_COMPONENTS = [
   "Textarea",
   "Kbd",
   "Label",
-  "Modal",
+  "Drawer",
   "Segmented",
 ] as const;
 

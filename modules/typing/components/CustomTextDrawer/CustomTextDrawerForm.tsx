@@ -1,30 +1,29 @@
 /**
- * Custom text / lesson editor form (modal body and actions).
+ * Custom text / lesson editor form (drawer body and actions).
  */
 
 "use client";
 
 import { useCustomTextStore } from "@/modules/typing/stores";
-import { CustomTextModalFormContent } from "./CustomTextModalFormContent";
+import { CustomTextDrawerFormContent } from "./CustomTextDrawerFormContent";
 
-type CustomTextModalFormProps = {
+type CustomTextDrawerFormProps = {
   open: boolean;
   onClose: () => void;
   onApplied?: () => void;
 };
 
-export const CustomTextModalForm = ({
+export const CustomTextDrawerForm = ({
   open,
   onClose,
   onApplied,
-}: CustomTextModalFormProps) => {
+}: CustomTextDrawerFormProps) => {
   const { settings, revision } = useCustomTextStore();
 
-  if (!open) return null;
-
   return (
-    <CustomTextModalFormContent
+    <CustomTextDrawerFormContent
       key={revision}
+      open={open}
       settings={settings}
       onClose={onClose}
       onApplied={onApplied}

@@ -1,5 +1,5 @@
 /**
- * Reusable open/close state for typing playground modals (custom text, settings, …).
+ * Reusable open/close state for typing playground drawers (custom text, settings, …).
  */
 
 "use client";

@@ -198,7 +198,7 @@ export const isRepeatTestShortcut = (event: KeyboardEvent): boolean => {
   return event.key === "Tab" && event.shiftKey;
 };
 
-/** Close modal dialogs. */
+/** Close drawer dialogs. */
 export const isCloseDialogShortcut = (event: KeyboardEvent): boolean => {
   if (hasPrimaryModifier(event)) return false;
   return event.key === "Escape";
@@ -251,7 +251,7 @@ export const isGlobalTypingCaptureKey = (
   );
 };
 
-export type CustomTextModalShortcutAction =
+export type CustomTextDrawerShortcutAction =
   | { type: "start" }
   | { type: "save" }
   | { type: "toggleSavedPanel" }
@@ -265,9 +265,9 @@ const FORM_MODE_BY_KEY: Record<string, CustomTextFormMode> = {
   "4": "random",
 };
 
-export const resolveCustomTextModalShortcut = (
+export const resolveCustomTextDrawerShortcut = (
   event: KeyboardEvent,
-): CustomTextModalShortcutAction | null => {
+): CustomTextDrawerShortcutAction | null => {
   if (event.ctrlKey || event.metaKey) {
     if (event.key === "Enter") return { type: "start" };
     if (event.key.toLowerCase() === "s") return { type: "save" };

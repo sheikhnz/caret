@@ -1,6 +1,6 @@
 import type { CustomTextFormMode } from "./form-state";
 
-export const CUSTOM_TEXT_MODAL_TITLE_ID = "custom-text-title";
+export const CUSTOM_TEXT_DRAWER_TITLE_ID = "custom-text-title";
 
 export const CUSTOM_TEXT_MODE_OPTIONS: {
   value: CustomTextFormMode;

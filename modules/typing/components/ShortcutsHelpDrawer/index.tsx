@@ -6,7 +6,7 @@
 
 import { Flex, Typography } from "antd";
 
-import { Modal } from "@/ui";
+import { Drawer } from "@/ui";
 
 import { listShortcutHelpGroups } from "@/modules/typing/constants/shortcut-help";
 import { KEYBOARD_SHORTCUTS } from "@/modules/typing/constants/keyboard-shortcuts";
@@ -14,19 +14,19 @@ import { ShortcutKeys } from "@/modules/typing/components/ShortcutKeys";
 
 const SHORTCUTS_HELP_TITLE_ID = "shortcuts-help-title";
 
-type ShortcutsHelpModalProps = {
+type ShortcutsHelpDrawerProps = {
   open: boolean;
   onClose: () => void;
 };
 
-export const ShortcutsHelpModal = ({
+export const ShortcutsHelpDrawer = ({
   open,
   onClose,
-}: ShortcutsHelpModalProps) => {
+}: ShortcutsHelpDrawerProps) => {
   const groups = listShortcutHelpGroups();
 
   return (
-    <Modal
+    <Drawer
       open={open}
       onClose={onClose}
       title="Keyboard shortcuts"
@@ -87,6 +87,6 @@ export const ShortcutsHelpModal = ({
           ))}
         </Flex>
       </Flex>
-    </Modal>
+    </Drawer>
   );
 };

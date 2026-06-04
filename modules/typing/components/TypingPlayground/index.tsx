@@ -8,8 +8,8 @@
 import { useCallback, useMemo } from "react";
 
 import { joinClassNames } from "@/utils";
-import { PlaygroundModals } from "@/modules/typing/components/PlaygroundModals";
-import { handlePlaygroundModalAction } from "@/modules/typing/components/PlaygroundModals/handle-playground-modal-action";
+import { PlaygroundDrawers } from "@/modules/typing/components/PlaygroundDrawers";
+import { handlePlaygroundDrawerAction } from "@/modules/typing/components/PlaygroundDrawers/handle-playground-drawer-action";
 import { Results } from "@/modules/typing/components/Results";
 import { TestConfig } from "@/modules/typing/components/TestConfig";
 import { TypingTest } from "@/modules/typing/components/TypingTest";
@@ -24,9 +24,9 @@ export const TypingPlayground = ({ playground }: TypingPlaygroundProps) => {
   const { phase, isTestFocused, typing, dialogs } = playground;
   const { restart, focusInput } = typing;
 
-  const handleModalAction = useCallback(
-    (action: Parameters<typeof handlePlaygroundModalAction>[0]) => {
-      handlePlaygroundModalAction(action, {
+  const handleDrawerAction = useCallback(
+    (action: Parameters<typeof handlePlaygroundDrawerAction>[0]) => {
+      handlePlaygroundDrawerAction(action, {
         restartTest: restart,
       });
     },
@@ -53,7 +53,7 @@ export const TypingPlayground = ({ playground }: TypingPlaygroundProps) => {
 
   return (
     <>
-      <PlaygroundModals dialogs={dialogs} onModalAction={handleModalAction} />
+      <PlaygroundDrawers dialogs={dialogs} onDrawerAction={handleDrawerAction} />
 
       {phase === "finished" ? (
         <Results onRestart={handleRestart} onRepeat={handleRepeat} />

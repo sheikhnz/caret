@@ -1,13 +1,13 @@
 /**
- * Modal — Ant Design dialog with Escape-to-close (no backdrop close).
+ * Drawer — Ant Design panel with Escape-to-close (no backdrop close).
  */
 
 "use client";
 
-import { Modal as AntModal, Typography } from "antd";
+import { Drawer as AntDrawer, Typography } from "antd";
 import type { ReactNode } from "react";
 
-type ModalProps = {
+type DrawerProps = {
   open: boolean;
   onClose: () => void;
   title: string;
@@ -19,7 +19,7 @@ type ModalProps = {
   closeLabel?: string;
 };
 
-export const Modal = ({
+export const Drawer = ({
   open,
   onClose,
   title,
@@ -29,28 +29,20 @@ export const Modal = ({
   className,
   width = 520,
   closeLabel = "Esc",
-}: ModalProps) => (
-  <AntModal
+}: DrawerProps) => (
+  <AntDrawer
     open={open}
-    onCancel={onClose}
+    onClose={onClose}
+    placement="right"
     title={<span id={titleId}>{title}</span>}
-    footer={footer ?? null}
+    footer={footer}
     mask={{ closable: false }}
     keyboard
-    destroyOnHidden
     className={className}
-    width={width}
-    styles={{
-      body: {
-        maxHeight: "min(70vh, 560px)",
-        overflowY: "auto",
-        overflowX: "hidden",
-        scrollbarGutter: "stable",
-      },
-      footer: { paddingTop: 16 },
-    }}
+    closable={{ placement: "end" }}
+    size={width}
     closeIcon={<Typography.Text type="secondary">{closeLabel}</Typography.Text>}
   >
     {children}
-  </AntModal>
+  </AntDrawer>
 );
