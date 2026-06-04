@@ -65,7 +65,9 @@ export const TestConfig = ({
                   numbers={config.numbers}
                   disabled={disabled}
                   onPunctuationChange={() =>
-                    interact(() => setConfig("punctuation", !config.punctuation))
+                    interact(() =>
+                      setConfig("punctuation", !config.punctuation),
+                    )
                   }
                   onNumbersChange={() =>
                     interact(() => setConfig("numbers", !config.numbers))
@@ -93,7 +95,9 @@ export const TestConfig = ({
                   time={config.time}
                   words={config.words}
                   disabled={disabled}
-                  onTimeChange={(time) => interact(() => setConfig("time", time))}
+                  onTimeChange={(time) =>
+                    interact(() => setConfig("time", time))
+                  }
                   onWordsChange={(words) =>
                     interact(() => setConfig("words", words))
                   }
