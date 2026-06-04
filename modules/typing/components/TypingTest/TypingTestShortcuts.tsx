@@ -1,7 +1,8 @@
 "use client";
 
+import { memo, useMemo } from "react";
 import { Button, Divider, Space } from "antd";
-import type { ReactNode } from "react";
+import type { MouseEvent } from "react";
 
 import { joinClassNames } from "@/utils";
 
@@ -26,87 +27,97 @@ type TypingTestShortcutsProps = {
   onOpenShortcutsHelp: () => void;
 };
 
-const ShortcutAction = ({
-  shortcut,
-  label,
-  onClick,
-}: {
+type ShortcutActionProps = {
   shortcut: ShortcutDefinition;
   label: string;
-  onClick: (event: React.MouseEvent<HTMLElement>) => void;
-}) => (
-  <Space size={SHORTCUT_GROUP_GAP} align="center">
-    <ShortcutKeys shortcut={shortcut} />
-    <Button type="text" size="small" onClick={onClick}>
-      {label}
-    </Button>
-  </Space>
+  onClick: () => void;
+};
+
+const ShortcutAction = memo(
+  ({ shortcut, label, onClick }: ShortcutActionProps) => {
+    const handleClick = (event: MouseEvent<HTMLElement>) => {
+      event.stopPropagation();
+      onClick();
+    };
+
+    return (
+      <Space size={SHORTCUT_GROUP_GAP} align="center">
+        <ShortcutKeys shortcut={shortcut} />
+        <Button type="text" size="small" onClick={handleClick}>
+          {label}
+        </Button>
+      </Space>
+    );
+  },
 );
 
-export const TypingTestShortcuts = ({
-  mode,
-  phase,
-  isTestFocused,
-  onRestart,
-  onBailOut,
-  onOpenShortcutsHelp,
-}: TypingTestShortcutsProps) => {
-  const restartShortcut =
-    mode === "zen" ? KEYBOARD_SHORTCUTS.restartZen : KEYBOARD_SHORTCUTS.restart;
+ShortcutAction.displayName = "ShortcutAction";
 
-  const groups: ReactNode[] = [
-    <ShortcutAction
-      key="restart"
-      shortcut={restartShortcut}
-      label={restartShortcut.label}
-      onClick={(e) => {
-        e.stopPropagation();
-        onRestart();
-      }}
-    />,
-  ];
+export const TypingTestShortcuts = memo(
+  ({
+    mode,
+    phase,
+    isTestFocused,
+    onRestart,
+    onBailOut,
+    onOpenShortcutsHelp,
+  }: TypingTestShortcutsProps) => {
+    const restartShortcut =
+      mode === "zen"
+        ? KEYBOARD_SHORTCUTS.restartZen
+        : KEYBOARD_SHORTCUTS.restart;
 
-  if (phase === "active") {
-    groups.push(
-      <ShortcutAction
-        key="bail-out"
-        shortcut={KEYBOARD_SHORTCUTS.bailOut}
-        label={KEYBOARD_SHORTCUTS.bailOut.label}
-        onClick={(e) => {
-          e.stopPropagation();
-          onBailOut();
-        }}
-      />,
-    );
-  }
+    const groups = useMemo(() => {
+      const items = [
+        <ShortcutAction
+          key="restart"
+          shortcut={restartShortcut}
+          label={restartShortcut.label}
+          onClick={onRestart}
+        />,
+      ];
 
-  groups.push(
-    <ShortcutAction
-      key="help"
-      shortcut={KEYBOARD_SHORTCUTS.openShortcutsHelp}
-      label="All shortcuts"
-      onClick={(e) => {
-        e.stopPropagation();
-        onOpenShortcutsHelp();
-      }}
-    />,
-  );
+      if (phase === "active") {
+        items.push(
+          <ShortcutAction
+            key="bail-out"
+            shortcut={KEYBOARD_SHORTCUTS.bailOut}
+            label={KEYBOARD_SHORTCUTS.bailOut.label}
+            onClick={onBailOut}
+          />,
+        );
+      }
 
-  return (
-    <div
-      className={joinClassNames(
-        "tp-shortcuts-bar",
-        isTestFocused && "tp-shortcuts-bar--dimmed",
-      )}
-    >
-      <Space
-        size={SHORTCUT_BAR_GAP}
-        align="center"
-        wrap
-        split={<Divider type="vertical" className="tp-shortcuts-divider" />}
+      items.push(
+        <ShortcutAction
+          key="help"
+          shortcut={KEYBOARD_SHORTCUTS.openShortcutsHelp}
+          label="All shortcuts"
+          onClick={onOpenShortcutsHelp}
+        />,
+      );
+
+      return items;
+    }, [phase, restartShortcut, onRestart, onBailOut, onOpenShortcutsHelp]);
+
+    return (
+      <div
+        className={joinClassNames(
+          "tp-shortcuts-bar",
+          isTestFocused && "tp-shortcuts-bar--dimmed",
+        )}
       >
-        {groups}
-      </Space>
-    </div>
-  );
-};
+        <Space
+          size={SHORTCUT_BAR_GAP}
+          align="center"
+          wrap
+          split={<Divider type="vertical" className="tp-shortcuts-divider" />}
+        >
+          {groups}
+        </Space>
+      </div>
+    );
+  },
+);
+
+TypingTestShortcuts.displayName = "TypingTestShortcuts";

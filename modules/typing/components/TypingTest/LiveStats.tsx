@@ -4,6 +4,8 @@
 
 "use client";
 
+import { memo } from "react";
+
 import { joinClassNames } from "@/utils";
 
 import {
@@ -20,17 +22,14 @@ export type {
 
 type LiveStatsProps = LiveStatsDisplayInput;
 
-export const LiveStats = (props: LiveStatsProps) => {
+export const LiveStats = memo((props: LiveStatsProps) => {
   const timerLabel = getLiveStatsTimerLabel(props);
   const showAccuracy = shouldShowLiveAccuracy(props);
   const hidden = isLiveStatsBarHidden({ timerLabel, showAccuracy });
 
   return (
     <div
-      className={joinClassNames(
-        "tp-live-stats",
-        hidden && "tp-live-stats--hidden",
-      )}
+      className={joinClassNames("tp-live-stats", hidden && "tp-live-stats--hidden")}
     >
       {timerLabel !== null && (
         <span className="tp-live-stats__time">{timerLabel}</span>
@@ -41,4 +40,6 @@ export const LiveStats = (props: LiveStatsProps) => {
       )}
     </div>
   );
-};
+});
+
+LiveStats.displayName = "LiveStats";

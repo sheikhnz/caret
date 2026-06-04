@@ -4,7 +4,7 @@
 
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react";
 
 import { shouldPreventDefaultInTypingInput } from "@/modules/typing/constants/keyboard-shortcuts";
 import * as TestInput from "@/modules/typing/engine/input/test-input";
@@ -202,13 +202,16 @@ export const useTypingTest = (
     customTextRevision,
   ]);
 
-  return {
-    inputRef,
-    wordsContainerRef,
-    handleKeyDown,
-    handleGlobalKeyDown,
-    restart,
-    bailOut,
-    focusInput,
-  };
+  return useMemo(
+    () => ({
+      inputRef,
+      wordsContainerRef,
+      handleKeyDown,
+      handleGlobalKeyDown,
+      restart,
+      bailOut,
+      focusInput,
+    }),
+    [handleKeyDown, handleGlobalKeyDown, restart, bailOut, focusInput],
+  );
 };

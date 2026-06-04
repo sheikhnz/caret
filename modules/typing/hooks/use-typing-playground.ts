@@ -41,11 +41,13 @@ export const useTypingPlayground = (): TypingPlaygroundState => {
     focusInputRef.current = typing.focusInput;
   }, [typing.focusInput]);
 
+  const { focusInput } = typing;
+
   useEffect(() => {
     if (isTestFocused && !isLoadingWords && phase !== "finished") {
-      typing.focusInput();
+      focusInput();
     }
-  }, [isTestFocused, isLoadingWords, phase, typing.focusInput, typing]);
+  }, [isTestFocused, isLoadingWords, phase, focusInput]);
 
   const dialogs = usePlaygroundDialogs();
 

@@ -4,6 +4,8 @@
 
 "use client";
 
+import { memo } from "react";
+
 import { joinClassNames } from "@/utils";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
 import { useCustomTextStore } from "@/modules/typing/stores/custom-text-store";
@@ -16,9 +18,7 @@ type TypingTestLiveStatsProps = {
   isTestFocused: boolean;
 };
 
-export const TypingTestLiveStats = ({
-  isTestFocused,
-}: TypingTestLiveStatsProps) => {
+export const TypingTestLiveStats = memo(({ isTestFocused }: TypingTestLiveStatsProps) => {
   const { liveStats, phase, wordIndex, wordCount } = useTestStore(
     useShallow((state) => ({
       liveStats: state.liveStats,
@@ -60,4 +60,6 @@ export const TypingTestLiveStats = ({
       />
     </div>
   );
-};
+});
+
+TypingTestLiveStats.displayName = "TypingTestLiveStats";

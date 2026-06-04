@@ -5,6 +5,8 @@
 
 "use client";
 
+import { useCallback, useMemo } from "react";
+
 import { joinClassNames } from "@/utils";
 import { PlaygroundModals } from "@/modules/typing/components/PlaygroundModals";
 import { handlePlaygroundModalAction } from "@/modules/typing/components/PlaygroundModals/handle-playground-modal-action";
@@ -20,40 +22,49 @@ type TypingPlaygroundProps = {
 
 export const TypingPlayground = ({ playground }: TypingPlaygroundProps) => {
   const { phase, isTestFocused, typing, dialogs } = playground;
+  const { restart, focusInput } = typing;
+
+  const handleModalAction = useCallback(
+    (action: Parameters<typeof handlePlaygroundModalAction>[0]) => {
+      handlePlaygroundModalAction(action, {
+        restartTest: restart,
+      });
+    },
+    [restart],
+  );
+
+  const handleRestart = useCallback(() => {
+    void restart(false);
+  }, [restart]);
+
+  const handleRepeat = useCallback(() => {
+    void restart(true);
+  }, [restart]);
+
+  const handleOpenShortcutsHelp = useCallback(() => {
+    dialogs.open(PLAYGROUND_DIALOGS.shortcutsHelp);
+  }, [dialogs]);
+
+  const configFadeClass = useMemo(
+    () =>
+      joinClassNames("tp-focus-fade", isTestFocused && "tp-focus-fade--dimmed"),
+    [isTestFocused],
+  );
 
   return (
     <>
-      <PlaygroundModals
-        dialogs={dialogs}
-        onModalAction={(action) => {
-          handlePlaygroundModalAction(action, {
-            restartTest: typing.restart,
-          });
-        }}
-      />
+      <PlaygroundModals dialogs={dialogs} onModalAction={handleModalAction} />
 
       {phase === "finished" ? (
-        <Results
-          onRestart={() => {
-            void typing.restart(false);
-          }}
-          onRepeat={() => {
-            void typing.restart(true);
-          }}
-        />
+        <Results onRestart={handleRestart} onRepeat={handleRepeat} />
       ) : (
         <div className="tp-content-column">
           <div className="tp-playground-config-slot">
-            <div
-              className={joinClassNames(
-                "tp-focus-fade",
-                isTestFocused && "tp-focus-fade--dimmed",
-              )}
-            >
+            <div className={configFadeClass}>
               <TestConfig
                 disabled={isTestFocused}
                 dialogs={dialogs}
-                onInteract={typing.focusInput}
+                onInteract={focusInput}
               />
             </div>
           </div>
@@ -61,9 +72,7 @@ export const TypingPlayground = ({ playground }: TypingPlaygroundProps) => {
           <TypingTest
             typing={typing}
             isTestFocused={isTestFocused}
-            onOpenShortcutsHelp={() =>
-              dialogs.open(PLAYGROUND_DIALOGS.shortcutsHelp)
-            }
+            onOpenShortcutsHelp={handleOpenShortcutsHelp}
           />
         </div>
       )}

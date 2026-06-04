@@ -7,10 +7,10 @@
 import { useCallback } from "react";
 
 import type { UseTypingTestReturn } from "@/modules/typing/hooks/use-typing-test";
+import { useTypingTestDisplayConfig } from "@/modules/typing/hooks/use-typing-test-display-config";
 import { useTypingTestView } from "@/modules/typing/hooks/use-typing-test-view";
 import { useCaretPosition } from "@/modules/typing/hooks/use-caret-position";
 import { useWordsRenderer } from "@/modules/typing/hooks/use-words-renderer";
-import { useConfigStore } from "@/modules/typing/stores/config-store";
 import { SkeletonLoader, SKELETON_IDS } from "@/ui";
 
 import { Caret } from "./Caret";
@@ -31,7 +31,7 @@ export const TypingTest = ({
   onOpenShortcutsHelp,
 }: TypingTestProps) => {
   const store = useTypingTestView();
-  const { config } = useConfigStore();
+  const { mode, blindMode, caretStyle, smoothCaret } = useTypingTestDisplayConfig();
   const {
     inputRef,
     wordsContainerRef,
@@ -41,13 +41,13 @@ export const TypingTest = ({
     focusInput,
   } = typing;
 
-  const isZenMode = config.mode === "zen";
+  const isZenMode = mode === "zen";
   const renderedWords = useWordsRenderer({
     words: store.words,
     wordIndex: store.wordIndex,
     currentInput: store.currentInput,
     inputHistory: store.inputHistory,
-    blindMode: config.blindMode,
+    blindMode,
     isZenMode,
   });
 
@@ -76,6 +76,14 @@ export const TypingTest = ({
     focusInput();
   }, [focusInput]);
 
+  const handleRestart = useCallback(() => {
+    void restart(false);
+  }, [restart]);
+
+  const handleBailOut = useCallback(() => {
+    bailOut();
+  }, [bailOut]);
+
   if (store.phase === "finished") return null;
 
   return (
@@ -99,8 +107,8 @@ export const TypingTest = ({
               <WordsDisplay renderedWords={renderedWords} />
               <Caret
                 position={caretPosition}
-                style={config.caretStyle}
-                smooth={config.smoothCaret}
+                style={caretStyle}
+                smooth={smoothCaret}
                 blink={!isTestFocused}
                 visible={showCaret}
               />
@@ -110,13 +118,11 @@ export const TypingTest = ({
       </div>
 
       <TypingTestShortcuts
-        mode={config.mode}
+        mode={mode}
         phase={store.phase}
         isTestFocused={isTestFocused}
-        onRestart={() => {
-          void restart(false);
-        }}
-        onBailOut={bailOut}
+        onRestart={handleRestart}
+        onBailOut={handleBailOut}
         onOpenShortcutsHelp={onOpenShortcutsHelp}
       />
 
