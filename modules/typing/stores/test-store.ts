@@ -68,7 +68,7 @@ export const useTestStore = create<TestStore>()((set) => ({
   liveStats: INITIAL_LIVE_STATS,
   result: null,
   language: null,
-  isLoadingWords: false,
+  isLoadingWords: true,
   restartCount: 0,
   incompleteTests: [],
   incompleteTestSeconds: 0,

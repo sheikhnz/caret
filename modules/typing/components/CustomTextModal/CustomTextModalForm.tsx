@@ -4,8 +4,7 @@
 
 "use client";
 
-import { useCustomTextStore } from "@/modules/typing/stores/custom-text-store";
-
+import { useCustomTextStore } from "@/modules/typing/stores";
 import { CustomTextModalFormContent } from "./CustomTextModalFormContent";
 
 type CustomTextModalFormProps = {

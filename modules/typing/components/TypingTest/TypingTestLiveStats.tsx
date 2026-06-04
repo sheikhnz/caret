@@ -8,7 +8,7 @@ import { memo } from "react";
 
 import { joinClassNames } from "@/utils";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
-import { useCustomTextStore } from "@/modules/typing/stores/custom-text-store";
+import { useCustomTextStore } from "@/modules/typing/stores";
 import { useTestStore } from "@/modules/typing/stores/test-store";
 import { useShallow } from "zustand/react/shallow";
 

@@ -22,7 +22,7 @@ import {
 import { CUSTOM_TEXT_MODAL_TITLE_ID } from "@/modules/typing/custom-text/constants";
 import { cleanUpCustomText } from "@/modules/typing/custom-text/utils";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
-import { useCustomTextStore } from "@/modules/typing/stores/custom-text-store";
+import { useCustomTextStore } from "@/modules/typing/stores";
 import type { CustomTextSettings } from "@/modules/typing/types/custom-text";
 
 import { LimitFields } from "./LimitFields";

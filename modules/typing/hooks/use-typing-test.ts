@@ -11,7 +11,7 @@ import * as TestInput from "@/modules/typing/engine/input/test-input";
 import * as TestState from "@/modules/typing/engine/runtime/test-state";
 import { setSoundSettings } from "@/modules/typing/services/sound";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
-import { useCustomTextStore } from "@/modules/typing/stores/custom-text-store";
+import { useCustomTextStore } from "@/modules/typing/stores";
 import { useTestStore } from "@/modules/typing/stores/test-store";
 import type { LanguageObject } from "@/modules/typing/types/language";
 
@@ -186,7 +186,6 @@ export const useTypingTest = (
 
   useLayoutEffect(() => {
     if (!persistedStoresHydrated) {
-      useTestStore.getState().setIsLoadingWords(true);
       return;
     }
     void initTest();
