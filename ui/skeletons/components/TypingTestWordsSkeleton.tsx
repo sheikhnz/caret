@@ -1,6 +1,6 @@
 /**
  * Typing test word area placeholder — one flex-wrap flow like WordsDisplay.
- * Pure CSS bars (not Ant Skeleton) so dark mode matches ThemeStyle before React hydrates.
+ * Palette-based bars for SSR-safe first paint on `/` (see ui/skeletons/README.md).
  */
 
 import type { CSSProperties } from "react";

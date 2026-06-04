@@ -353,7 +353,7 @@ button:focus-visible,
   height: 100%;
 }
 
-/* ThemeStyle palette vars — no Ant Skeleton (SSR always injects light Ant tokens). */
+/* SSR-safe typing skeleton — palette vars; see ui/skeletons/README.md */
 .tp-skeleton-word-bar {
   display: block;
   height: 1em;

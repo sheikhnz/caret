@@ -1,6 +1,8 @@
 /**
  * Skeleton registry — map stable ids to placeholder components.
  * Add new entries in configs/, components/, and SKELETON_IDS.
+ *
+ * First-paint vs Ant Skeleton: see README.md in this folder.
  */
 
 import type { ComponentType } from "react";
