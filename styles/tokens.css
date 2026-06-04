@@ -1,98 +1,28 @@
 /**
- * Minimal tokens — fonts, page shell, typing text, errors, chart.
- * Theme follows prefers-color-scheme (and optional data-theme override).
- * Ant Design chrome uses ConfigProvider; typing letters use --tp-text-* here.
+ * Static tokens + semantic aliases to Ant cssVar (--tp-color-*).
+ * Colors: ui/theme/palette.ts → buildRootThemeCss() in layout <head>.
  */
 
 :root {
-  color-scheme: light;
-
-  --tp-page-bg: #f5f5f5;
-  --tp-page-text: rgb(0 0 0 / 88%);
-  --tp-text-primary: rgb(0 0 0 / 88%);
-  --tp-text-muted: rgb(0 0 0 / 45%);
-  --tp-caret: rgb(0 0 0 / 88%);
-
   --tp-font-sans:
     ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji";
   --tp-font-mono:
     ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
 
-  --tp-error: #ff4d4f;
-  --tp-error-muted: rgb(255 77 79 / 0.12);
-
+  --tp-results-chart-height: 220px;
   --tp-scrollbar-size: 4px;
-  --tp-scrollbar-thumb: rgb(0 0 0 / 0.15);
-  --tp-scrollbar-thumb-hover: rgb(0 0 0 / 0.25);
-
   --tp-radius-sm: 2px;
   --tp-radius-md: 4px;
 
-  --tp-chart-plot-bg: #ebebeb;
-  --tp-chart-plot-border: #d4d4d4;
-  --tp-chart-grid: rgb(0 0 0 / 0.1);
-  --tp-chart-axis: rgb(0 0 0 / 0.45);
-  --tp-chart-wpm-line: #171717;
-  --tp-chart-wpm-fill: rgb(23 23 23 / 0.14);
-  --tp-chart-raw-line: #737373;
-  --tp-chart-error-bar: rgb(220 38 38 / 0.55);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-
-    --tp-page-bg: #000000;
-    --tp-page-text: rgb(255 255 255 / 88%);
-    --tp-text-primary: rgb(255 255 255 / 88%);
-    --tp-text-muted: rgb(255 255 255 / 45%);
-    --tp-caret: rgb(255 255 255 / 88%);
-
-    --tp-error: #ff7875;
-    --tp-error-muted: rgb(255 120 117 / 0.14);
-    --tp-chart-plot-bg: #141414;
-    --tp-chart-plot-border: #3f3f3f;
-    --tp-chart-grid: rgb(255 255 255 / 0.12);
-    --tp-chart-axis: rgb(255 255 255 / 0.45);
-    --tp-chart-wpm-line: #fafafa;
-    --tp-chart-wpm-fill: rgb(250 250 250 / 0.12);
-    --tp-chart-raw-line: #a3a3a3;
-    --tp-chart-error-bar: rgb(248 113 113 / 0.65);
-    --tp-scrollbar-thumb: rgb(255 255 255 / 0.15);
-    --tp-scrollbar-thumb-hover: rgb(255 255 255 / 0.28);
-  }
-}
-
-[data-theme="dark"] {
-  color-scheme: dark;
-
-  --tp-page-bg: #000000;
-  --tp-page-text: rgb(255 255 255 / 88%);
-  --tp-text-primary: rgb(255 255 255 / 88%);
-  --tp-text-muted: rgb(255 255 255 / 45%);
-  --tp-caret: rgb(255 255 255 / 88%);
-
-  --tp-error: #ff7875;
-  --tp-error-muted: rgb(255 120 117 / 0.14);
-  --tp-chart-plot-bg: #141414;
-  --tp-chart-plot-border: #3f3f3f;
-  --tp-chart-grid: rgb(255 255 255 / 0.12);
-  --tp-chart-axis: rgb(255 255 255 / 0.45);
-  --tp-chart-wpm-line: #fafafa;
-  --tp-chart-wpm-fill: rgb(250 250 250 / 0.12);
-  --tp-chart-raw-line: #a3a3a3;
-  --tp-chart-error-bar: rgb(248 113 113 / 0.65);
-  --tp-scrollbar-thumb: rgb(255 255 255 / 0.15);
-  --tp-scrollbar-thumb-hover: rgb(255 255 255 / 0.28);
-}
-
-[data-theme="light"] {
-  color-scheme: light;
-
-  --tp-page-bg: #f5f5f5;
-  --tp-page-text: rgb(0 0 0 / 88%);
-  --tp-text-primary: rgb(0 0 0 / 88%);
-  --tp-text-muted: rgb(0 0 0 / 45%);
-  --tp-caret: rgb(0 0 0 / 88%);
+  /* Semantic aliases (Ant cssVar names) */
+  --tp-page-bg: var(--tp-color-bg-layout);
+  --tp-page-text: var(--tp-color-text);
+  --tp-text-primary: var(--tp-color-text);
+  --tp-text-muted: var(--tp-color-text-description);
+  --tp-text-disabled: var(--tp-color-text-disabled);
+  --tp-caret: var(--tp-color-text);
+  --tp-surface: var(--tp-color-bg-container);
+  --tp-border: var(--tp-color-border);
+  --tp-fill-secondary: var(--tp-color-fill-secondary);
 }

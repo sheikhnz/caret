@@ -36,22 +36,28 @@ Match Monkeytype behavior unless this project intentionally diverges (document t
 
 **Stack:** Ant Design 6 only for UI chrome. No Tailwind. Layout and spacing use Ant components (`Flex`, `Row`, `Col`, `Space`, `Layout`) — not utility-class grids.
 
-**Theme entry points:**
+### Standard architecture (system light/dark)
 
-| File                  | Role                                                                                      |
-| --------------------- | ----------------------------------------------------------------------------------------- |
-| `ui/theme.ts`         | `buildAntdTheme(isDark)` — single source for Ant token overrides                          |
-| `ui/AntdProvider.tsx` | `ConfigProvider` + `prefers-color-scheme` only (do not read/write `data-theme` in JS)   |
-| `styles/tokens.css`   | Non-Ant tokens: page shell, typing text (`--tp-text-*`), errors, chart                  |
-| `app/globals.css`     | Typing-specific CSS (letter states, test-config pill shell, `Kbd`)                        |
+Follows [Ant Design theme](https://ant.design/docs/react/customize-theme) + [CSS variables](https://ant.design/docs/react/css-variables) + platform `prefers-color-scheme`.
 
-**Palette:** Monochrome minimal — no brand purple/blue accent. Light mode primary ≈ black on white; dark mode primary ≈ white on black. Muted grays for secondary text, links, and shortcuts. **Do not** reintroduce `--tp-accent` or colorful `colorPrimary` overrides.
+| Layer | File | Standard pattern |
+| ----- | ---- | ---------------- |
+| Tokens | `ui/theme/palette.ts` | Single source of color values |
+| Ant | `ui/theme.ts` → `AppProviders` | `ConfigProvider` + `algorithm` + `token` + `cssVar: { prefix: 'tp', key: 'tp' }` |
+| OS sync | `ui/AppProviders.tsx` | `useSyncExternalStore` + `matchMedia('(prefers-color-scheme: dark)')` ([React](https://react.dev/reference/react/useSyncExternalStore)) |
+| Custom CSS | `styles/theme-vars.css` | `:root` vars + `@media (prefers-color-scheme: dark)` — keep in sync with `palette.ts`; imported from `globals.css` |
+| Aliases | `styles/tokens.css` | Fonts, radii; `--tp-text-primary` → `var(--tp-color-text)` |
+
+**Do not add:** blocking scripts, `data-theme` toggles, duplicate pill color CSS, or `inherit` Ant token hacks. For a user-controlled theme toggle later, use [`next-themes`](https://github.com/pacocoursey/next-themes) and drive `buildAntdTheme` from `resolvedTheme`.
+
+**Palette:** Monochrome minimal — no brand purple/blue accent. Light mode primary ≈ black on white; dark mode primary ≈ white on black. **Do not** reintroduce `--tp-accent` or colorful `colorPrimary` overrides.
 
 **When adding UI:**
 
 - Prefer Ant components and `@/ui` wrappers (`Button`, `Modal`, `Card`, `Input`, `Kbd`, `AppSegmented`).
-- Read colors from `--ant-color-*` (set by ConfigProvider) for Ant components, or Ant `Typography` `type="secondary"`.
-- Typing letters, caret, live stats, shortcuts bar: use `--tp-text-primary` / `--tp-text-muted` from `tokens.css` (never `--ant-color-*` with light-only fallbacks).
+- Ant chrome: theme tokens / `ConfigProvider` (not manual `--ant-color-*`).
+- Custom CSS (`globals.css`, typing letters): `var(--tp-color-*)` on `:root` or semantic aliases in `tokens.css`.
+- All hex/rgba values live in `palette.ts` only.
 - Primary actions: `Button` `variant="primary"` (monochrome fill via theme). Quiet actions: `type="text"` or `type="default"`, not loud link-blue.
 - Shortcut keys: `ShortcutKeys` + `Kbd`; inside primary buttons, `Kbd` / separators inherit contrast via `.tp-kbd` / `.tp-kbd-separator` in `globals.css`.
 - Form focus: keep rings light via `controlFocus` in `ui/theme.ts` only (do not duplicate in `globals.css`).
@@ -60,7 +66,7 @@ Match Monkeytype behavior unless this project intentionally diverges (document t
   - Results: `tp-results-card`, `tp-results-top`, `tp-results-chart-col` (use Flex, not `Row` gutter inside cards)
   - Sections: `tp-section-*`, `tp-stat-card*`, `tp-shortcuts-*`
 - Results card layout: Flex only inside `tp-results-card` — Ant `Row` gutter negative margins break card padding.
-- Test-config chips: keep `TEST_CONFIG_PILL_CLASS` (`tp-config-pill`) for the bordered pill container; do not strip the shell back to ghost segments.
+- Test-config chips: keep `TEST_CONFIG_PILL_CLASS` (`tp-config-pill`); `TestConfig` returns `null` until `usePersistedStoresHydrated()` so Ant/theme SSR mismatch is not visible on chips.
 
 **Intentional color exceptions:** Letter status classes (`.letter-correct`, `.letter-incorrect`, etc.) and results chart series (`--tp-chart-*` in `styles/tokens.css`, rendered via `useChartTheme`) — functional feedback and readable data viz, not decorative accent.
 

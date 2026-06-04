@@ -8,6 +8,7 @@ import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 
 import { PLAYGROUND_DIALOGS } from "@/modules/typing/constants/playground-dialogs";
 import type { PlaygroundDialogsApi } from "@/modules/typing/hooks/use-playground-dialogs";
+import { usePersistedStoresHydrated } from "@/modules/typing/hooks/use-persisted-stores-hydrated";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
 
 import { CustomModeControls } from "./CustomModeControls";
@@ -34,8 +35,13 @@ export const TestConfig = ({
   dialogs,
   onInteract,
 }: TestConfigProps) => {
+  const hydrated = usePersistedStoresHydrated();
   const { config, setConfig } = useConfigStore();
   const disabled = disabledProp;
+
+  if (!hydrated) {
+    return null;
+  }
   const showPuncNum = config.mode !== "zen" && config.mode !== "custom";
   const showPresets = config.mode === "time" || config.mode === "words";
   const showCustomControls = config.mode === "custom";

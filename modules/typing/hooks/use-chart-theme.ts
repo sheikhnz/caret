@@ -1,20 +1,12 @@
 /**
- * Chart colors from dedicated tokens — high contrast vs results card in both themes.
+ * Chart colors from the shared theme palette (via AppProviders).
  */
 
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useMemo } from "react";
 
-import { getIsDark, subscribeColorScheme } from "@/ui/AntdProvider";
-
-const readCssVar = (name: string, fallback: string) => {
-  if (typeof window === "undefined") return fallback;
-  return (
-    getComputedStyle(document.documentElement).getPropertyValue(name).trim() ||
-    fallback
-  );
-};
+import { useAppTheme } from "@/ui/AppProviders";
 
 export type ChartThemeColors = {
   plotBg: string;
@@ -32,25 +24,25 @@ export type ChartThemeColors = {
   tooltipBody: string;
 };
 
-const readChartTheme = (): ChartThemeColors => ({
-  plotBg: readCssVar("--tp-chart-plot-bg", "#f0f0f0"),
-  plotBorder: readCssVar("--tp-chart-plot-border", "#e5e5e5"),
-  grid: readCssVar("--tp-chart-grid", "rgba(0, 0, 0, 0.1)"),
-  axis: readCssVar("--tp-chart-axis", "rgba(0, 0, 0, 0.45)"),
-  wpmLine: readCssVar("--tp-chart-wpm-line", "#171717"),
-  wpmFill: readCssVar("--tp-chart-wpm-fill", "rgba(23, 23, 23, 0.14)"),
-  rawLine: readCssVar("--tp-chart-raw-line", "#737373"),
-  errorBar: readCssVar("--tp-chart-error-bar", "rgba(220, 38, 38, 0.55)"),
-  error: readCssVar("--tp-error", "#ff4d4f"),
-  tooltipBg: readCssVar("--tp-page-bg", "#ffffff"),
-  tooltipBorder: readCssVar("--tp-chart-plot-border", "#d9d9d9"),
-  tooltipTitle: readCssVar("--tp-text-muted", "rgba(0, 0, 0, 0.45)"),
-  tooltipBody: readCssVar("--tp-text-primary", "rgba(0, 0, 0, 0.88)"),
-});
-
 export const useChartTheme = (): ChartThemeColors => {
-  // Re-render when OS color scheme changes so CSS variables are re-read.
-  useSyncExternalStore(subscribeColorScheme, getIsDark, () => false);
+  const { palette } = useAppTheme();
 
-  return readChartTheme();
+  return useMemo(
+    () => ({
+      plotBg: palette.chartPlotBg,
+      plotBorder: palette.chartPlotBorder,
+      grid: palette.chartGrid,
+      axis: palette.chartAxis,
+      wpmLine: palette.chartWpmLine,
+      wpmFill: palette.chartWpmFill,
+      rawLine: palette.chartRawLine,
+      errorBar: palette.chartErrorBar,
+      error: palette.error,
+      tooltipBg: palette.colorBgLayout,
+      tooltipBorder: palette.chartPlotBorder,
+      tooltipTitle: palette.colorTextDescription,
+      tooltipBody: palette.colorText,
+    }),
+    [palette],
+  );
 };

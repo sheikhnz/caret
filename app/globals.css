@@ -54,7 +54,7 @@ body {
   font-weight: 600;
   letter-spacing: -0.025em;
   line-height: 1.25;
-  color: var(--ant-color-text-heading, inherit);
+  color: var(--tp-color-text, inherit);
 }
 
 main {
@@ -65,12 +65,12 @@ a:focus-visible,
 button:focus-visible,
 [tabindex]:focus-visible {
   outline: 1px solid
-    color-mix(in srgb, var(--ant-color-text, currentColor) 35%, transparent);
+    color-mix(in srgb, var(--tp-color-text, currentColor) 35%, transparent);
   outline-offset: 1px;
 }
 
 ::selection {
-  background: var(--ant-color-fill-secondary, rgb(0 0 0 / 6%));
+  background: var(--tp-color-fill-secondary);
   color: inherit;
 }
 
@@ -402,7 +402,7 @@ button:focus-visible,
 .tp-results-stats-row {
   width: 100%;
   padding-top: 20px;
-  border-top: 1px solid var(--ant-color-border-secondary, rgb(0 0 0 / 6%));
+  border-top: 1px solid var(--tp-border);
 }
 
 .tp-stat-card {
@@ -412,7 +412,7 @@ button:focus-visible,
 
 .tp-stat-card .ant-statistic-title {
   margin-bottom: 0;
-  color: var(--ant-color-text-description);
+  color: var(--tp-text-muted);
   font-weight: 400;
 }
 
@@ -430,7 +430,7 @@ button:focus-visible,
 .tp-stat-card .ant-statistic-content {
   font-family: var(--tp-font-mono);
   font-variant-numeric: tabular-nums;
-  color: var(--ant-color-text);
+  color: var(--tp-text-primary);
 }
 
 .tp-stat-card--hero .ant-statistic-content {
@@ -464,7 +464,7 @@ button:focus-visible,
   font-size: 16px;
   line-height: 16px;
   font-weight: 400;
-  color: var(--ant-color-text-description);
+  color: var(--tp-text-muted);
 }
 
 .tp-char-stats__values {
@@ -479,12 +479,12 @@ button:focus-visible,
 
 .tp-char-stats__sep {
   margin: 0 0.2em;
-  color: var(--ant-color-text-description);
+  color: var(--tp-text-muted);
   font-weight: 400;
 }
 
 .tp-char-stats__n--correct {
-  color: var(--ant-color-text);
+  color: var(--tp-text-primary);
 }
 
 .tp-char-stats__n--incorrect,
@@ -511,7 +511,7 @@ button:focus-visible,
 }
 
 .tp-char-stats__key {
-  color: var(--ant-color-text-description);
+  color: var(--tp-text-muted);
 }
 
 .tp-char-stats__key--incorrect,
@@ -547,11 +547,11 @@ button:focus-visible,
   font-size: 14px;
   font-weight: 600;
   line-height: 1.4;
-  color: var(--ant-color-text);
+  color: var(--tp-text-primary);
 }
 
 .tp-form-label-required {
-  color: var(--ant-color-error);
+  color: var(--tp-error);
 }
 
 /* Modal / section headings — avoid default Title bottom margin */
@@ -578,9 +578,9 @@ button:focus-visible,
   font-size: 0.85em;
   font-weight: 500;
   line-height: 1.25;
-  color: var(--ant-color-text-description);
-  background: var(--ant-color-fill-secondary);
-  border: 1px solid var(--ant-color-border);
+  color: var(--tp-text-muted);
+  background: var(--tp-fill-secondary);
+  border: 1px solid var(--tp-border);
   border-radius: var(--tp-radius-sm);
   box-shadow: none;
 }
@@ -601,7 +601,7 @@ button:focus-visible,
   display: inline-flex;
   align-items: center;
   align-self: center;
-  color: var(--ant-color-text-description);
+  color: var(--tp-text-muted);
   font-size: 0.85em;
   line-height: 1;
   user-select: none;
@@ -639,7 +639,7 @@ button:focus-visible,
   text-underline-offset: 0.15em;
 }
 
-/* Test-config pill shell — bordered container (Segmented + CheckableTagGroup) */
+/* Test-config pill shell — tp tokens (CSS-first; correct before React hydrates) */
 .tp-config-pill.ant-segmented,
 .tp-config-pill.ant-tag-checkable-group {
   display: inline-flex;
@@ -647,9 +647,9 @@ button:focus-visible,
   max-width: none;
   flex-shrink: 0;
   padding: 2px;
-  background: var(--ant-color-bg-container);
-  border: 1px solid var(--ant-color-border);
-  border-radius: var(--ant-border-radius, 6px);
+  background: var(--tp-color-bg-container);
+  border: 1px solid var(--tp-color-border);
+  border-radius: var(--tp-radius-md);
 }
 
 .tp-config-pill.ant-segmented .ant-segmented-group {
@@ -665,11 +665,18 @@ button:focus-visible,
 
 .tp-config-pill.ant-segmented
   .ant-segmented-item:not(.ant-segmented-item-selected) {
-  color: var(--ant-color-text-description);
+  color: var(--tp-color-text-description);
+  background: transparent;
 }
 
 .tp-config-pill.ant-segmented .ant-segmented-item-selected {
-  color: var(--ant-color-text);
+  color: var(--tp-color-text);
+  background: var(--tp-color-fill-secondary);
+}
+
+.tp-config-pill.ant-segmented .ant-segmented-thumb {
+  background: var(--tp-color-fill-secondary);
+  box-shadow: none;
 }
 
 .tp-config-pill-action.ant-segmented .ant-segmented-thumb {
@@ -678,13 +685,13 @@ button:focus-visible,
 
 .tp-config-pill-action.ant-segmented .ant-segmented-item,
 .tp-config-pill-action.ant-segmented .ant-segmented-item-selected {
-  color: var(--ant-color-text-description);
+  color: var(--tp-color-text-description);
   background: transparent;
 }
 
 .tp-config-pill-action.ant-segmented
   .ant-segmented-item:hover:not(.ant-segmented-item-disabled) {
-  color: var(--ant-color-text);
+  color: var(--tp-color-text);
 }
 
 .tp-config-pill.ant-tag-checkable-group {
@@ -703,25 +710,25 @@ button:focus-visible,
   border: none;
   border-radius: var(--tp-radius-sm);
   background: transparent;
-  color: var(--ant-color-text-description);
+  color: var(--tp-color-text-description);
   cursor: pointer;
 }
 
 .tp-config-pill.ant-tag-checkable-group
   .ant-tag-checkable:hover:not(.ant-tag-checkable-disabled) {
-  color: var(--ant-color-text);
+  color: var(--tp-color-text);
 }
 
 .tp-config-pill.ant-tag-checkable-group .ant-tag-checkable-checked {
-  background: var(--ant-color-fill-secondary);
-  color: var(--ant-color-text);
+  background: var(--tp-color-fill-secondary);
+  color: var(--tp-color-text);
 }
 
 .tp-config-pill.ant-segmented.ant-segmented-disabled .ant-segmented-item,
 .tp-config-pill.ant-segmented.ant-segmented-disabled
   .ant-segmented-item-selected,
 .tp-config-pill.ant-segmented .ant-segmented-item-disabled {
-  color: var(--ant-color-text-disabled);
+  color: var(--tp-text-disabled);
   cursor: not-allowed;
 }
 
@@ -735,7 +742,7 @@ button:focus-visible,
 .tp-config-pill.ant-tag-checkable-group .ant-tag-checkable-disabled,
 .tp-config-pill.ant-tag-checkable-group
   .ant-tag-checkable-disabled.ant-tag-checkable-checked {
-  color: var(--ant-color-text-disabled);
+  color: var(--tp-text-disabled);
   background-color: transparent;
   cursor: not-allowed;
 }

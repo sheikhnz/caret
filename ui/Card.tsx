@@ -19,8 +19,9 @@ export const Card = ({
 }: CardProps) => {
   const elevatedRoot = elevated
     ? {
-        boxShadow: "var(--ant-box-shadow-secondary, 0 1px 2px rgb(0 0 0 / 6%))",
-        borderColor: "var(--ant-color-border)",
+        boxShadow:
+          "0 1px 2px color-mix(in srgb, var(--tp-color-text) 8%, transparent)",
+        borderColor: "var(--tp-color-border)",
       }
     : undefined;
 
