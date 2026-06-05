@@ -109,7 +109,7 @@ Follows [Ant Design theme](https://ant.design/docs/react/customize-theme) + [CSS
 ## Tests
 
 - Run unit tests: `pnpm test`
-- Pure logic lives in `calculations/`, `engine/input/`, `engine/generation/` — add Vitest files alongside as `*.test.ts`.
+- Pure logic lives in `calculations/`, `engine/input/`, `engine/generation/` — add Vitest files under `__tests__/` in the matching module folder (e.g. `calculations/__tests__/wpm.test.ts`).
 
 ## React performance (typing hot path)
 

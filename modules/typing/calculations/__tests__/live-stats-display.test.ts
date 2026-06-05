@@ -3,8 +3,8 @@ import { describe, expect, it } from "vitest";
 import {
   getLiveStatsTimerLabel,
   shouldShowLiveAccuracy,
-} from "./live-stats-display";
-import type { LiveStatsDisplayInput } from "./live-stats-display";
+} from "../live-stats-display";
+import type { LiveStatsDisplayInput } from "../live-stats-display";
 import type { LiveStats } from "@/modules/typing/stores/test-store";
 
 const baseStats: LiveStats = {

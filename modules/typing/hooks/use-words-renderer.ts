@@ -6,25 +6,12 @@
 "use client";
 
 import { useMemo } from "react";
+
+import {
+  getCharStatus,
+  shouldMaskCharInBlindMode,
+} from "../calculations/char-display";
 import type { RenderedWord, RenderedChar, CharStatus } from "../types/engine";
-
-const getCharStatus = (
-  inputChar: string | undefined,
-  targetChar: string,
-  wordCompleted: boolean,
-  isCurrentWord: boolean,
-  charIndex: number,
-  currentInputLength: number,
-): CharStatus => {
-  if (!isCurrentWord && !wordCompleted) return "pending";
-
-  if (isCurrentWord && charIndex >= currentInputLength) return "pending";
-
-  if (!inputChar) {
-    return wordCompleted ? "missed" : "pending";
-  }
-  return inputChar === targetChar ? "correct" : "incorrect";
-};
 
 type UseWordsRendererArgs = {
   words: string[];
@@ -88,18 +75,17 @@ export const useWordsRenderer = ({
         if (ci >= word.length) {
           status = "extra";
         } else {
-          status = getCharStatus(
+          status = getCharStatus({
             inputChar,
             targetChar,
-            isCompleted,
-            isActive,
-            ci,
-            currentInput.length,
-          );
+            wordCompleted: isCompleted,
+            isCurrentWord: isActive,
+            charIndex: ci,
+            currentInputLength: currentInput.length,
+          });
         }
 
-        // blind mode: hide incorrect chars
-        if (blindMode && (status === "incorrect" || status === "extra")) {
+        if (blindMode && shouldMaskCharInBlindMode(status)) {
           chars.push({
             char: targetChar || inputChar || "",
             status: "correct",

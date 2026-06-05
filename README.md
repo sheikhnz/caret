@@ -174,7 +174,7 @@ Loaders validate language names (allowlist: `english` today) before fetching. To
 ## Contributing
 
 - Run `pnpm pr-preflight` before opening a PR.
-- Add Vitest tests next to pure logic (`*.test.ts` under `modules/typing/`).
+- Add Vitest tests under `__tests__/` in the matching module folder (e.g. `modules/typing/calculations/__tests__/wpm.test.ts`).
 - Agent and architecture conventions: **[AGENTS.md](./AGENTS.md)** (including when to check upstream Monkeytype for behavior).
 
 ## Lineage and license
