@@ -53,7 +53,12 @@ export const Results = ({
           <div className="tp-results-footer">
             <div className="tp-results-footer-stats">
               <StatCard label="WPM" value={result.wpm} featured reserveSub />
-              <StatCard label="Acc" value={`${result.acc}%`} featured reserveSub />
+              <StatCard
+                label="Acc"
+                value={`${result.acc}%`}
+                featured
+                reserveSub
+              />
               <StatCard label="Raw" value={result.rawWpm} reserveSub />
               <StatCard
                 label="Consist."

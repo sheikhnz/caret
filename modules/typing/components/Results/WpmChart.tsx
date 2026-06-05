@@ -37,7 +37,11 @@ type ChartLegendItemProps = {
   label: string;
 };
 
-const ChartLegendItem = ({ color, dash = false, label }: ChartLegendItemProps) => (
+const ChartLegendItem = ({
+  color,
+  dash = false,
+  label,
+}: ChartLegendItemProps) => (
   <li className="tp-results-chart-legend-item">
     <span
       className={`tp-results-chart-legend-swatch${dash ? " tp-results-chart-legend-swatch--dash" : ""}`}
@@ -181,9 +185,7 @@ export const WpmChart = ({ data }: Props) => {
           callbacks: {
             title: (items) => {
               const second = items[0]?.label ?? "";
-              return summary.isDownsampled
-                ? `Around ${second}s`
-                : `${second}s`;
+              return summary.isDownsampled ? `Around ${second}s` : `${second}s`;
             },
             label: (item) => {
               const value = item.parsed.y ?? 0;

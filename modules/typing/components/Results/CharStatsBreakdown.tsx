@@ -36,7 +36,10 @@ export const CharStatsBreakdown = ({ stats }: CharStatsBreakdownProps) => (
         </span>
       ))}
     </div>
-    <div className="tp-char-stats__sub tp-stat-card-sub tp-stat-card-sub--empty" aria-hidden>
+    <div
+      className="tp-char-stats__sub tp-stat-card-sub tp-stat-card-sub--empty"
+      aria-hidden
+    >
       {"\u00a0"}
     </div>
   </div>
