@@ -15,7 +15,10 @@ export type ChartThemeColors = {
   axis: string;
   wpmLine: string;
   wpmFill: string;
+  wpmFillStrong: string;
+  wpmFillFade: string;
   rawLine: string;
+  avgLine: string;
   errorBar: string;
   error: string;
   tooltipBg: string;
@@ -35,7 +38,10 @@ export const useChartTheme = (): ChartThemeColors => {
       axis: palette.chartAxis,
       wpmLine: palette.chartWpmLine,
       wpmFill: palette.chartWpmFill,
+      wpmFillStrong: palette.chartWpmFillStrong,
+      wpmFillFade: palette.chartWpmFillFade,
       rawLine: palette.chartRawLine,
+      avgLine: palette.chartAvgLine,
       errorBar: palette.chartErrorBar,
       error: palette.error,
       tooltipBg: palette.colorBgLayout,

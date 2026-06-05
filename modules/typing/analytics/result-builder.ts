@@ -121,7 +121,7 @@ export const buildCompletedEvent = ({
     keySpacing: TestInput.keypressTimings.spacing.array,
     keyDuration: TestInput.keypressTimings.duration.array,
     keyOverlap: keyOverlapTotal,
-    chartData: duration > 122 ? "toolong" : chartData,
+    chartData,
     bailedOut: TestState.isBailedOut(),
     stopOnLetter: config.stopOnError === "letter",
     restartCount,

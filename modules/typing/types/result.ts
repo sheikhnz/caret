@@ -43,7 +43,7 @@ export type CompletedEvent = {
   keySpacing: number[];
   keyDuration: number[];
   keyOverlap: number;
-  chartData: ChartData | "toolong";
+  chartData: ChartData;
   bailedOut: boolean;
   stopOnLetter: boolean;
   restartCount: number;

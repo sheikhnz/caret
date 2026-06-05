@@ -4,7 +4,7 @@
 
 "use client";
 
-import { Flex, Space, Typography } from "antd";
+import { Flex, Space } from "antd";
 
 import { Badge, Button, Card, Separator } from "@/ui";
 
@@ -42,64 +42,33 @@ export const Results = ({
   const afkLabel =
     result.afkDuration > 0 ? `-${result.afkDuration}s AFK` : undefined;
 
-  const configTags = [
-    config.language,
-    modeLabel,
-    config.punctuation ? "Punctuation" : null,
-    config.numbers ? "Numbers" : null,
-    config.difficulty !== "normal"
-      ? config.difficulty.charAt(0).toUpperCase() + config.difficulty.slice(1)
-      : null,
-  ].filter(Boolean) as string[];
-
   return (
     <Flex vertical gap={16} className="tp-content-column">
       <Card elevated className="tp-results-card">
         <Flex vertical gap={24} className="tp-results-card-inner">
-          <Flex
-            className="tp-results-top"
-            gap={24}
-            align="flex-start"
-            wrap="wrap"
-          >
-            <Flex vertical gap={16} className="tp-results-hero-col">
+          <div className="tp-results-chart-col">
+            <WpmChart data={result.chartData} />
+          </div>
+
+          <div className="tp-results-footer">
+            <div className="tp-results-footer-stats">
+              <StatCard label="WPM" value={result.wpm} featured reserveSub />
+              <StatCard label="Acc" value={`${result.acc}%`} featured reserveSub />
+              <StatCard label="Raw" value={result.rawWpm} reserveSub />
               <StatCard
-                label="WPM"
-                value={result.wpm}
-                sub={
-                  result.rawWpm !== undefined ? `${result.rawWpm}` : undefined
-                }
-                subLabel="Raw"
-                size="hero"
+                label="Consist."
+                value={`${result.consistency}%`}
+                reserveSub
               />
-              <StatCard label="Acc" value={`${result.acc}%`} size="hero" />
-            </Flex>
-
-            <div className="tp-results-chart-col">
-              {result.chartData !== "toolong" ? (
-                <WpmChart data={result.chartData} />
-              ) : (
-                <Flex
-                  align="center"
-                  justify="center"
-                  className="tp-chart-fallback tp-results-chart"
-                >
-                  <Typography.Text type="secondary">
-                    Test too long to display chart
-                  </Typography.Text>
-                </Flex>
-              )}
-            </div>
-          </Flex>
-
-          <div className="tp-results-stats-row">
-            <Flex wrap gap="32px 16px" justify="space-between">
-              <StatCard label="Raw" value={result.rawWpm} />
-              <StatCard label="Consistency" value={`${result.consistency}%`} />
-              <StatCard label="Time" value={timeLabel} sub={afkLabel} />
+              <StatCard
+                label="Time"
+                value={timeLabel}
+                sub={afkLabel}
+                reserveSub
+              />
               <CharStatsBreakdown stats={[correct, incorrect, extra, missed]} />
-              <StatCard label="Test Type" value={modeLabel} size="compact" />
-            </Flex>
+              <StatCard label="Mode" value={modeLabel} reserveSub />
+            </div>
           </div>
         </Flex>
       </Card>
@@ -108,16 +77,6 @@ export const Results = ({
         <Space size={8} wrap>
           {testInvalid && <Badge tone="error">Invalid: too short</Badge>}
           {result.bailedOut && <Badge tone="neutral">Bailed out</Badge>}
-        </Space>
-      )}
-
-      {configTags.length > 0 && (
-        <Space size={8} wrap>
-          {configTags.map((tag) => (
-            <Badge key={tag} tone="neutral">
-              {tag}
-            </Badge>
-          ))}
         </Space>
       )}
 

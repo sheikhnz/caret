@@ -20,14 +20,19 @@ const COLORS = {
   colorTextDescription: ["rgba(0, 0, 0, 0.45)", "rgba(255, 255, 255, 0.45)"],
   colorTextDisabled: ["rgba(0, 0, 0, 0.25)", "rgba(255, 255, 255, 0.25)"],
   colorError: ["#ff4d4f", "#ff7875"],
-  chartPlotBg: ["#ebebeb", "#141414"],
-  chartPlotBorder: ["#d4d4d4", "#3f3f3f"],
-  chartGrid: ["rgba(0, 0, 0, 0.1)", "rgba(255, 255, 255, 0.12)"],
+  chartPlotBg: ["#f4f4f4", "#101010"],
+  chartPlotBorder: ["#e5e5e5", "#333333"],
+  chartGrid: ["rgba(0, 0, 0, 0.06)", "rgba(255, 255, 255, 0.08)"],
   chartAxis: ["rgba(0, 0, 0, 0.45)", "rgba(255, 255, 255, 0.45)"],
   chartWpmLine: ["#171717", "#fafafa"],
   chartWpmFill: ["rgba(23, 23, 23, 0.14)", "rgba(250, 250, 250, 0.12)"],
+  chartWpmFillStrong: ["rgba(23, 23, 23, 0.28)", "rgba(250, 250, 250, 0.22)"],
+  chartWpmFillFade: ["rgba(23, 23, 23, 0)", "rgba(250, 250, 250, 0)"],
   chartRawLine: ["#737373", "#a3a3a3"],
+  chartAvgLine: ["rgba(0, 0, 0, 0.28)", "rgba(255, 255, 255, 0.28)"],
   chartErrorBar: ["rgba(220, 38, 38, 0.55)", "rgba(248, 113, 113, 0.65)"],
+  resultsFeatured: ["#171717", "#ffffff"],
+  resultsSecondary: ["rgba(0, 0, 0, 0.45)", "rgba(255, 255, 255, 0.45)"],
   errorMuted: ["rgba(255, 77, 79, 0.12)", "rgba(255, 120, 117, 0.14)"],
   scrollbarThumb: ["rgb(0 0 0 / 0.15)", "rgb(255 255 255 / 0.15)"],
   scrollbarThumbHover: ["rgb(0 0 0 / 0.25)", "rgb(255 255 255 / 0.28)"],
@@ -55,6 +60,7 @@ export const DARK_PALETTE = buildPalette(true);
 const paletteCssVarName = (key: ColorKey | "error"): string => {
   if (key === "error") return "--tp-error";
   if (key === "errorMuted") return "--tp-error-muted";
+  if (key.startsWith("results")) return `--tp-${toKebab(key)}`;
   if (key.startsWith("chart")) return `--tp-chart-${toKebab(key.slice(5))}`;
   if (key.startsWith("skeleton")) return `--tp-${toKebab(key)}`;
   if (key.startsWith("scrollbar")) return `--tp-${toKebab(key)}`;
@@ -79,6 +85,8 @@ const ROOT_KEYS: (ColorKey | "error")[] = [
   "colorTextDescription",
   "colorTextDisabled",
   "colorError",
+  "resultsFeatured",
+  "resultsSecondary",
   "chartPlotBg",
   "chartPlotBorder",
   "error",
