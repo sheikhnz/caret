@@ -252,6 +252,7 @@ export const recordKeyupTime = (now: number, event: KeyboardEvent): void => {
   updateOverlap(now);
 };
 
+/** Reset timing arrays at test start while keeping the first key's timestamp. */
 export const carryoverFirstKeypress = (): void => {
   const lastKey = Object.keys(keyDownData).reduce((a, b) => {
     const aIdx = keyDownData[a]?.index;
@@ -275,6 +276,7 @@ export const carryoverFirstKeypress = (): void => {
   }
 };
 
+/** Close any keys still held at test end (user may release after the last char). */
 export const forceKeyup = (now: number): void => {
   const indexesToRemove = new Set(
     Object.values(keyDownData).map((d) => d.index),

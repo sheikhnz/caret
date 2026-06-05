@@ -1,3 +1,10 @@
+/**
+ * Mode helpers — timed duration and whether words stream in during a test.
+ *
+ * shouldAppendWordsDuringTest drives both timer-tick word lookahead and
+ * process-keydown's finishOnLastWord (word-count modes finish; timed modes don't).
+ */
+
 import type { TypingConfig } from "../../types/config";
 import type { CustomTextSettings } from "../../types/custom-text";
 

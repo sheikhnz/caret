@@ -1,3 +1,10 @@
+/**
+ * Input validation rules — finish detection, difficulty fail, min acc/burst.
+ * Source: frontend/src/ts/test/test-logic.ts
+ *
+ * All functions are pure; called from process-char after each keystroke.
+ */
+
 import type { TypingConfig } from "../../types/config";
 
 export const isSpace = (char: string): boolean => char === " " || char === "\n";
@@ -10,6 +17,7 @@ export const checkDifficultyFail = (
   if (config.difficulty === "expert" && !correct) {
     return "difficulty";
   }
+  // Master: one wrong letter fails, but space still advances (recovery attempt).
   if (config.difficulty === "master" && !correct && !isSpaceOrNewline) {
     return "difficulty";
   }
@@ -31,6 +39,7 @@ export const checkIfFinished = ({
 }): boolean => {
   if (!finishOnLastWord || !allWordsTyped) return false;
 
+  // Last word: finish on exact match, or on space even if the word was wrong.
   const wordIsCorrect = testInput === currentWord;
   return wordIsCorrect || shouldGoToNextWord;
 };

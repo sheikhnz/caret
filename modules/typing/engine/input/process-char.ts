@@ -1,3 +1,11 @@
+/**
+ * Per-character input processing.
+ * Source: frontend/src/ts/test/test-logic.ts
+ *
+ * Pure engine mutation: updates TestInput/TestState and returns an InputEvent.
+ * Does not touch Zustand — process-keydown syncs the store after each call.
+ */
+
 import { calculateBurst } from "../../calculations/wpm";
 import * as TestInput from "./test-input";
 import * as TestState from "../runtime/test-state";
@@ -34,6 +42,8 @@ export const processChar = (data: string, ctx: InputContext): InputEvent => {
   const charIsNewline = char === "\n";
   const shouldGoToNextWord = charIsSpace || charIsNewline;
 
+  // Idle → active on first key. Caller (process-keydown) starts the timer and
+  // invokes processChar a second time so this keystroke is actually applied.
   if (!TestState.isActive()) {
     TestState.setPhase("active");
     TestInput.carryoverFirstKeypress();
@@ -60,6 +70,7 @@ export const processChar = (data: string, ctx: InputContext): InputEvent => {
     TestInput.setBurstStart(now);
   }
 
+  // stopOnError "letter": count the error but do not append the wrong char.
   if (config.stopOnError === "letter" && !correct && !charIsSpace) {
     return { type: "charUpdate", correct: false };
   }

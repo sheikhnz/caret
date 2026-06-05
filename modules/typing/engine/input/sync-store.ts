@@ -1,3 +1,11 @@
+/**
+ * Engine → Zustand bridge.
+ *
+ * Engine modules (TestInput, TestState) are the source of truth during a test.
+ * React reads Zustand; call these after every keystroke, start, and finish.
+ * liveStats and words are synced separately (timer-tick / word generation).
+ */
+
 import * as TestInput from "./test-input";
 import * as TestState from "../runtime/test-state";
 import type { TestPhase } from "../../types/engine";

@@ -88,6 +88,8 @@ export const usePlaygroundKeyboardShortcuts = ({
         return;
       }
 
+      // Typing works without clicking: capture phase replays keys into the hidden
+      // input when it is not focused. Space is excluded — user must click first.
       if (!isGlobalTypingCaptureKey(event, config.mode)) return;
       if (document.activeElement === typing.inputRef.current) return;
       if (shouldDeferGlobalTypingCapture(document.activeElement)) return;

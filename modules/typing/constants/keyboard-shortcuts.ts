@@ -234,7 +234,10 @@ export const shouldPreventDefaultInTypingInput = (
   isOpenSettingsShortcut(event) ||
   isTypingCharacter(event);
 
-/** Keys replayed by the document listener when the typing input is not focused. */
+/**
+ * Keys replayed by the document listener when the typing input is not focused.
+ * Space and plain Enter are excluded so the first interaction is a click or letter.
+ */
 export const isGlobalTypingCaptureKey = (
   event: KeyboardEvent,
   mode: TestMode,

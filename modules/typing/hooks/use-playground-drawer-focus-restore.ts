@@ -1,5 +1,6 @@
 /**
  * Refocus the hidden typing input after all playground drawers close.
+ * Runs on drawer close edge only — does not enter UI focus mode (isTestFocused).
  */
 
 "use client";

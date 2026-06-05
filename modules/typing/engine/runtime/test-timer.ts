@@ -1,5 +1,8 @@
 /**
  * Timer management for the typing test.
+ *
+ * Schedules one-second ticks anchored to performance.now() so drift stays low.
+ * durationSeconds null = endless (zen/words); a number = timed countdown.
  */
 
 import { isActive } from "./test-state";
@@ -49,6 +52,7 @@ function tick(): void {
     return;
   }
 
+  // Anchor each tick to startTime + N seconds instead of chaining setTimeout(1000).
   nextTick = state.startTime + tickCount * 1000;
   const delay = Math.max(0, nextTick - performance.now());
   state.timerId = setTimeout(tick, delay);

@@ -1,5 +1,9 @@
 /**
  * Main typing test orchestration hook.
+ *
+ * Wires React (hidden input, refs) to the engine via process-keydown.
+ * wordsRef/languageRef are authoritative during a test; Zustand.words is the
+ * reactive copy for UI. Config/custom-text changes re-run initTest (useLayoutEffect).
  */
 
 "use client";
@@ -190,6 +194,7 @@ export const useTypingTest = (
     return () => window.removeEventListener("keyup", handleKeyUp);
   }, []);
 
+  // Re-initialize when config or custom text changes (including mid-test).
   useLayoutEffect(() => {
     if (!persistedStoresHydrated) {
       return;

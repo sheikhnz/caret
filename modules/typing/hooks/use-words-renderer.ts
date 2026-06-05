@@ -1,6 +1,9 @@
 /**
  * Computes the rendered word list (characters with statuses) for display.
  * Derives RenderedWord[] from store state — no side effects.
+ *
+ * Char status rules live in calculations/char-display.ts (unit-tested).
+ * This hook maps words + inputHistory into RenderedWord[] for WordsDisplay.
  */
 
 "use client";

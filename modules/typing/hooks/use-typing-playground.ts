@@ -1,6 +1,10 @@
 /**
  * Orchestrates the full typing playground: focus, global keys, and test lifecycle.
  * Use once per page, then pass the return value to TypingPlayground.
+ *
+ * Focus has two layers: DOM focus (hidden input) via focusInput, and UI focus
+ * mode (isTestFocused) via useTestFocus. First keystroke enters focus mode;
+ * restart/next-test exits it — user must click or type to re-enter.
  */
 
 "use client";
@@ -44,6 +48,7 @@ export const useTypingPlayground = (): TypingPlaygroundState => {
 
   const { focusInput } = typing;
 
+  // While in focus mode, keep the hidden input focused unless loading or finished.
   useEffect(() => {
     if (isTestFocused && !isLoadingWords && phase !== "finished") {
       focusInput();

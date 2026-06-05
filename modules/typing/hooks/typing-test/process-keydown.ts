@@ -1,3 +1,15 @@
+/**
+ * Keystroke orchestrator — the single entry point for every typing key.
+ * Source: frontend/src/ts/test/test-logic.ts (keydown handler)
+ *
+ * Flow: shortcut checks → engine mutation (processChar/processBackspace)
+ * → syncInputSnapshot → finish/fail. Called from both the hidden input
+ * and the document capture listener (use-playground-keyboard-shortcuts).
+ *
+ * Engine modules hold truth; this file never writes Zustand directly except
+ * via sync-store helpers and zen word padding.
+ */
+
 import {
   processBackspace,
   processChar,
@@ -100,6 +112,7 @@ export const processKeyDown = (
 
   onTypingKeyRef.current?.();
 
+  // Word-count modes finish when the last target word is done; time/zen keep going.
   const finishOnLastWord =
     config.mode !== "zen" &&
     !shouldAppendWordsDuringTest({
@@ -114,6 +127,8 @@ export const processKeyDown = (
     finishOnLastWord,
   });
 
+  // First key: processChar returns startTest without applying the char.
+  // Start the timer, then call processChar again so the same key is typed.
   if (inputEvent.type === "startTest") {
     TestStats.setStart(now);
     TestState.setPhase("active");
@@ -146,6 +161,7 @@ export const processKeyDown = (
 
   syncInputSnapshot(store);
 
+  // Zen has no pre-generated word list — grow empty slots as the user advances.
   if (config.mode === "zen") {
     const requiredSlots = TestState.getActiveWordIndex() + 1;
     if (wordsRef.current.length < requiredSlots) {

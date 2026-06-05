@@ -1,3 +1,8 @@
+/**
+ * Backspace handling — char delete within a word, or rewind to the previous word.
+ * stopOnError "word" blocks rewinding past a completed (incorrect) word.
+ */
+
 import type { TypingConfig } from "../../types/config";
 import * as TestInput from "./test-input";
 import * as TestState from "../runtime/test-state";

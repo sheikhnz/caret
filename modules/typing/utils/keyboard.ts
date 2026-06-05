@@ -1,3 +1,10 @@
+/**
+ * Focus-defer rules for playground shortcuts vs global typing capture.
+ *
+ * Config segmented chips are an exception: focus there must not block typing
+ * keys from reaching the hidden input (see TEST_CONFIG_NAV_ARIA_LABEL).
+ */
+
 import { isPlaygroundDrawerOpen } from "@/modules/typing/utils/playground-drawer-open";
 
 /** Matches TestConfig nav `aria-label` — chip focus here must not block typing capture. */

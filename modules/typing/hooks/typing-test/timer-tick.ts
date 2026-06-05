@@ -1,3 +1,11 @@
+/**
+ * One-second timer callback — live stats, chart history, and word lookahead.
+ *
+ * Called by test-timer on each tick. Updates liveStats in Zustand and pushes
+ * per-second histories into TestInput (used by the results chart).
+ * Timed/custom-time modes append words when fewer than 30 lie ahead of the caret.
+ */
+
 import { calculateBurst } from "@/modules/typing/calculations/wpm";
 import {
   getNextWord,
@@ -75,6 +83,7 @@ export const handleTimerTick = (
     return;
   }
 
+  // Keep ~30 words ahead of the active index so timed tests never run dry.
   const language = refs.languageRef.current;
   if (!language || refs.wordsRef.current.length - s.wordIndex >= 30) {
     return;

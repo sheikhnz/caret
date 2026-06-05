@@ -1,3 +1,11 @@
+/**
+ * Test end — flush input history, compute final stats, build CompletedEvent.
+ * Source: frontend/src/ts/test/test-logic.ts (endTest)
+ *
+ * Called on natural finish, timer expiry, bail-out, or difficulty fail.
+ * runFailTest records the current second's history before finishing.
+ */
+
 import { buildCompletedEvent } from "@/modules/typing/analytics/result-builder";
 import { calculateBurst } from "@/modules/typing/calculations/wpm";
 import { isCustomTimedMode } from "@/modules/typing/engine/generation/mode-helpers";
@@ -57,6 +65,7 @@ export const runFinishTest = ({
     TestStats.setLastSecondNotRound();
   }
 
+  // Non-time modes can end mid-second; push one more chart sample when ≥0.5s left.
   if (
     TestStats.lastSecondNotRound &&
     !difficultyFailed &&

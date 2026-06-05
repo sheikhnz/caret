@@ -1,3 +1,10 @@
+/**
+ * Test initialization and restart.
+ *
+ * runInitTest loads words, resets engine + store. runRestartTest clears the
+ * timer and tracks incomplete time-mode attempts (Esc/Tab mid-test) for results.
+ */
+
 import { calculateAccuracy } from "@/modules/typing/calculations/accuracy";
 import { generateWords } from "@/modules/typing/engine/generation/word-generator";
 import * as TestInput from "@/modules/typing/engine/input/test-input";
@@ -96,6 +103,7 @@ export const runRestartTest = async ({
   clearTimer(true);
   void clearAllSounds();
 
+  // Time-mode restart mid-test: record partial attempt for the results screen.
   if (
     TestState.isActive() &&
     config.mode === "time" &&
