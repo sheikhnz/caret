@@ -3,7 +3,7 @@
 .tp-test-config-nav {
   display: none;
   width: 100%;
-  max-width: 870px;
+  max-width: var(--tp-layout-max-width);
   margin-inline: auto;
   font-size: 0.875rem;
 }

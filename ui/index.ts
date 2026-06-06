@@ -1,3 +1,4 @@
+export { AccountAvatarButton } from "./AccountAvatarButton";
 export { Badge } from "./Badge";
 export { Button } from "./Button";
 export { Card } from "./Card";
@@ -27,7 +28,15 @@ export {
   type SkeletonId,
 } from "./skeletons";
 
-export { Divider, Space, Typography, Slider, Checkbox, Flex } from "antd";
+export {
+  Avatar,
+  Checkbox,
+  Divider,
+  Flex,
+  Slider,
+  Space,
+  Typography,
+} from "antd";
 
 export const UI_COMPONENTS = [
   "Badge",

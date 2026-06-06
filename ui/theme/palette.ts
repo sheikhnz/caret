@@ -98,6 +98,9 @@ const ROOT_KEYS: (ColorKey | "error")[] = [
 const paletteRootVars = (palette: ThemePalette) =>
   ROOT_KEYS.map((key) => `${paletteCssVarName(key)}:${palette[key]}`).join(";");
 
-/** SSR + first paint — dark via prefers-color-scheme before React. */
+/**
+ * :root vars for custom CSS before React (body, scrollbar, skeleton, etc.).
+ * Ant components use ConfigProvider cssVar on `.tp`; color-scheme is set by tp-theme-init.
+ */
 export const buildRootThemeCss = () =>
-  `:root{color-scheme:light;${paletteRootVars(LIGHT_PALETTE)}}@media (prefers-color-scheme:dark){:root{color-scheme:dark;${paletteRootVars(DARK_PALETTE)}}}`;
+  `:root{${paletteRootVars(LIGHT_PALETTE)}}@media (prefers-color-scheme:dark){:root{${paletteRootVars(DARK_PALETTE)}}}`;

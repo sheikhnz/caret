@@ -1,5 +1,5 @@
 /**
- * Root page — typing test inside the shared page layout shell.
+ * Root page — Caret typing test inside the shared page layout shell.
  */
 
 "use client";

@@ -1,6 +1,6 @@
-# Typing Playground
+# Caret
 
-A focused typing test built with Next.js and React. Gameplay, stats, and word generation are adapted from [Monkeytype](https://github.com/monkeytypegame/monkeytype); this repo is a slimmer, modular Next.js app you can run and extend locally.
+**Caret** (wordmark: **C^ret**) is a minimal typing speed test built with Next.js and React. Gameplay, stats, and word generation are adapted from [Monkeytype](https://github.com/monkeytypegame/monkeytype); this repo is a slimmer, modular Next.js app you can run and extend locally.
 
 ## What you get
 

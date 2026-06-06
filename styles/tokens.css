@@ -1,6 +1,6 @@
 /**
- * Static tokens + semantic aliases to Ant cssVar (--tp-color-*).
- * Colors: ui/theme/palette.ts → buildRootThemeCss() in layout <head>.
+ * Layout tokens + semantic aliases to palette vars (--tp-color-*).
+ * Color values: ui/theme/palette.ts → buildRootThemeCss() in <head>.
  */
 
 :root {
@@ -14,6 +14,8 @@
   --tp-scrollbar-size: 4px;
   --tp-radius-sm: 2px;
   --tp-radius-md: 4px;
+  --tp-layout-max-width: 870px;
+  --tp-page-content-offset-top: 32px;
 
   /* Semantic aliases (Ant cssVar names) */
   --tp-page-bg: var(--tp-color-bg-layout);

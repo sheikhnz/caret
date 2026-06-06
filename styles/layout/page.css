@@ -10,6 +10,37 @@
   display: none;
 }
 
+.tp-page-header {
+  padding: 16px 24px;
+}
+
+/* Shared max-width column — aligns chrome with .tp-playground-root */
+.tp-page-inner {
+  width: 100%;
+  max-width: var(--tp-layout-max-width);
+  margin-inline: auto;
+}
+
+.tp-brand-wordmark {
+  display: inline-flex;
+  align-items: baseline;
+  font-family: var(--tp-font-mono);
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--tp-text-primary);
+}
+
+.tp-brand-wordmark-accent {
+  position: relative;
+  top: -0.35em;
+  margin: 0 0.02em;
+  font-size: 0.72em;
+  font-weight: 700;
+  color: var(--tp-text-muted);
+}
+
 .tp-page-shell {
   display: flex;
   flex-direction: column;
@@ -21,22 +52,16 @@
   display: flex;
   flex: 1 1 0;
   min-height: 0;
+  box-sizing: border-box;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 24px;
+  justify-content: flex-start;
+  padding: var(--tp-page-content-offset-top) 24px 24px;
 }
 
 .tp-page-footer {
   padding: 16px 24px;
-  text-align: center;
   background: transparent;
-}
-
-.tp-page-footer-note {
-  margin: 0;
-  font-size: 14px;
-  color: var(--tp-text-muted);
 }
 
 /*
@@ -59,9 +84,8 @@
   visibility: visible;
 }
 
-/* Inside playground: still hide regions marked for focus mode (e.g. test config) */
+/* Inside playground: fade config on focus without moving the typing viewport */
 .tp-page-shell:has([data-tp-pg-focus]) .tp-pg-focus-dim {
-  visibility: hidden;
   opacity: 0;
   pointer-events: none;
 }

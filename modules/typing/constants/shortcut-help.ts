@@ -20,7 +20,7 @@ export type ShortcutHelpSectionMeta = {
 export const SHORTCUT_HELP_SECTIONS: readonly ShortcutHelpSectionMeta[] = [
   {
     id: "playground",
-    title: "Playground",
+    title: "Caret",
     description:
       "When the word area is not focused and no other drawer is open.",
   },

@@ -1,5 +1,5 @@
 /**
- * System color scheme + shared palette for custom CSS and charts.
+ * OS color scheme for Ant Design + charts. Custom CSS uses :root vars from ThemeStyle.
  */
 
 "use client";
@@ -7,22 +7,32 @@
 import {
   createContext,
   useContext,
-  useMemo,
   useSyncExternalStore,
+  type ReactNode,
 } from "react";
 
-import {
-  DARK_PALETTE,
-  LIGHT_PALETTE,
-  type ThemePalette,
-} from "@/ui/theme/palette";
+import { getThemeServerSnapshot } from "./bootstrap.client";
 
 import type { ProviderProps } from "../types";
 
 export type AppThemeContextValue = {
   isDark: boolean;
-  palette: ThemePalette;
 };
+
+const InitialIsDarkContext = createContext(false);
+
+/** SSR hint from layout — must wrap the composed provider chain in AppProviders. */
+export const InitialIsDarkProvider = ({
+  value,
+  children,
+}: {
+  value: boolean;
+  children: ReactNode;
+}) => (
+  <InitialIsDarkContext.Provider value={value}>
+    {children}
+  </InitialIsDarkContext.Provider>
+);
 
 const AppThemeContext = createContext<AppThemeContextValue | null>(null);
 
@@ -36,22 +46,16 @@ const subscribeColorScheme = (onStoreChange: () => void): (() => void) => {
 };
 
 export const ThemeProvider = ({ children }: ProviderProps) => {
+  const initialIsDark = useContext(InitialIsDarkContext);
+
   const isDark = useSyncExternalStore(
     subscribeColorScheme,
     getIsDark,
-    () => false,
-  );
-
-  const value = useMemo(
-    () => ({
-      isDark,
-      palette: isDark ? DARK_PALETTE : LIGHT_PALETTE,
-    }),
-    [isDark],
+    () => getThemeServerSnapshot(initialIsDark),
   );
 
   return (
-    <AppThemeContext.Provider value={value}>
+    <AppThemeContext.Provider value={{ isDark }}>
       {children}
     </AppThemeContext.Provider>
   );

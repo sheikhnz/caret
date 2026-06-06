@@ -6,7 +6,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 <!-- END:nextjs-agent-rules -->
 
-# Typing Playground — agent conventions
+# Caret — agent conventions
+
+**Product name:** Caret (wordmark: C^ret). Public branding lives in `layout/brand/` (`BRAND_NAME`, `CaretWordmark`).
 
 ## Monkeytype reference (check upstream first)
 
@@ -40,18 +42,17 @@ Match Monkeytype behavior unless this project intentionally diverges (document t
 
 Follows [Ant Design theme](https://ant.design/docs/react/customize-theme) + [CSS variables](https://ant.design/docs/react/css-variables) + platform `prefers-color-scheme`.
 
-| Layer          | File                              | Standard pattern                                                                                                                        |
-| -------------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| Tokens         | `ui/theme/palette.ts`             | Single source of color values                                                                                                           |
-| Ant            | `ui/theme.ts` → `providers/antd/` | `ConfigProvider` + `algorithm` + `token` + `cssVar: { prefix: 'tp', key: 'tp' }`                                                        |
-| OS sync        | `providers/theme/`                | `useSyncExternalStore` + `matchMedia('(prefers-color-scheme: dark)')` ([React](https://react.dev/reference/react/useSyncExternalStore)) |
-| Provider shell | `providers/AppProviders.tsx`      | `composeProviders` chain — add `providers/<name>/` + append to `APP_PROVIDER_CHAIN`; wire in `app/layout.tsx`                           |
-| Document head  | `app-head/AppHead.tsx`            | `composeHead` chain — add `app-head/<name>/` + append to `APP_HEAD_CHAIN`; wire in `app/layout.tsx` `<head>`                            |
-| Root theme CSS | `app-head/theme/ThemeStyle.tsx`   | Inline `:root` vars from `palette.ts` (before paint; complements `styles/theme-vars.css`)                                               |
-| Custom CSS     | `styles/theme-vars.css`           | `:root` vars + `@media (prefers-color-scheme: dark)` — keep in sync with `palette.ts`; imported from `globals.css`                      |
-| Aliases        | `styles/tokens.css`               | Fonts, radii; `--tp-text-primary` → `var(--tp-color-text)`                                                                              |
+| Layer            | File                                           | Standard pattern                                                                                                                        |
+| ---------------- | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| Tokens           | `ui/theme/palette.ts`                          | Single source of color values                                                                                                           |
+| Ant              | `ui/theme.ts` → `providers/antd/`              | `ConfigProvider` + `algorithm` + `token` + `cssVar: { prefix: 'tp', key: 'tp' }`                                                        |
+| OS sync          | `providers/theme/ThemeProvider.tsx`            | `useSyncExternalStore` + `matchMedia('(prefers-color-scheme: dark)')` ([React](https://react.dev/reference/react/useSyncExternalStore)) |
+| Flash prevention | `proxy.ts` + `providers/theme/bootstrap.*`        | `Accept-CH` client hint → `initialIsDark` in layout; `tp-theme-init` script in `<head>` for Safari / first visit                         |
+| Provider shell   | `providers/AppProviders.tsx`                   | `composeProviders` chain — add `providers/<name>/` + append to `STATIC_PROVIDER_CHAIN`; pass `initialIsDark` from `app/layout.tsx`      |
+| Document head    | `app-head/theme/ThemeStyle.tsx`                | Init script + inline `:root` vars from `palette.ts` (`@media prefers-color-scheme`) for custom CSS before React                         |
+| Aliases          | `styles/tokens.css`                            | Fonts, radii; `--tp-text-primary` → `var(--tp-color-text)`                                                                              |
 
-**Do not add:** blocking scripts, `data-theme` toggles, duplicate pill color CSS, or `inherit` Ant token hacks. For a user-controlled theme toggle later, use [`next-themes`](https://github.com/pacocoursey/next-themes) and drive `buildAntdTheme` from `resolvedTheme`.
+**Do not add:** `data-theme` toggles, duplicate pill color CSS, or `inherit` Ant token hacks. The `tp-theme-init` inline script is intentional (FOUC prevention). For a user-controlled theme toggle later, use [`next-themes`](https://github.com/pacocoursey/next-themes) and drive `buildAntdTheme` from `resolvedTheme`.
 
 **Palette:** Monochrome minimal — no brand purple/blue accent. Light mode primary ≈ black on white; dark mode primary ≈ white on black. **Do not** reintroduce `--tp-accent` or colorful `colorPrimary` overrides.
 
@@ -93,6 +94,8 @@ Follows [Ant Design theme](https://ant.design/docs/react/customize-theme) + [CSS
 - When phase changes, call `syncStoreFromEngine(store, { phase })`.
 
 ## Persistence
+
+Legacy `localStorage` keys (kept for existing users — do not rename without a migration):
 
 - Config: `typing-playground-config`
 - Custom text: `typing-playground-custom-text`

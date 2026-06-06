@@ -1,5 +1,5 @@
 /**
- * Chart colors from the shared theme palette (via ThemeProvider).
+ * Chart colors from the shared theme palette (via ThemeProvider isDark).
  */
 
 "use client";
@@ -7,6 +7,7 @@
 import { useMemo } from "react";
 
 import { useAppTheme } from "@/providers";
+import { DARK_PALETTE, LIGHT_PALETTE } from "@/ui/theme/palette";
 
 export type ChartThemeColors = {
   plotBg: string;
@@ -28,7 +29,8 @@ export type ChartThemeColors = {
 };
 
 export const useChartTheme = (): ChartThemeColors => {
-  const { palette } = useAppTheme();
+  const { isDark } = useAppTheme();
+  const palette = isDark ? DARK_PALETTE : LIGHT_PALETTE;
 
   return useMemo(
     () => ({
