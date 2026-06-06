@@ -102,8 +102,9 @@ export const playHowlerClick = async (
     return;
   }
 
-  await ensureClickBundleLoaded(playSoundOnClick);
+  // Resume while the keydown user gesture is still active — loading must not run first.
   await resumeHowler();
+  await ensureClickBundleLoaded(playSoundOnClick);
 
   const sounds = clickSoundConfig[playSoundOnClick];
   if (sounds === undefined) return;
@@ -122,8 +123,9 @@ export const playError = async (
   const { soundVolume } = getSoundSettings();
 
   if (playSoundOnError === "off" || playSoundOnError === undefined) return;
-  if (errorSounds === null) await initErrorSound();
+
   await resumeHowler();
+  if (errorSounds === null) await initErrorSound();
 
   const sounds = (errorSounds as ErrorSounds)[playSoundOnError];
   if (sounds === undefined) return;
@@ -137,8 +139,8 @@ export const playError = async (
 export const playTimeWarning = async (): Promise<void> => {
   const { soundVolume } = getSoundSettings();
 
-  if (timeWarning === null) await initTimeWarning();
   await resumeHowler();
+  if (timeWarning === null) await initTimeWarning();
 
   const soundToPlay = timeWarning as Howl;
   soundToPlay.volume(soundVolume);

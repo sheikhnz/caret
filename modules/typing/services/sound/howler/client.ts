@@ -12,7 +12,15 @@ const howlers: Record<string, Promise<Howl>> = {};
 export const getHowl = async (src: string): Promise<Howl> => {
   howlers[src] ??= (async () => {
     const { Howl } = await getHowlerModule();
-    return new Howl({ src });
+    return new Promise<Howl>((resolve, reject) => {
+      const howl = new Howl({
+        src,
+        onload: () => resolve(howl),
+        onloaderror: (_id, error) => {
+          reject(new Error(`Failed to load sound ${src}: ${error}`));
+        },
+      });
+    });
   })();
   return howlers[src];
 };

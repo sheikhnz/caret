@@ -21,13 +21,16 @@ let settings: SoundSettings = {
 
 export const getSoundSettings = (): SoundSettings => settings;
 
+const areHowlerSoundsEnabled = (soundSettings: SoundSettings): boolean =>
+  soundSettings.playSoundOnClick !== "off" ||
+  soundSettings.playSoundOnError !== "off";
+
 export const setSoundSettings = (next: Partial<SoundSettings>): void => {
   settings = { ...settings, ...next };
-  if (next.soundVolume !== undefined) void setHowlerVolume(next.soundVolume);
-  if (
-    settings.playSoundOnClick !== "off" ||
-    settings.playSoundOnError !== "off"
-  ) {
+  if (next.soundVolume !== undefined && areHowlerSoundsEnabled(settings)) {
+    void setHowlerVolume(next.soundVolume);
+  }
+  if (areHowlerSoundsEnabled(settings)) {
     void ensureHowlerReady();
   }
 };

@@ -9,7 +9,10 @@ export const playInputSound = async (options: {
   codeOverride?: string;
   shifted?: boolean;
 }): Promise<void> => {
+  const { playSoundOnClick, playSoundOnError } = getSoundSettings();
+
   if (options.type === "backspace") {
+    if (playSoundOnClick === "off") return;
     await playClick({
       codeOverride: options.codeOverride,
       shifted: options.shifted,
@@ -17,13 +20,13 @@ export const playInputSound = async (options: {
     return;
   }
 
-  const { playSoundOnError } = getSoundSettings();
-
-  if (
+  const useClickSound =
     options.correct === true ||
     playSoundOnError === "off" ||
-    options.blindMode
-  ) {
+    options.blindMode;
+
+  if (useClickSound) {
+    if (playSoundOnClick === "off") return;
     await playClick({
       codeOverride: options.codeOverride,
       shifted: options.shifted,
