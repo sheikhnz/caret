@@ -21,9 +21,6 @@ export type FooterConfig = {
 
 const FOOTER_VERSION = packageJson.version;
 
-const FOOTER_REPOSITORY_URL =
-  "https://github.com/sheikhnz/typing-playground-next-2026";
-
 /**
  * Footer link registry — add items to `start` (left) or `end` (right).
  */
@@ -37,10 +34,8 @@ export const FOOTER_CONFIG = {
     {
       id: "version",
       label: `v${FOOTER_VERSION}`,
-      href: FOOTER_REPOSITORY_URL,
-      external: true,
-      icon: "fork",
-      ariaLabel: `View source on GitHub (v${FOOTER_VERSION})`,
+      href: "/changelog",
+      ariaLabel: `View changelog (v${FOOTER_VERSION})`,
     },
   ],
 } as const satisfies FooterConfig;
