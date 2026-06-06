@@ -79,6 +79,10 @@
   white-space: nowrap;
 }
 
+.tp-segment-label .tp-segment-icon {
+  font-size: 12px;
+}
+
 .tp-segment-label .tp-kbd {
   margin-left: 4px;
   font-size: 0.65rem;

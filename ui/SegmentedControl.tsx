@@ -5,8 +5,7 @@
 "use client";
 
 import { Segmented, Tag } from "antd";
-import type { LucideIcon } from "lucide-react";
-import type { ReactNode } from "react";
+import type { ComponentType, ReactNode } from "react";
 
 import { joinClassNames } from "@/utils";
 
@@ -17,10 +16,15 @@ export { Segmented };
 /** Shared pill shell class for every test-config chip group. */
 export const TEST_CONFIG_PILL_CLASS = "tp-config-pill";
 
+export type SegmentIcon = ComponentType<{
+  "aria-hidden"?: boolean;
+  className?: string;
+}>;
+
 export type SegmentedOption<T extends string | number> = {
   value: T;
   label: ReactNode;
-  icon?: LucideIcon;
+  icon?: SegmentIcon;
   disabled?: boolean;
   shortcutKey?: string;
 };
@@ -31,11 +35,11 @@ const renderSegmentLabel = ({
   shortcutKey,
 }: {
   label: ReactNode;
-  icon?: LucideIcon;
+  icon?: SegmentIcon;
   shortcutKey?: string;
 }) => (
   <span className="tp-segment-label">
-    {Icon ? <Icon size={12} aria-hidden /> : null}
+    {Icon ? <Icon aria-hidden className="tp-segment-icon" /> : null}
     {label}
     {shortcutKey ? <Kbd>{shortcutKey}</Kbd> : null}
   </span>
@@ -134,7 +138,7 @@ export const AppToggleGroup = <T extends string>({
 
 type AppPillActionProps = {
   label: ReactNode;
-  icon?: LucideIcon;
+  icon?: SegmentIcon;
   disabled?: boolean;
   onClick: () => void;
   className?: string;

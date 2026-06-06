@@ -4,7 +4,7 @@ import { AppToggleGroup } from "@/ui";
 
 import type { TestMode } from "@/modules/typing/types/config";
 
-import { AtSign, Hash } from "./constants";
+import { Hash, Punctuation } from "./constants";
 
 type PunctuationToggle = "punctuation" | "numbers";
 
@@ -32,7 +32,7 @@ export const PunctuationNumbers = ({
       aria-label="Punctuation and numbers"
       disabled={toggleDisabled}
       options={[
-        { value: "punctuation", label: "Punctuation", icon: AtSign },
+        { value: "punctuation", label: "Punctuation", icon: Punctuation },
         { value: "numbers", label: "Numbers", icon: Hash },
       ]}
       isActive={(value) => (value === "punctuation" ? punctuation : numbers)}
