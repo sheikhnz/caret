@@ -15,24 +15,19 @@ import { SkeletonLoader, SKELETON_IDS } from "@/ui";
 
 import { Caret } from "./Caret";
 import { TypingTestLiveStats } from "./TypingTestLiveStats";
-import { TypingTestShortcuts } from "./TypingTestShortcuts";
 import { useWordScroll } from "./use-word-scroll";
 import { WordsDisplay } from "./WordsDisplay";
 
 type TypingTestProps = {
   typing: UseTypingTestReturn;
   isTestFocused: boolean;
-  onOpenSettings: () => void;
-  onOpenShortcutsHelp: () => void;
-  /** Rendered below the words viewport and above the shortcuts bar. */
+  /** Rendered below the words viewport (e.g. finger map). */
   afterViewport?: ReactNode;
 };
 
 export const TypingTest = ({
   typing,
   isTestFocused,
-  onOpenSettings,
-  onOpenShortcutsHelp,
   afterViewport,
 }: TypingTestProps) => {
   const store = useTypingTestView();
@@ -42,8 +37,6 @@ export const TypingTest = ({
     inputRef,
     wordsContainerRef,
     handleKeyDown,
-    restart,
-    bailOut,
     focusInput,
   } = typing;
 
@@ -82,18 +75,13 @@ export const TypingTest = ({
     focusInput();
   }, [focusInput]);
 
-  const handleRestart = useCallback(() => {
-    void restart(false);
-  }, [restart]);
-
-  const handleBailOut = useCallback(() => {
-    bailOut();
-  }, [bailOut]);
-
   if (store.phase === "finished") return null;
 
   return (
-    <div className="tp-content-column" onClick={handleContainerClick}>
+    <div
+      className="tp-typing-test tp-content-column"
+      onClick={handleContainerClick}
+    >
       <div className="tp-typing-mono tp-typing-root">
         <TypingTestLiveStats isTestFocused={isTestFocused} />
 
@@ -126,16 +114,6 @@ export const TypingTest = ({
       {afterViewport ? (
         <div className="tp-typing-after-viewport">{afterViewport}</div>
       ) : null}
-
-      <TypingTestShortcuts
-        mode={mode}
-        phase={store.phase}
-        isTestFocused={isTestFocused}
-        onRestart={handleRestart}
-        onBailOut={handleBailOut}
-        onOpenSettings={onOpenSettings}
-        onOpenShortcutsHelp={onOpenShortcutsHelp}
-      />
 
       <input
         ref={inputRef}

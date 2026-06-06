@@ -30,8 +30,13 @@
   margin-bottom: 0.5rem;
 }
 
-.tp-typing-after-viewport + .tp-shortcuts-bar {
-  margin-top: 2rem;
+/* Shortcuts sit as a sibling after the typing test block (see TypingPlayground). */
+.tp-typing-test + .tp-shortcuts-bar {
+  margin-top: 40px;
+}
+
+.tp-typing-test:has(.tp-typing-after-viewport) + .tp-shortcuts-bar {
+  margin-top: 2.5rem;
 }
 
 .tp-typing-scroll {

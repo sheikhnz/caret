@@ -15,6 +15,8 @@ import { handlePlaygroundDrawerAction } from "@/modules/typing/components/Playgr
 import { Results } from "@/modules/typing/components/Results";
 import { TestConfig } from "@/modules/typing/components/TestConfig";
 import { TypingTest } from "@/modules/typing/components/TypingTest";
+import { TypingTestShortcuts } from "@/modules/typing/components/TypingTest/TypingTestShortcuts";
+import { useTypingTestDisplayConfig } from "@/modules/typing/hooks/use-typing-test-display-config";
 import { PLAYGROUND_DIALOGS } from "@/modules/typing/constants/playground-dialogs";
 import type { TypingPlaygroundState } from "@/modules/typing/hooks/use-typing-playground";
 
@@ -32,7 +34,8 @@ export const TypingPlayground = ({
   isolateOnFocus = false,
 }: TypingPlaygroundProps) => {
   const { phase, isTestFocused, typing, dialogs, fingerMap } = playground;
-  const { restart, focusInput } = typing;
+  const { restart, bailOut, focusInput } = typing;
+  const { mode } = useTypingTestDisplayConfig();
 
   const handleDrawerAction = useCallback(
     (action: Parameters<typeof handlePlaygroundDrawerAction>[0]) => {
@@ -50,6 +53,10 @@ export const TypingPlayground = ({
   const handleRepeat = useCallback(() => {
     void restart(true);
   }, [restart]);
+
+  const handleBailOut = useCallback(() => {
+    bailOut();
+  }, [bailOut]);
 
   const handleOpenSettings = useCallback(() => {
     dialogs.open(PLAYGROUND_DIALOGS.settings);
@@ -99,13 +106,21 @@ export const TypingPlayground = ({
           <TypingTest
             typing={typing}
             isTestFocused={isTestFocused}
-            onOpenSettings={handleOpenSettings}
-            onOpenShortcutsHelp={handleOpenShortcutsHelp}
             afterViewport={
               fingerMap.enabled ? (
                 <FingerMap fingerMap={fingerMap} isTestFocused={isTestFocused} />
               ) : null
             }
+          />
+
+          <TypingTestShortcuts
+            mode={mode}
+            phase={phase}
+            isTestFocused={isTestFocused}
+            onRestart={handleRestart}
+            onBailOut={handleBailOut}
+            onOpenSettings={handleOpenSettings}
+            onOpenShortcutsHelp={handleOpenShortcutsHelp}
           />
         </div>
       )}

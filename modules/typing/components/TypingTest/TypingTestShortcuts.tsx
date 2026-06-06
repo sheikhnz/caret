@@ -10,6 +10,7 @@ import {
   KEYBOARD_SHORTCUTS,
   type ShortcutDefinition,
 } from "@/modules/typing/constants/keyboard-shortcuts";
+import { useConfigStore } from "@/modules/typing/stores/config-store";
 import type { TestMode } from "@/modules/typing/types/config";
 import type { TestPhase } from "@/modules/typing/types/engine";
 
@@ -64,6 +65,8 @@ export const TypingTestShortcuts = memo(
     onOpenSettings,
     onOpenShortcutsHelp,
   }: TypingTestShortcutsProps) => {
+    const configHydrated = useConfigStore((state) => state.hasHydrated);
+
     const restartShortcut =
       mode === "zen"
         ? KEYBOARD_SHORTCUTS.restartZen
@@ -114,6 +117,8 @@ export const TypingTestShortcuts = memo(
       onOpenSettings,
       onOpenShortcutsHelp,
     ]);
+
+    if (!configHydrated) return null;
 
     return (
       <div
