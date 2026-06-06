@@ -33,12 +33,7 @@ export const TypingTest = ({
   const store = useTypingTestView();
   const { mode, blindMode, caretStyle, smoothCaret } =
     useTypingTestDisplayConfig();
-  const {
-    inputRef,
-    wordsContainerRef,
-    handleKeyDown,
-    focusInput,
-  } = typing;
+  const { inputRef, wordsContainerRef, handleKeyDown, focusInput } = typing;
 
   const isZenMode = mode === "zen";
   const renderedWords = useWordsRenderer({

@@ -17,25 +17,27 @@ type FingerMapProps = {
 /**
  * Finger guidance keyboard shown below the typing viewport during a live test.
  */
-export const FingerMap = memo(({ fingerMap, isTestFocused }: FingerMapProps) => {
-  if (!fingerMap.enabled) return null;
+export const FingerMap = memo(
+  ({ fingerMap, isTestFocused }: FingerMapProps) => {
+    if (!fingerMap.enabled) return null;
 
-  const dimmed = fingerMap.phase === "finished" || !isTestFocused;
+    const dimmed = fingerMap.phase === "finished" || !isTestFocused;
 
-  return (
-    <Flex
-      justify="center"
-      className={joinClassNames(
-        "tp-finger-map-root",
-        dimmed && "tp-finger-map-root--dimmed",
-      )}
-    >
-      <Keyboard
-        targetKey={fingerMap.targetKey}
-        activeFinger={fingerMap.activeFinger}
-      />
-    </Flex>
-  );
-});
+    return (
+      <Flex
+        justify="center"
+        className={joinClassNames(
+          "tp-finger-map-root",
+          dimmed && "tp-finger-map-root--dimmed",
+        )}
+      >
+        <Keyboard
+          targetKey={fingerMap.targetKey}
+          activeFinger={fingerMap.activeFinger}
+        />
+      </Flex>
+    );
+  },
+);
 
 FingerMap.displayName = "FingerMap";

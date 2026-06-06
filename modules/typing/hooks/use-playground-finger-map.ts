@@ -37,7 +37,9 @@ const DISABLED_STATE: PlaygroundFingerMapState = {
   phase: "idle",
 };
 
-const selectFingerMapSlice = (state: ReturnType<typeof useTestStore.getState>): FingerMapStoreSlice => ({
+const selectFingerMapSlice = (
+  state: ReturnType<typeof useTestStore.getState>,
+): FingerMapStoreSlice => ({
   phase: state.phase,
   words: state.words,
   wordIndex: state.wordIndex,
@@ -66,7 +68,9 @@ const getFingerMapSlice = (): FingerMapStoreSlice => {
 const getFingerForKey = (targetKey: string): FingerId | null =>
   KEY_FINGER_LOOKUP.get(targetKey) ?? null;
 
-const buildEnabledState = (slice: FingerMapStoreSlice): PlaygroundFingerMapState => {
+const buildEnabledState = (
+  slice: FingerMapStoreSlice,
+): PlaygroundFingerMapState => {
   const targetKey = deriveTargetKey(slice);
   const activeFinger = targetKey === null ? null : getFingerForKey(targetKey);
 
