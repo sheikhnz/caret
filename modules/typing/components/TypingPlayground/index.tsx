@@ -9,6 +9,7 @@ import { useCallback } from "react";
 
 import { TP_PG_FOCUS_ATTR } from "@/layout";
 import { joinClassNames } from "@/utils";
+import { FingerMap } from "@/modules/typing/components/FingerMap";
 import { PlaygroundDrawers } from "@/modules/typing/components/PlaygroundDrawers";
 import { handlePlaygroundDrawerAction } from "@/modules/typing/components/PlaygroundDrawers/handle-playground-drawer-action";
 import { Results } from "@/modules/typing/components/Results";
@@ -30,7 +31,7 @@ export const TypingPlayground = ({
   playground,
   isolateOnFocus = false,
 }: TypingPlaygroundProps) => {
-  const { phase, isTestFocused, typing, dialogs } = playground;
+  const { phase, isTestFocused, typing, dialogs, fingerMap } = playground;
   const { restart, focusInput } = typing;
 
   const handleDrawerAction = useCallback(
@@ -100,6 +101,11 @@ export const TypingPlayground = ({
             isTestFocused={isTestFocused}
             onOpenSettings={handleOpenSettings}
             onOpenShortcutsHelp={handleOpenShortcutsHelp}
+            afterViewport={
+              fingerMap.enabled ? (
+                <FingerMap fingerMap={fingerMap} isTestFocused={isTestFocused} />
+              ) : null
+            }
           />
         </div>
       )}

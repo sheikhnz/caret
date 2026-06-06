@@ -73,6 +73,7 @@ export type TypingConfig = {
   showLiveAcc: boolean;
   showLiveBurst: boolean;
   showTimerProgress: boolean;
+  showFingerMap: boolean;
   soundVolume: SoundVolume;
   playSoundOnClick: PlaySoundOnClick;
   playSoundOnError: PlaySoundOnError;

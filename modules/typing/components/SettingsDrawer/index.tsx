@@ -4,7 +4,11 @@
 
 "use client";
 
+import { Flex } from "antd";
+
 import { Drawer } from "@/ui";
+
+import { DisplaySettings } from "./sections/DisplaySettings";
 import { SoundSettings } from "./sections/SoundSettings";
 
 const SETTINGS_DRAWER_TITLE_ID = "settings-drawer-title";
@@ -22,6 +26,9 @@ export const SettingsDrawer = ({ open, onClose }: SettingsDrawerProps) => (
     titleId={SETTINGS_DRAWER_TITLE_ID}
     width={448}
   >
-    <SoundSettings />
+    <Flex vertical gap={24}>
+      <DisplaySettings />
+      <SoundSettings />
+    </Flex>
   </Drawer>
 );

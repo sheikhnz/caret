@@ -1,0 +1,239 @@
+/* Finger map — color-coded keyboard below the typing viewport */
+
+.tp-finger-map-root {
+  width: 100%;
+  margin: 0;
+  opacity: 0.9;
+  user-select: none;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.tp-finger-map-root--dimmed {
+  opacity: 0.44;
+}
+
+.tp-finger-map-scroll {
+  overflow-x: auto;
+  width: min(100%, 52rem);
+}
+
+.tp-finger-map-keyboard {
+  min-width: max-content;
+  margin-inline: auto;
+}
+
+.tp-finger-map-row {
+  flex-wrap: nowrap;
+}
+
+.tp-finger-map-row--home {
+  margin-left: 1.1rem;
+}
+
+.tp-finger-map-row--bottom {
+  margin-left: 2.2rem;
+}
+
+.tp-finger-map-row--space {
+  margin-top: 0.125rem;
+}
+
+.tp-finger-map-key {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-width: 2.125rem;
+  height: 2.125rem;
+  padding: 0 0.35rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--tp-color-border);
+  font-family: var(--tp-font-mono);
+  line-height: 1;
+  color: var(--tp-color-text-description);
+  background: var(--tp-color-bg-container);
+  transition:
+    background-color 0.12s ease,
+    border-color 0.12s ease,
+    color 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.tp-finger-map-key-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.tp-finger-map-key-label--wide {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+}
+
+.tp-finger-map-key--wide {
+  min-width: 16rem;
+  height: 2rem;
+}
+
+.tp-finger-map-key--left-pinky {
+  background: color-mix(
+    in srgb,
+    var(--tp-color-finger-left-pinky) 62%,
+    var(--tp-color-bg-container)
+  );
+}
+
+.tp-finger-map-key--left-ring {
+  background: color-mix(
+    in srgb,
+    var(--tp-color-finger-left-ring) 62%,
+    var(--tp-color-bg-container)
+  );
+}
+
+.tp-finger-map-key--left-middle {
+  background: color-mix(
+    in srgb,
+    var(--tp-color-finger-left-middle) 62%,
+    var(--tp-color-bg-container)
+  );
+}
+
+.tp-finger-map-key--left-index {
+  background: color-mix(
+    in srgb,
+    var(--tp-color-finger-left-index) 62%,
+    var(--tp-color-bg-container)
+  );
+}
+
+.tp-finger-map-key--right-index {
+  background: color-mix(
+    in srgb,
+    var(--tp-color-finger-right-index) 62%,
+    var(--tp-color-bg-container)
+  );
+}
+
+.tp-finger-map-key--right-middle {
+  background: color-mix(
+    in srgb,
+    var(--tp-color-finger-right-middle) 62%,
+    var(--tp-color-bg-container)
+  );
+}
+
+.tp-finger-map-key--right-ring {
+  background: color-mix(
+    in srgb,
+    var(--tp-color-finger-right-ring) 62%,
+    var(--tp-color-bg-container)
+  );
+}
+
+.tp-finger-map-key--right-pinky {
+  background: color-mix(
+    in srgb,
+    var(--tp-color-finger-right-pinky) 62%,
+    var(--tp-color-bg-container)
+  );
+}
+
+.tp-finger-map-key--thumb {
+  background: color-mix(
+    in srgb,
+    var(--tp-color-finger-thumb) 62%,
+    var(--tp-color-bg-container)
+  );
+}
+
+.tp-finger-map-key--target {
+  border-color: color-mix(
+    in srgb,
+    var(--tp-color-text) 35%,
+    var(--tp-color-border)
+  );
+  color: var(--tp-color-text);
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--tp-color-text) 12%, transparent);
+}
+
+.tp-finger-map-key--finger-active.tp-finger-map-key--left-pinky {
+  background: color-mix(
+    in srgb,
+    var(--tp-color-finger-left-pinky) 78%,
+    var(--tp-color-bg-container)
+  );
+}
+
+.tp-finger-map-key--finger-active.tp-finger-map-key--left-ring {
+  background: color-mix(
+    in srgb,
+    var(--tp-color-finger-left-ring) 78%,
+    var(--tp-color-bg-container)
+  );
+}
+
+.tp-finger-map-key--finger-active.tp-finger-map-key--left-middle {
+  background: color-mix(
+    in srgb,
+    var(--tp-color-finger-left-middle) 78%,
+    var(--tp-color-bg-container)
+  );
+}
+
+.tp-finger-map-key--finger-active.tp-finger-map-key--left-index {
+  background: color-mix(
+    in srgb,
+    var(--tp-color-finger-left-index) 78%,
+    var(--tp-color-bg-container)
+  );
+}
+
+.tp-finger-map-key--finger-active.tp-finger-map-key--right-index {
+  background: color-mix(
+    in srgb,
+    var(--tp-color-finger-right-index) 78%,
+    var(--tp-color-bg-container)
+  );
+}
+
+.tp-finger-map-key--finger-active.tp-finger-map-key--right-middle {
+  background: color-mix(
+    in srgb,
+    var(--tp-color-finger-right-middle) 78%,
+    var(--tp-color-bg-container)
+  );
+}
+
+.tp-finger-map-key--finger-active.tp-finger-map-key--right-ring {
+  background: color-mix(
+    in srgb,
+    var(--tp-color-finger-right-ring) 78%,
+    var(--tp-color-bg-container)
+  );
+}
+
+.tp-finger-map-key--finger-active.tp-finger-map-key--right-pinky {
+  background: color-mix(
+    in srgb,
+    var(--tp-color-finger-right-pinky) 78%,
+    var(--tp-color-bg-container)
+  );
+}
+
+.tp-finger-map-key--finger-active.tp-finger-map-key--thumb {
+  background: color-mix(
+    in srgb,
+    var(--tp-color-finger-thumb) 78%,
+    var(--tp-color-bg-container)
+  );
+}
+
+.tp-finger-map-key--finger-active .tp-finger-map-key-label--wide {
+  color: var(--tp-color-text);
+}

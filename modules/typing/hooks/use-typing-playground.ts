@@ -15,6 +15,8 @@ import { usePlaygroundDrawerFocusRestore } from "@/modules/typing/hooks/use-play
 import { usePlaygroundKeyboardShortcuts } from "@/modules/typing/hooks/keyboard-shortcuts";
 import type { PlaygroundDialogsApi } from "@/modules/typing/hooks/use-playground-dialogs";
 import { usePlaygroundDialogs } from "@/modules/typing/hooks/use-playground-dialogs";
+import type { PlaygroundFingerMapState } from "@/modules/typing/hooks/use-playground-finger-map";
+import { usePlaygroundFingerMap } from "@/modules/typing/hooks/use-playground-finger-map";
 import { useTestFocus } from "@/modules/typing/hooks/use-test-focus";
 import { useTypingTest } from "@/modules/typing/hooks/use-typing-test";
 import type { UseTypingTestReturn } from "@/modules/typing/hooks/use-typing-test";
@@ -26,6 +28,7 @@ export type TypingPlaygroundState = {
   isTestFocused: boolean;
   typing: UseTypingTestReturn;
   dialogs: PlaygroundDialogsApi;
+  fingerMap: PlaygroundFingerMapState;
 };
 
 export const useTypingPlayground = (): TypingPlaygroundState => {
@@ -65,5 +68,7 @@ export const useTypingPlayground = (): TypingPlaygroundState => {
 
   usePlaygroundKeyboardShortcuts({ phase, typing, dialogs });
 
-  return { phase, isTestFocused, typing, dialogs };
+  const fingerMap = usePlaygroundFingerMap();
+
+  return { phase, isTestFocused, typing, dialogs, fingerMap };
 };

@@ -111,6 +111,11 @@ export const buildAntdTheme = (isDark: boolean): ThemeConfig => {
         handleColor: palette.colorPrimary,
         handleActiveColor: palette.colorPrimary,
       },
+      Switch: {
+        handleBg: palette.colorBgContainer,
+        colorPrimary: palette.colorPrimary,
+        colorPrimaryHover: palette.colorPrimaryHover,
+      },
     },
   };
 };

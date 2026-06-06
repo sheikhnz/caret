@@ -1,0 +1,29 @@
+/* Themed switch — monochrome track/handle via palette tokens */
+
+.tp-switch.ant-switch {
+  background: var(--tp-color-fill-secondary);
+}
+
+.tp-switch.ant-switch:hover:not(.ant-switch-disabled) {
+  background: var(--tp-color-fill-secondary);
+}
+
+.tp-switch.ant-switch.ant-switch-checked {
+  background: var(--tp-color-primary);
+}
+
+.tp-switch.ant-switch.ant-switch-checked:hover:not(.ant-switch-disabled) {
+  background: var(--tp-color-primary-hover);
+}
+
+.tp-switch.ant-switch .ant-switch-handle::before {
+  background-color: var(--tp-color-bg-container);
+}
+
+.tp-switch.ant-switch.ant-switch-checked .ant-switch-handle::before {
+  background-color: var(--tp-color-text-light-solid);
+}
+
+.tp-switch.ant-switch.ant-switch-disabled {
+  opacity: 0.45;
+}

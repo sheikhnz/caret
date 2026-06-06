@@ -36,6 +36,15 @@ const COLORS = {
   errorMuted: ["rgba(255, 77, 79, 0.12)", "rgba(255, 120, 117, 0.14)"],
   scrollbarThumb: ["rgb(0 0 0 / 0.15)", "rgb(255 255 255 / 0.15)"],
   scrollbarThumbHover: ["rgb(0 0 0 / 0.25)", "rgb(255 255 255 / 0.28)"],
+  colorFingerLeftPinky: ["#e8b4b4", "#9a5558"],
+  colorFingerLeftRing: ["#e8c8b4", "#9a6848"],
+  colorFingerLeftMiddle: ["#e8dcb4", "#9a8248"],
+  colorFingerLeftIndex: ["#b4e8bc", "#489a58"],
+  colorFingerRightIndex: ["#b4dce8", "#48909a"],
+  colorFingerRightMiddle: ["#b4c4e8", "#48609a"],
+  colorFingerRightRing: ["#c8b4e8", "#68489a"],
+  colorFingerRightPinky: ["#e8b4d8", "#9a4878"],
+  colorFingerThumb: ["#d8d8d8", "#686868"],
 } as const;
 
 type ColorKey = keyof typeof COLORS;
@@ -91,6 +100,15 @@ const ROOT_KEYS: (ColorKey | "error")[] = [
   "errorMuted",
   "scrollbarThumb",
   "scrollbarThumbHover",
+  "colorFingerLeftPinky",
+  "colorFingerLeftRing",
+  "colorFingerLeftMiddle",
+  "colorFingerLeftIndex",
+  "colorFingerRightIndex",
+  "colorFingerRightMiddle",
+  "colorFingerRightRing",
+  "colorFingerRightPinky",
+  "colorFingerThumb",
 ];
 
 const paletteRootVars = (palette: ThemePalette) =>

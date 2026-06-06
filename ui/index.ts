@@ -5,6 +5,10 @@ export { Card } from "./Card";
 export { Input } from "./Input";
 export { Select } from "./Select";
 export type { SelectProps } from "antd";
+export { Switch } from "./Switch";
+export type { SwitchProps } from "./Switch";
+export { ToggleField } from "./ToggleField";
+export type { ToggleFieldProps } from "./ToggleField";
 export { Textarea } from "./Textarea";
 export { Kbd } from "./Kbd";
 export { Label } from "./Label";
@@ -48,6 +52,8 @@ export const UI_COMPONENTS = [
   "Textarea",
   "Kbd",
   "Label",
+  "Switch",
+  "ToggleField",
   "Drawer",
   "Segmented",
 ] as const;

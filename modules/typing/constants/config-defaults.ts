@@ -27,6 +27,7 @@ export const DEFAULT_CONFIG: TypingConfig = {
   showLiveAcc: false,
   showLiveBurst: false,
   showTimerProgress: true,
+  showFingerMap: true,
   soundVolume: 0.5,
   playSoundOnClick: "1",
   playSoundOnError: "1",

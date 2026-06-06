@@ -4,7 +4,7 @@
 
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, type ReactNode } from "react";
 
 import type { UseTypingTestReturn } from "@/modules/typing/hooks/use-typing-test";
 import { useTypingTestDisplayConfig } from "@/modules/typing/hooks/use-typing-test-display-config";
@@ -24,6 +24,8 @@ type TypingTestProps = {
   isTestFocused: boolean;
   onOpenSettings: () => void;
   onOpenShortcutsHelp: () => void;
+  /** Rendered below the words viewport and above the shortcuts bar. */
+  afterViewport?: ReactNode;
 };
 
 export const TypingTest = ({
@@ -31,6 +33,7 @@ export const TypingTest = ({
   isTestFocused,
   onOpenSettings,
   onOpenShortcutsHelp,
+  afterViewport,
 }: TypingTestProps) => {
   const store = useTypingTestView();
   const { mode, blindMode, caretStyle, smoothCaret } =
@@ -119,6 +122,10 @@ export const TypingTest = ({
           )}
         </div>
       </div>
+
+      {afterViewport ? (
+        <div className="tp-typing-after-viewport">{afterViewport}</div>
+      ) : null}
 
       <TypingTestShortcuts
         mode={mode}
