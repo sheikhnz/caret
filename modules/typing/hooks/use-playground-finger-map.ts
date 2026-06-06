@@ -7,11 +7,8 @@
 
 import { useCallback, useMemo, useSyncExternalStore } from "react";
 
-import { deriveTargetKey } from "@/modules/typing/components/FingerMap/derive-target-key";
-import {
-  KEY_FINGER_LOOKUP,
-  type FingerId,
-} from "@/modules/typing/components/FingerMap/constants";
+import { buildFingerMapState } from "@/modules/typing/components/FingerMap/build-finger-map-state";
+import type { FingerId } from "@/modules/typing/components/FingerMap/constants";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
 import { useTestStore } from "@/modules/typing/stores/test-store";
 import type { TestPhase } from "@/modules/typing/types/engine";
@@ -65,22 +62,12 @@ const getFingerMapSlice = (): FingerMapStoreSlice => {
   return next;
 };
 
-const getFingerForKey = (targetKey: string): FingerId | null =>
-  KEY_FINGER_LOOKUP.get(targetKey) ?? null;
-
 const buildEnabledState = (
   slice: FingerMapStoreSlice,
-): PlaygroundFingerMapState => {
-  const targetKey = deriveTargetKey(slice);
-  const activeFinger = targetKey === null ? null : getFingerForKey(targetKey);
-
-  return {
-    enabled: true,
-    targetKey,
-    activeFinger,
-    phase: slice.phase,
-  };
-};
+): PlaygroundFingerMapState => ({
+  enabled: true,
+  ...buildFingerMapState(slice),
+});
 
 /**
  * Subscribes to `{ phase, words, wordIndex, currentInput }` when config.showFingerMap

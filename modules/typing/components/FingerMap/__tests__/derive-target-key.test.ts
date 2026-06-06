@@ -90,4 +90,37 @@ describe("deriveTargetKey", () => {
       }),
     ).toBeNull();
   });
+
+  it("returns digits without lowercasing", () => {
+    expect(
+      deriveTargetKey({
+        words: ["test2"],
+        wordIndex: 0,
+        currentInput: "test",
+        phase: "active",
+      }),
+    ).toBe("2");
+  });
+
+  it("returns punctuation characters as-is", () => {
+    expect(
+      deriveTargetKey({
+        words: ["wait,"],
+        wordIndex: 0,
+        currentInput: "wait",
+        phase: "active",
+      }),
+    ).toBe(",");
+  });
+
+  it("advances to the next character after partial input", () => {
+    expect(
+      deriveTargetKey({
+        words: ["typing"],
+        wordIndex: 0,
+        currentInput: "typ",
+        phase: "active",
+      }),
+    ).toBe("i");
+  });
 });

@@ -12,28 +12,11 @@ import {
   type FingerId,
   type FingerMapKey,
 } from "./constants";
+import { isTargetKey, normalizeTargetKey } from "./target-key-match";
 
 type KeyboardProps = {
   targetKey: string | null;
   activeFinger: FingerId | null;
-};
-
-const normalizeTargetKey = (targetKey: string | null): string | null => {
-  if (targetKey === null) return null;
-  if (targetKey === " ") return " ";
-  return targetKey.length === 1 ? targetKey.toLowerCase() : targetKey;
-};
-
-const isTargetKey = ({
-  keyLabel,
-  targetKey,
-}: {
-  keyLabel: string;
-  targetKey: string | null;
-}): boolean => {
-  if (targetKey === null) return false;
-  if (keyLabel === " ") return targetKey === " ";
-  return keyLabel.toLowerCase() === targetKey.toLowerCase();
 };
 
 type KeyCapProps = {
