@@ -67,12 +67,12 @@ Follows [Ant Design theme](https://ant.design/docs/react/customize-theme) + [CSS
 - Form focus: keep rings light via `controlFocus` in `ui/theme.ts` only (do not duplicate in `globals.css`).
 - Shared layout/CSS utilities in `app/globals.css` — prefer these over inline layout styles:
   - Page: `tp-page-shell`, `tp-page-content`, `tp-page-chrome`, `data-tp-pg-focus` (opt-in via `TypingPlayground` `isolateOnFocus`), `tp-pg-focus-dim`
-  - Results: `tp-results-card`, `tp-results-top`, `tp-results-chart-col` (use Flex, not `Row` gutter inside cards)
+  - Results: `tp-results-card`, `tp-results-chart-col` (use Flex, not `Row` gutter inside cards)
   - Sections: `tp-section-*`, `tp-stat-card*`, `tp-shortcuts-*`
 - Results card layout: Flex only inside `tp-results-card` — Ant `Row` gutter negative margins break card padding.
 - Test-config chips: keep `TEST_CONFIG_PILL_CLASS` (`tp-config-pill`); `TestConfig` returns `null` until `usePersistedStoresHydrated()` so Ant/theme SSR mismatch is not visible on chips.
 
-**Intentional color exceptions:** Letter status classes (`.letter-correct`, `.letter-incorrect`, etc.) and results chart series (`--tp-chart-*` in `styles/tokens.css`, rendered via `useChartTheme`) — functional feedback and readable data viz, not decorative accent.
+**Intentional color exceptions:** Letter status classes (`.letter-correct`, `.letter-incorrect`, etc.) and results chart series (`ui/theme/palette.ts`, rendered via `useChartTheme`) — functional feedback and readable data viz, not decorative accent.
 
 ## Module layout (`modules/typing/`)
 

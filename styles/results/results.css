@@ -186,40 +186,18 @@
 
 .tp-stat-card .ant-statistic-title {
   margin-bottom: 0;
+  font-size: 16px;
+  line-height: 16px;
   color: var(--tp-text-muted);
   font-weight: 400;
 }
 
-.tp-stat-card--hero .ant-statistic-title {
-  font-size: 24px;
-  line-height: 24px;
-}
-
-.tp-stat-card--default .ant-statistic-title,
-.tp-stat-card--compact .ant-statistic-title {
-  font-size: 16px;
-  line-height: 16px;
-}
-
 .tp-stat-card .ant-statistic-content {
   font-family: var(--tp-font-mono);
-  font-variant-numeric: tabular-nums;
-  color: var(--tp-text-primary);
-}
-
-.tp-stat-card--hero .ant-statistic-content {
-  font-size: 4rem;
-  line-height: 4rem;
-}
-
-.tp-stat-card--default .ant-statistic-content {
   font-size: 20px;
   line-height: 28px;
-}
-
-.tp-stat-card--compact .ant-statistic-content {
-  font-size: 16px;
-  line-height: 20px;
+  font-variant-numeric: tabular-nums;
+  color: var(--tp-text-primary);
 }
 
 .tp-stat-card-sub {
@@ -272,30 +250,6 @@
   text-decoration: underline;
   text-decoration-color: var(--tp-error);
   text-underline-offset: 0.12em;
-}
-
-.tp-char-stats__legend {
-  display: flex;
-  gap: 10px;
-  margin-top: 6px;
-  font-family: var(--tp-font-mono);
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.tp-char-stats__key {
-  color: var(--tp-text-muted);
-}
-
-.tp-char-stats__key--incorrect,
-.tp-char-stats__key--extra,
-.tp-char-stats__key--missed {
-  color: var(--tp-error);
-}
-
-.tp-char-stats__key--missed {
-  opacity: 0.72;
 }
 
 /* Results chart */

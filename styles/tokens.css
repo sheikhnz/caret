@@ -24,7 +24,6 @@
   --tp-text-muted: var(--tp-color-text-description);
   --tp-text-disabled: var(--tp-color-text-disabled);
   --tp-caret: var(--tp-color-text);
-  --tp-surface: var(--tp-color-bg-container);
   --tp-border: var(--tp-color-border);
   --tp-fill-secondary: var(--tp-color-fill-secondary);
 }

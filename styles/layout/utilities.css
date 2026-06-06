@@ -3,14 +3,6 @@
   min-width: 0;
 }
 
-.tp-shrink-0 {
-  flex-shrink: 0;
-}
-
-.tp-flex-1 {
-  flex: 1;
-}
-
 .tp-save-compact {
   flex: 1;
   min-width: 200px;

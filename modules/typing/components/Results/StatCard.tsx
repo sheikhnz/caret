@@ -8,8 +8,6 @@ import { Statistic, Typography } from "antd";
 
 import { joinClassNames } from "@/utils";
 
-type StatCardSize = "hero" | "default" | "compact";
-
 type StatCardProps = {
   label: string;
   value: string | number;
@@ -19,16 +17,7 @@ type StatCardProps = {
   featured?: boolean;
   /** Keeps a third row so inline stat rows stay aligned. */
   reserveSub?: boolean;
-  /** @deprecated Prefer `size="hero"` */
-  large?: boolean;
-  size?: StatCardSize;
   className?: string;
-};
-
-const sizeClass: Record<StatCardSize, string> = {
-  hero: "tp-stat-card--hero",
-  default: "tp-stat-card--default",
-  compact: "tp-stat-card--compact",
 };
 
 export const StatCard = ({
@@ -38,18 +27,14 @@ export const StatCard = ({
   subLabel,
   featured = false,
   reserveSub = false,
-  large = false,
-  size,
   className,
 }: StatCardProps) => {
-  const resolvedSize: StatCardSize = size ?? (large ? "hero" : "default");
   const showSub = sub !== undefined || reserveSub;
 
   return (
     <div
       className={joinClassNames(
         "tp-stat-card",
-        sizeClass[resolvedSize],
         featured && "tp-stat-card--featured",
         className,
       )}

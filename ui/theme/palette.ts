@@ -87,8 +87,6 @@ const ROOT_KEYS: (ColorKey | "error")[] = [
   "colorError",
   "resultsFeatured",
   "resultsSecondary",
-  "chartPlotBg",
-  "chartPlotBorder",
   "error",
   "errorMuted",
   "scrollbarThumb",
