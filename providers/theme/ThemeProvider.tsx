@@ -48,10 +48,8 @@ const subscribeColorScheme = (onStoreChange: () => void): (() => void) => {
 export const ThemeProvider = ({ children }: ProviderProps) => {
   const initialIsDark = useContext(InitialIsDarkContext);
 
-  const isDark = useSyncExternalStore(
-    subscribeColorScheme,
-    getIsDark,
-    () => getThemeServerSnapshot(initialIsDark),
+  const isDark = useSyncExternalStore(subscribeColorScheme, getIsDark, () =>
+    getThemeServerSnapshot(initialIsDark),
   );
 
   return (

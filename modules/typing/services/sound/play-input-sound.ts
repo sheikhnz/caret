@@ -21,9 +21,7 @@ export const playInputSound = async (options: {
   }
 
   const useClickSound =
-    options.correct === true ||
-    playSoundOnError === "off" ||
-    options.blindMode;
+    options.correct === true || playSoundOnError === "off" || options.blindMode;
 
   if (useClickSound) {
     if (playSoundOnClick === "off") return;

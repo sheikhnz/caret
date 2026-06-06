@@ -10,7 +10,9 @@ type CaretWordmarkProps = {
 
 export const CaretWordmark = ({ className }: CaretWordmarkProps) => (
   <span
-    className={className ? `tp-brand-wordmark ${className}` : "tp-brand-wordmark"}
+    className={
+      className ? `tp-brand-wordmark ${className}` : "tp-brand-wordmark"
+    }
     aria-label={BRAND_NAME}
   >
     <span className="tp-brand-wordmark-c">C</span>

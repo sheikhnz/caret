@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  getCharStatus,
-  shouldMaskCharInBlindMode,
-} from "../char-display";
+import { getCharStatus, shouldMaskCharInBlindMode } from "../char-display";
 
 describe("getCharStatus", () => {
   it("marks future words and characters as pending", () => {

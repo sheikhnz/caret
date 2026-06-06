@@ -135,7 +135,10 @@ describe("processKeyDown", () => {
     useTestStore.getState().setPhase("active");
     TestInput.setCurrentInput("abc");
 
-    processKeyDown(new KeyboardEvent("keydown", { key: " ", code: "Space" }), deps);
+    processKeyDown(
+      new KeyboardEvent("keydown", { key: " ", code: "Space" }),
+      deps,
+    );
 
     expect(deps.wordsRef.current.length).toBeGreaterThanOrEqual(2);
     expect(useTestStore.getState().words.length).toBeGreaterThanOrEqual(2);
@@ -148,7 +151,10 @@ describe("processKeyDown", () => {
     TestState.setActiveWordIndex(0);
     TestInput.setCurrentInput("hel");
 
-    processKeyDown(keyEvent("l"), { ...finishDeps, wordsRef: { current: ["hell"] } });
+    processKeyDown(keyEvent("l"), {
+      ...finishDeps,
+      wordsRef: { current: ["hell"] },
+    });
     expect(finishDeps.finishTest).toHaveBeenCalledTimes(1);
 
     const failDeps = createDeps({

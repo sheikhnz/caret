@@ -52,9 +52,9 @@ describe("shouldDeferPlaygroundShortcuts", () => {
 
 describe("shouldDeferGlobalTypingCapture", () => {
   it("defers capture for any focused input field", () => {
-    expect(shouldDeferGlobalTypingCapture(document.createElement("input"))).toBe(
-      true,
-    );
+    expect(
+      shouldDeferGlobalTypingCapture(document.createElement("input")),
+    ).toBe(true);
     expect(shouldDeferGlobalTypingCapture(makeTypingInput())).toBe(true);
   });
 

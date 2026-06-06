@@ -80,7 +80,9 @@ describe("smoothDataset", () => {
       { x: 3, y: 30 },
     ];
 
-    expect(smoothDataset(data, 3).map((point) => point.y)).toEqual([15, 20, 25]);
+    expect(smoothDataset(data, 3).map((point) => point.y)).toEqual([
+      15, 20, 25,
+    ]);
   });
 });
 

@@ -69,8 +69,8 @@ describe("forceKeyup", () => {
 
     TestInput.forceKeyup(1200);
 
-    expect(TestInput.keypressTimings.duration.array.every((value) => value > 0)).toBe(
-      true,
-    );
+    expect(
+      TestInput.keypressTimings.duration.array.every((value) => value > 0),
+    ).toBe(true);
   });
 });

@@ -14,7 +14,12 @@ import { PgLayoutAccountButton } from "./PgLayoutAccountButton";
 export const PgLayoutHeader = () => (
   <header className="tp-page-chrome tp-page-header">
     <div className="tp-page-inner">
-      <Flex align="flex-start" gap={16} justify="space-between" style={{ width: "100%" }}>
+      <Flex
+        align="flex-start"
+        gap={16}
+        justify="space-between"
+        style={{ width: "100%" }}
+      >
         <Flex align="flex-start" gap={4} vertical>
           <CaretWordmark />
           <Typography.Text type="secondary">{BRAND_TAGLINE}</Typography.Text>
