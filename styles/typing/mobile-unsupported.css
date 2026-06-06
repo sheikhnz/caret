@@ -1,0 +1,37 @@
+/* Mobile / touch-primary gate — matches hooks/use-is-mobile-device.ts media queries */
+
+.tp-mobile-unsupported {
+  display: none;
+  width: 100%;
+  max-width: var(--tp-layout-max-width);
+  margin-inline: auto;
+  justify-content: center;
+  padding-block: 24px;
+}
+
+@media (max-width: 767px), (hover: none) and (pointer: coarse) {
+  .tp-mobile-unsupported {
+    display: flex;
+  }
+
+  /* Hide playground (incl. SSR typing skeleton) before React hydrates */
+  .tp-playground-root {
+    display: none !important;
+  }
+}
+
+.tp-mobile-unsupported-card {
+  width: 100%;
+  max-width: 28rem;
+  text-align: center;
+}
+
+.tp-mobile-unsupported-title.ant-typography {
+  margin-bottom: 0;
+}
+
+.tp-mobile-unsupported-description.ant-typography {
+  margin-bottom: 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
