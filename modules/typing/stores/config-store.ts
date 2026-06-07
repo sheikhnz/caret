@@ -4,7 +4,7 @@
 
 "use client";
 
-import { create } from "zustand";
+import { create } from "zustand/react";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 import { DEFAULT_CONFIG } from "@/modules/typing/constants/config-defaults";

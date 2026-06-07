@@ -4,7 +4,7 @@
 
 "use client";
 
-import { create } from "zustand";
+import { create } from "zustand/react";
 import type { TestPhase } from "@/modules/typing/types/engine";
 import type { CompletedEvent } from "@/modules/typing/types/result";
 import type { LanguageObject } from "@/modules/typing/types/language";

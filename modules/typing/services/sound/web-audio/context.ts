@@ -12,7 +12,10 @@ export const initAudioContext = (): void => {
 
 export const resumeWebAudio = async (): Promise<void> => {
   if (audioCtx === undefined) initAudioContext();
-  if (audioCtx?.state === "suspended") {
+  if (!audioCtx || audioCtx.state === "running") return;
+  try {
     await audioCtx.resume();
+  } catch {
+    audioCtx = null;
   }
 };

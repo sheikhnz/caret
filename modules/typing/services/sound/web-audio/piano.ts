@@ -1,7 +1,7 @@
 import type { SupportedOscillatorTypes } from "@/modules/typing/constants/sounds";
 
 import { getSoundSettings } from "../settings";
-import { audioCtx, initAudioContext } from "./context";
+import { audioCtx } from "./context";
 import { codeToNote } from "./notes";
 
 let currentCode = "KeyA";
@@ -17,8 +17,7 @@ export const playNote = (options: {
   oscillatorType: SupportedOscillatorTypes;
   shifted?: boolean;
 }): void => {
-  if (audioCtx === undefined) initAudioContext();
-  if (!audioCtx) return;
+  if (!audioCtx || audioCtx.state !== "running") return;
 
   currentCode = options.codeOverride ?? currentCode;
   if (!(currentCode in codeToNote)) return;

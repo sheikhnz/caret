@@ -7,7 +7,7 @@ import {
 
 import { randomElementFromArray } from "../utils";
 import { getSoundSettings } from "../settings";
-import { audioCtx, initAudioContext } from "./context";
+import { audioCtx } from "./context";
 import { noteFrequencies } from "./notes";
 
 type ScaleData = {
@@ -44,8 +44,7 @@ export const playScale = (
   validNotes: ValidNotes[],
   scaleMeta: ScaleData,
 ): void => {
-  if (audioCtx === undefined) initAudioContext();
-  if (!audioCtx) return;
+  if (!audioCtx || audioCtx.state !== "running") return;
 
   if (Math.random() < 0.5) {
     scaleMeta.octave += scaleMeta.direction;

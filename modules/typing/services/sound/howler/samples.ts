@@ -6,86 +6,79 @@ import type {
   PlaySoundOnError,
 } from "@/modules/typing/types/config";
 
+import { resumeAudio } from "../resume-audio";
 import { getSoundSettings } from "../settings";
 import { randomElementFromArray } from "../utils";
-import { getHowl, getHowlerModule, resumeHowler } from "./client";
+import { getHowl, getHowlerModule } from "./client";
 
-type ErrorSounds = Record<Exclude<PlaySoundOnError, "off">, Howl[]>;
+const ERROR_SOUND_PATHS: Record<
+  Exclude<PlaySoundOnError, "off">,
+  readonly string[]
+> = {
+  1: ["/sounds/error1/1.wav"],
+  2: ["/sounds/error2/1.wav"],
+  3: ["/sounds/error3/1.wav"],
+  4: ["/sounds/error4/1.wav", "/sounds/error4/2.wav"],
+};
 
-let initPromise: Promise<void> | null = null;
-const loadedBundles: Set<PlaySoundOnClick> = new Set();
+type SampleClickSound = keyof typeof clickSoundConfig;
 
-let errorSounds: ErrorSounds | null = null;
+let howlerInitPromise: Promise<void> | null = null;
+const prefetchedBundles = new Set<SampleClickSound>();
+const errorSoundCache: Partial<
+  Record<Exclude<PlaySoundOnError, "off">, Howl[]>
+> = {};
+const errorSoundPromises: Partial<
+  Record<Exclude<PlaySoundOnError, "off">, Promise<Howl[]>>
+> = {};
+
 let timeWarning: Howl | null = null;
+
+const ensureHowlerModule = async (): Promise<void> => {
+  howlerInitPromise ??= (async () => {
+    const { Howler } = await getHowlerModule();
+    Howler.volume(getSoundSettings().soundVolume);
+  })();
+  await howlerInitPromise;
+};
+
+const isSampleClickSound = (
+  playSoundOnClick: PlaySoundOnClick,
+): playSoundOnClick is SampleClickSound =>
+  playSoundOnClick !== "off" && playSoundOnClick in clickSoundConfig;
+
+const prefetchClickBundle = (playSoundOnClick: SampleClickSound): void => {
+  if (prefetchedBundles.has(playSoundOnClick)) return;
+  prefetchedBundles.add(playSoundOnClick);
+
+  const config = clickSoundConfig[playSoundOnClick];
+  if (config === undefined) return;
+
+  void Promise.all(config.map(getHowl));
+};
+
+const loadErrorSounds = async (
+  playSoundOnError: Exclude<PlaySoundOnError, "off">,
+): Promise<Howl[]> => {
+  if (errorSoundCache[playSoundOnError] !== undefined) {
+    return errorSoundCache[playSoundOnError] as Howl[];
+  }
+
+  errorSoundPromises[playSoundOnError] ??= (async () => {
+    await ensureHowlerModule();
+    const paths = ERROR_SOUND_PATHS[playSoundOnError];
+    const sounds = await Promise.all(paths.map(getHowl));
+    errorSoundCache[playSoundOnError] = sounds;
+    return sounds;
+  })();
+
+  return errorSoundPromises[playSoundOnError] as Promise<Howl[]>;
+};
 
 const initTimeWarning = async (): Promise<void> => {
   if (timeWarning !== null) return;
+  await ensureHowlerModule();
   timeWarning = await getHowl("/sounds/timeWarning.wav");
-};
-
-const initErrorSound = async (): Promise<void> => {
-  if (errorSounds !== null) return;
-  const { soundVolume } = getSoundSettings();
-  errorSounds = {
-    1: [await getHowl("/sounds/error1/1.wav")],
-    2: [await getHowl("/sounds/error2/1.wav")],
-    3: [await getHowl("/sounds/error3/1.wav")],
-    4: [
-      await getHowl("/sounds/error4/1.wav"),
-      await getHowl("/sounds/error4/2.wav"),
-    ],
-  };
-  (await getHowlerModule()).Howler.volume(soundVolume);
-};
-
-const initHowler = async (): Promise<void> => {
-  const { soundVolume, playSoundOnClick } = getSoundSettings();
-
-  initPromise ??= (async () => {
-    const { Howler } = await getHowlerModule();
-    Howler.volume(soundVolume);
-  })();
-
-  await initPromise;
-  await initErrorSound();
-
-  if (
-    playSoundOnClick === "off" ||
-    playSoundOnClick === undefined ||
-    !(playSoundOnClick in clickSoundConfig)
-  ) {
-    return;
-  }
-
-  if (!loadedBundles.has(playSoundOnClick)) {
-    loadedBundles.add(playSoundOnClick);
-    const config = clickSoundConfig[playSoundOnClick];
-    if (config === undefined) return;
-    await Promise.all(config.flatMap(getHowl));
-  }
-};
-
-export const ensureHowlerReady = (): Promise<void> => initHowler();
-
-const ensureClickBundleLoaded = async (
-  playSoundOnClick: PlaySoundOnClick,
-): Promise<void> => {
-  if (
-    playSoundOnClick === "off" ||
-    playSoundOnClick === undefined ||
-    !(playSoundOnClick in clickSoundConfig)
-  ) {
-    return;
-  }
-
-  await initHowler();
-
-  if (!loadedBundles.has(playSoundOnClick)) {
-    loadedBundles.add(playSoundOnClick);
-    const config = clickSoundConfig[playSoundOnClick];
-    if (config === undefined) return;
-    await Promise.all(config.flatMap(getHowl));
-  }
 };
 
 export const playHowlerClick = async (
@@ -94,26 +87,22 @@ export const playHowlerClick = async (
   const playSoundOnClick = soundOverride ?? getSoundSettings().playSoundOnClick;
   const { soundVolume } = getSoundSettings();
 
-  if (
-    playSoundOnClick === "off" ||
-    playSoundOnClick === undefined ||
-    !(playSoundOnClick in clickSoundConfig)
-  ) {
-    return;
-  }
-
-  // Resume while the keydown user gesture is still active — loading must not run first.
-  await resumeHowler();
-  await ensureClickBundleLoaded(playSoundOnClick);
+  if (!isSampleClickSound(playSoundOnClick)) return;
 
   const sounds = clickSoundConfig[playSoundOnClick];
   if (sounds === undefined) return;
+
+  // Unlock audio on the user gesture before any async sound loading.
+  await resumeAudio();
+  await ensureHowlerModule();
 
   const randomSound = randomElementFromArray(sounds);
   const soundToPlay = await getHowl(randomSound);
   soundToPlay.volume(soundVolume);
   soundToPlay.seek(0);
   soundToPlay.play();
+
+  prefetchClickBundle(playSoundOnClick);
 };
 
 export const playError = async (
@@ -124,13 +113,10 @@ export const playError = async (
 
   if (playSoundOnError === "off" || playSoundOnError === undefined) return;
 
-  await resumeHowler();
-  if (errorSounds === null) await initErrorSound();
+  await resumeAudio();
+  const errorSounds = await loadErrorSounds(playSoundOnError);
 
-  const sounds = (errorSounds as ErrorSounds)[playSoundOnError];
-  if (sounds === undefined) return;
-
-  const randomSound = randomElementFromArray(sounds);
+  const randomSound = randomElementFromArray(errorSounds);
   randomSound.volume(soundVolume);
   randomSound.seek(0);
   randomSound.play();
@@ -139,7 +125,7 @@ export const playError = async (
 export const playTimeWarning = async (): Promise<void> => {
   const { soundVolume } = getSoundSettings();
 
-  await resumeHowler();
+  await resumeAudio();
   if (timeWarning === null) await initTimeWarning();
 
   const soundToPlay = timeWarning as Howl;
