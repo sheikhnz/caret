@@ -29,7 +29,7 @@ export const DEFAULT_CONFIG: TypingConfig = {
   showTimerProgress: true,
   showFingerMap: {
     keyboard: true,
-    hands: false,
+    hands: true,
   },
   soundVolume: 0.5,
   playSoundOnClick: "1",
