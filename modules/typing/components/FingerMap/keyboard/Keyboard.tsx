@@ -11,7 +11,7 @@ import {
   FINGER_ROW_CLASS,
   type FingerId,
   type FingerMapKey,
-} from "./constants";
+} from "../constants";
 import { isTargetKey, normalizeTargetKey } from "./target-key-match";
 
 type KeyboardProps = {

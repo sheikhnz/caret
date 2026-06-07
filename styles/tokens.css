@@ -26,4 +26,17 @@
   --tp-caret: var(--tp-color-text);
   --tp-border: var(--tp-color-border);
   --tp-fill-secondary: var(--tp-color-fill-secondary);
+
+  /* Finger-map / hands: saturated light palette + tuned mix so zones read on white. */
+  --tp-finger-zone-mix-idle: 40%;
+  --tp-finger-zone-mix-active: 65%;
+  --tp-finger-target-border-mix: 52%;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --tp-finger-zone-mix-idle: 62%;
+    --tp-finger-zone-mix-active: 78%;
+    --tp-finger-target-border-mix: 58%;
+  }
 }

@@ -47,7 +47,7 @@ describe("deriveTargetKey", () => {
     ).toBe("'");
   });
 
-  it("lowercases alphabetic characters", () => {
+  it("preserves alphabetic character casing from the word", () => {
     expect(
       deriveTargetKey({
         words: ["Hello"],
@@ -55,7 +55,7 @@ describe("deriveTargetKey", () => {
         currentInput: "",
         phase: "active",
       }),
-    ).toBe("h");
+    ).toBe("H");
   });
 
   it("returns null when the test is finished", () => {

@@ -12,6 +12,7 @@ import { VALID_TIME_WARNING_VALUES } from "@/modules/typing/constants/sound-opti
 import type {
   TypingConfig,
   PlayTimeWarning,
+  ShowFingerMapConfig,
 } from "@/modules/typing/types/config";
 
 type ConfigStore = {
@@ -31,10 +32,33 @@ const normalizePlayTimeWarning = (value: unknown): PlayTimeWarning => {
   return DEFAULT_CONFIG.playTimeWarning;
 };
 
+const normalizeShowFingerMap = (value: unknown): ShowFingerMapConfig => {
+  if (typeof value === "boolean") {
+    return { keyboard: value, hands: false };
+  }
+
+  if (value && typeof value === "object") {
+    const record = value as Partial<ShowFingerMapConfig>;
+    return {
+      keyboard:
+        typeof record.keyboard === "boolean"
+          ? record.keyboard
+          : DEFAULT_CONFIG.showFingerMap.keyboard,
+      hands:
+        typeof record.hands === "boolean"
+          ? record.hands
+          : DEFAULT_CONFIG.showFingerMap.hands,
+    };
+  }
+
+  return DEFAULT_CONFIG.showFingerMap;
+};
+
 const normalizeConfig = (config: TypingConfig): TypingConfig => {
   const normalized = {
     ...config,
     playTimeWarning: normalizePlayTimeWarning(config.playTimeWarning),
+    showFingerMap: normalizeShowFingerMap(config.showFingerMap),
   };
 
   if (normalized.mode === "quote") {

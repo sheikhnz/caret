@@ -82,7 +82,7 @@
 .tp-finger-map-key--left-pinky {
   background: color-mix(
     in srgb,
-    var(--tp-color-finger-left-pinky) 62%,
+    var(--tp-color-finger-left-pinky) var(--tp-finger-zone-mix-idle),
     var(--tp-color-bg-container)
   );
 }
@@ -90,7 +90,7 @@
 .tp-finger-map-key--left-ring {
   background: color-mix(
     in srgb,
-    var(--tp-color-finger-left-ring) 62%,
+    var(--tp-color-finger-left-ring) var(--tp-finger-zone-mix-idle),
     var(--tp-color-bg-container)
   );
 }
@@ -98,7 +98,7 @@
 .tp-finger-map-key--left-middle {
   background: color-mix(
     in srgb,
-    var(--tp-color-finger-left-middle) 62%,
+    var(--tp-color-finger-left-middle) var(--tp-finger-zone-mix-idle),
     var(--tp-color-bg-container)
   );
 }
@@ -106,7 +106,7 @@
 .tp-finger-map-key--left-index {
   background: color-mix(
     in srgb,
-    var(--tp-color-finger-left-index) 62%,
+    var(--tp-color-finger-left-index) var(--tp-finger-zone-mix-idle),
     var(--tp-color-bg-container)
   );
 }
@@ -114,7 +114,7 @@
 .tp-finger-map-key--right-index {
   background: color-mix(
     in srgb,
-    var(--tp-color-finger-right-index) 62%,
+    var(--tp-color-finger-right-index) var(--tp-finger-zone-mix-idle),
     var(--tp-color-bg-container)
   );
 }
@@ -122,7 +122,7 @@
 .tp-finger-map-key--right-middle {
   background: color-mix(
     in srgb,
-    var(--tp-color-finger-right-middle) 62%,
+    var(--tp-color-finger-right-middle) var(--tp-finger-zone-mix-idle),
     var(--tp-color-bg-container)
   );
 }
@@ -130,7 +130,7 @@
 .tp-finger-map-key--right-ring {
   background: color-mix(
     in srgb,
-    var(--tp-color-finger-right-ring) 62%,
+    var(--tp-color-finger-right-ring) var(--tp-finger-zone-mix-idle),
     var(--tp-color-bg-container)
   );
 }
@@ -138,7 +138,7 @@
 .tp-finger-map-key--right-pinky {
   background: color-mix(
     in srgb,
-    var(--tp-color-finger-right-pinky) 62%,
+    var(--tp-color-finger-right-pinky) var(--tp-finger-zone-mix-idle),
     var(--tp-color-bg-container)
   );
 }
@@ -146,7 +146,7 @@
 .tp-finger-map-key--thumb {
   background: color-mix(
     in srgb,
-    var(--tp-color-finger-thumb) 62%,
+    var(--tp-color-finger-thumb) var(--tp-finger-zone-mix-idle),
     var(--tp-color-bg-container)
   );
 }
@@ -154,18 +154,18 @@
 .tp-finger-map-key--target {
   border-color: color-mix(
     in srgb,
-    var(--tp-color-text) 35%,
+    var(--tp-color-text) var(--tp-finger-target-border-mix),
     var(--tp-color-border)
   );
   color: var(--tp-color-text);
   box-shadow: inset 0 0 0 1px
-    color-mix(in srgb, var(--tp-color-text) 12%, transparent);
+    color-mix(in srgb, var(--tp-color-text) 16%, transparent);
 }
 
 .tp-finger-map-key--finger-active.tp-finger-map-key--left-pinky {
   background: color-mix(
     in srgb,
-    var(--tp-color-finger-left-pinky) 78%,
+    var(--tp-color-finger-left-pinky) var(--tp-finger-zone-mix-active),
     var(--tp-color-bg-container)
   );
 }
@@ -173,7 +173,7 @@
 .tp-finger-map-key--finger-active.tp-finger-map-key--left-ring {
   background: color-mix(
     in srgb,
-    var(--tp-color-finger-left-ring) 78%,
+    var(--tp-color-finger-left-ring) var(--tp-finger-zone-mix-active),
     var(--tp-color-bg-container)
   );
 }
@@ -181,7 +181,7 @@
 .tp-finger-map-key--finger-active.tp-finger-map-key--left-middle {
   background: color-mix(
     in srgb,
-    var(--tp-color-finger-left-middle) 78%,
+    var(--tp-color-finger-left-middle) var(--tp-finger-zone-mix-active),
     var(--tp-color-bg-container)
   );
 }
@@ -189,7 +189,7 @@
 .tp-finger-map-key--finger-active.tp-finger-map-key--left-index {
   background: color-mix(
     in srgb,
-    var(--tp-color-finger-left-index) 78%,
+    var(--tp-color-finger-left-index) var(--tp-finger-zone-mix-active),
     var(--tp-color-bg-container)
   );
 }
@@ -197,7 +197,7 @@
 .tp-finger-map-key--finger-active.tp-finger-map-key--right-index {
   background: color-mix(
     in srgb,
-    var(--tp-color-finger-right-index) 78%,
+    var(--tp-color-finger-right-index) var(--tp-finger-zone-mix-active),
     var(--tp-color-bg-container)
   );
 }
@@ -205,7 +205,7 @@
 .tp-finger-map-key--finger-active.tp-finger-map-key--right-middle {
   background: color-mix(
     in srgb,
-    var(--tp-color-finger-right-middle) 78%,
+    var(--tp-color-finger-right-middle) var(--tp-finger-zone-mix-active),
     var(--tp-color-bg-container)
   );
 }
@@ -213,7 +213,7 @@
 .tp-finger-map-key--finger-active.tp-finger-map-key--right-ring {
   background: color-mix(
     in srgb,
-    var(--tp-color-finger-right-ring) 78%,
+    var(--tp-color-finger-right-ring) var(--tp-finger-zone-mix-active),
     var(--tp-color-bg-container)
   );
 }
@@ -221,7 +221,7 @@
 .tp-finger-map-key--finger-active.tp-finger-map-key--right-pinky {
   background: color-mix(
     in srgb,
-    var(--tp-color-finger-right-pinky) 78%,
+    var(--tp-color-finger-right-pinky) var(--tp-finger-zone-mix-active),
     var(--tp-color-bg-container)
   );
 }
@@ -229,7 +229,7 @@
 .tp-finger-map-key--finger-active.tp-finger-map-key--thumb {
   background: color-mix(
     in srgb,
-    var(--tp-color-finger-thumb) 78%,
+    var(--tp-color-finger-thumb) var(--tp-finger-zone-mix-active),
     var(--tp-color-bg-container)
   );
 }

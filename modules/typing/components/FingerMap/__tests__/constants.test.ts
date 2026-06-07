@@ -3,6 +3,9 @@ import { describe, expect, it } from "vitest";
 import {
   FINGER_MAP_LAYOUT,
   KEY_FINGER_LOOKUP,
+  requiresShift,
+  resolveBaseKeyLabel,
+  resolveShiftFinger,
   type FingerId,
 } from "../constants";
 
@@ -25,8 +28,13 @@ const SHIFTED_PUNCTUATION_FINGERS: Record<string, FingerId> = {
   ":": "right-pinky",
   "!": "left-pinky",
   "?": "right-pinky",
-  "(": "right-index",
-  ")": "right-index",
+  "(": "right-ring",
+  ")": "right-pinky",
+  "@": "left-ring",
+  "#": "left-middle",
+  $: "left-index",
+  "%": "left-index",
+  "^": "right-index",
 };
 
 describe("KEY_FINGER_LOOKUP", () => {
@@ -56,8 +64,20 @@ describe("KEY_FINGER_LOOKUP", () => {
   });
 
   it("maps shifted punctuation aliases to their touch-typing fingers", () => {
-    for (const [shifted, finger] of Object.entries(SHIFTED_PUNCTUATION_FINGERS)) {
+    for (const [shifted, finger] of Object.entries(
+      SHIFTED_PUNCTUATION_FINGERS,
+    )) {
       expect(KEY_FINGER_LOOKUP.get(shifted)).toBe(finger);
     }
+  });
+
+  it("derives shifted-to-base and shift detection from layout shiftLabel fields", () => {
+    expect(resolveBaseKeyLabel("@")).toBe("2");
+    expect(requiresShift("@")).toBe(true);
+    expect(requiresShift("2")).toBe(false);
+    expect(requiresShift("W")).toBe(true);
+    expect(requiresShift("w")).toBe(false);
+    expect(resolveShiftFinger("left-ring")).toBe("right-pinky");
+    expect(resolveShiftFinger("right-index")).toBe("left-pinky");
   });
 });

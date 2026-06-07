@@ -10,7 +10,7 @@ import { useCallback } from "react";
 import { TP_PG_FOCUS_ATTR } from "@/layout";
 import { joinClassNames } from "@/utils";
 import { useIsMobileDevice } from "@/hooks";
-import { FingerMap } from "@/modules/typing/components/FingerMap";
+import { FingerMapGuidance } from "@/modules/typing/components/FingerMap";
 import { PlaygroundDrawers } from "@/modules/typing/components/PlaygroundDrawers";
 import { handlePlaygroundDrawerAction } from "@/modules/typing/components/PlaygroundDrawers/handle-playground-drawer-action";
 import { Results } from "@/modules/typing/components/Results";
@@ -35,7 +35,7 @@ export const TypingPlayground = ({
   playground,
   isolateOnFocus = false,
 }: TypingPlaygroundProps) => {
-  const { phase, isTestFocused, typing, dialogs, fingerMap } = playground;
+  const { phase, isTestFocused, typing, dialogs } = playground;
   const { restart, bailOut, focusInput } = typing;
   const { mode } = useTypingTestDisplayConfig();
   const isMobileDevice = useIsMobileDevice();
@@ -108,18 +108,9 @@ export const TypingPlayground = ({
             </div>
           </div>
 
-          <TypingTest
-            typing={typing}
-            isTestFocused={isTestFocused}
-            afterViewport={
-              fingerMap.enabled ? (
-                <FingerMap
-                  fingerMap={fingerMap}
-                  isTestFocused={isTestFocused}
-                />
-              ) : null
-            }
-          />
+          <TypingTest typing={typing} isTestFocused={isTestFocused} />
+
+          <FingerMapGuidance isTestFocused={isTestFocused} />
 
           <TypingTestShortcuts
             mode={mode}

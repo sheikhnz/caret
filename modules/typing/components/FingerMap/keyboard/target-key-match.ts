@@ -2,10 +2,11 @@
  * Target-key normalization and key-cap matching for the finger-map keyboard.
  */
 
+import { resolveBaseKeyLabel } from "../constants";
+
 export const normalizeTargetKey = (targetKey: string | null): string | null => {
   if (targetKey === null) return null;
-  if (targetKey === " ") return " ";
-  return targetKey.length === 1 ? targetKey.toLowerCase() : targetKey;
+  return resolveBaseKeyLabel(targetKey);
 };
 
 export const isTargetKey = ({
@@ -15,7 +16,8 @@ export const isTargetKey = ({
   keyLabel: string;
   targetKey: string | null;
 }): boolean => {
-  if (targetKey === null) return false;
-  if (keyLabel === " ") return targetKey === " ";
-  return keyLabel.toLowerCase() === targetKey.toLowerCase();
+  const normalized = normalizeTargetKey(targetKey);
+  if (normalized === null) return false;
+  if (keyLabel === " ") return normalized === " ";
+  return keyLabel.toLowerCase() === normalized.toLowerCase();
 };

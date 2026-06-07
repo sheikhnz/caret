@@ -12,8 +12,9 @@ export type DeriveTargetKeyArgs = {
 };
 
 /**
- * Returns the next character to type (lowercase letters; space when the active
- * word is complete). Null when the test is finished or words are unavailable.
+ * Returns the next character to type as it appears in the word (preserves case
+ * so shift-required keys can be resolved). Space when the active word is complete.
+ * Null when the test is finished or words are unavailable.
  */
 export const deriveTargetKey = ({
   words,
@@ -29,8 +30,7 @@ export const deriveTargetKey = ({
 
   const typedLength = currentInput.length;
   if (typedLength < currentWord.length) {
-    const nextChar = currentWord[typedLength];
-    return /[a-z]/i.test(nextChar) ? nextChar.toLowerCase() : nextChar;
+    return currentWord[typedLength];
   }
 
   return " ";

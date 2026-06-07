@@ -50,6 +50,12 @@ export type SoundVolume = number;
 
 export type PlayTimeWarning = "off" | "1" | "3" | "5" | "10";
 
+/** Finger-guidance display toggles (keyboard map + hand icons). */
+export type ShowFingerMapConfig = {
+  keyboard: boolean;
+  hands: boolean;
+};
+
 export type TypingConfig = {
   mode: TestMode;
   time: number;
@@ -73,7 +79,7 @@ export type TypingConfig = {
   showLiveAcc: boolean;
   showLiveBurst: boolean;
   showTimerProgress: boolean;
-  showFingerMap: boolean;
+  showFingerMap: ShowFingerMapConfig;
   soundVolume: SoundVolume;
   playSoundOnClick: PlaySoundOnClick;
   playSoundOnError: PlaySoundOnError;

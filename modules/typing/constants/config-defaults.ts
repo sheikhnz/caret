@@ -27,7 +27,10 @@ export const DEFAULT_CONFIG: TypingConfig = {
   showLiveAcc: false,
   showLiveBurst: false,
   showTimerProgress: true,
-  showFingerMap: true,
+  showFingerMap: {
+    keyboard: true,
+    hands: false,
+  },
   soundVolume: 0.5,
   playSoundOnClick: "1",
   playSoundOnError: "1",

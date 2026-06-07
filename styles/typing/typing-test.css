@@ -16,27 +16,26 @@
   cursor: pointer;
 }
 
-/* Finger map / other plugins — clear gap below the clipped words viewport */
-.tp-typing-mono:has(+ .tp-typing-after-viewport) {
-  margin-bottom: 1rem;
+/* Finger map / hands — guidance block below the words viewport (sibling of .tp-typing-test) */
+.tp-typing-test + .tp-typing-after-viewport {
+  margin-top: 1.5rem;
+  padding-top: 0.75rem;
 }
 
 .tp-typing-after-viewport {
   display: flex;
   width: 100%;
   justify-content: center;
-  margin-top: 2.5rem;
-  padding-top: 1.5rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
-/* Shortcuts sit as a sibling after the typing test block (see TypingPlayground). */
+/* Shortcuts sit after the typing test or after guidance (see TypingPlayground). */
 .tp-typing-test + .tp-shortcuts-bar {
   margin-top: 40px;
 }
 
-.tp-typing-test:has(.tp-typing-after-viewport) + .tp-shortcuts-bar {
-  margin-top: 2.5rem;
+.tp-typing-after-viewport + .tp-shortcuts-bar {
+  margin-top: 1.25rem;
 }
 
 .tp-typing-scroll {

@@ -3,10 +3,7 @@
  */
 
 import { deriveTargetKey } from "./derive-target-key";
-import {
-  KEY_FINGER_LOOKUP,
-  type FingerId,
-} from "./constants";
+import { KEY_FINGER_LOOKUP, type FingerId } from "./constants";
 import type { TestPhase } from "@/modules/typing/types/engine";
 
 export type FingerMapSlice = {

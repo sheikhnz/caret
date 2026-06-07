@@ -5,20 +5,20 @@ import { Flex } from "antd";
 
 import { joinClassNames } from "@/utils";
 
-import type { PlaygroundFingerMapState } from "@/modules/typing/hooks/use-playground-finger-map";
+import type { PlaygroundFingerMapKeyboardState } from "@/modules/typing/hooks/use-playground-finger-map";
 
 import { Keyboard } from "./Keyboard";
 
-type FingerMapProps = {
-  fingerMap: PlaygroundFingerMapState;
+type FingerMapKeyboardProps = {
+  fingerMap: PlaygroundFingerMapKeyboardState;
   isTestFocused: boolean;
 };
 
 /**
  * Finger guidance keyboard shown below the typing viewport during a live test.
  */
-export const FingerMap = memo(
-  ({ fingerMap, isTestFocused }: FingerMapProps) => {
+export const FingerMapKeyboard = memo(
+  ({ fingerMap, isTestFocused }: FingerMapKeyboardProps) => {
     if (!fingerMap.enabled) return null;
 
     const dimmed = fingerMap.phase === "finished" || !isTestFocused;
@@ -40,4 +40,4 @@ export const FingerMap = memo(
   },
 );
 
-FingerMap.displayName = "FingerMap";
+FingerMapKeyboard.displayName = "FingerMapKeyboard";

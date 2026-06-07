@@ -14,11 +14,18 @@ export const DisplaySettings = () => {
   const showFingerMap = useConfigStore((state) => state.config.showFingerMap);
   const setConfig = useConfigStore((state) => state.setConfig);
 
-  const handleFingerMapChange = useCallback(
+  const handleKeyboardChange = useCallback(
     (checked: boolean) => {
-      setConfig("showFingerMap", checked);
+      setConfig("showFingerMap", { ...showFingerMap, keyboard: checked });
     },
-    [setConfig],
+    [setConfig, showFingerMap],
+  );
+
+  const handleHandsChange = useCallback(
+    (checked: boolean) => {
+      setConfig("showFingerMap", { ...showFingerMap, hands: checked });
+    },
+    [setConfig, showFingerMap],
   );
 
   return (
@@ -27,11 +34,18 @@ export const DisplaySettings = () => {
       description="Customize what appears while you type."
     >
       <ToggleField
-        id="show-finger-map"
+        id="show-finger-map-keyboard"
         label="Show finger map"
         description="Highlights which finger to use for the next key on a color-coded keyboard."
-        checked={showFingerMap}
-        onChange={handleFingerMapChange}
+        checked={showFingerMap.keyboard}
+        onChange={handleKeyboardChange}
+      />
+      <ToggleField
+        id="show-finger-map-hands"
+        label="Show typing hands"
+        description="Displays hand icons below the keyboard with the active finger highlighted."
+        checked={showFingerMap.hands}
+        onChange={handleHandsChange}
       />
     </SettingsSection>
   );
