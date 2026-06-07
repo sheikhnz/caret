@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 
 import { AppHead } from "@/app-head";
 import { BRAND_DESCRIPTION, BRAND_NAME, BRAND_TAGLINE } from "@/layout/brand";
@@ -38,6 +39,7 @@ export default async function RootLayout({
         <AppProviders initialIsDark={initialIsDark}>
           <PgLayout>{children}</PgLayout>
         </AppProviders>
+        <Analytics />
       </body>
     </html>
   );
