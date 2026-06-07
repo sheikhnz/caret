@@ -145,6 +145,8 @@ export const pushErrorToHistory = (): void => {
   currentErrorEntry = { count: 0, words: [] };
 };
 
+export const getCurrentSecondErrorCount = (): number => currentErrorEntry.count;
+
 // ─── Burst ───────────────────────────────────────────────────────────────────
 
 export const setBurstStart = (time: number): void => {

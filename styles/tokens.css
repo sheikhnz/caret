@@ -15,6 +15,7 @@
   --tp-radius-sm: 2px;
   --tp-radius-md: 4px;
   --tp-layout-max-width: 870px;
+  --tp-live-status-bar-width: 360px;
   --tp-page-content-offset-top: 32px;
 
   /* Semantic aliases (Ant cssVar names) */

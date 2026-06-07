@@ -14,6 +14,7 @@ import {
   processBackspace,
   processChar,
 } from "@/modules/typing/engine/input/input-handler";
+import { syncLiveSnapshot } from "@/modules/typing/engine/input/sync-live-snapshot";
 import {
   syncInputSnapshot,
   syncStoreFromEngine,
@@ -102,6 +103,12 @@ export const processKeyDown = (
     });
 
     syncInputSnapshot(store);
+    if (store.phase === "active") {
+      syncLiveSnapshot(store, {
+        words: wordsRef.current,
+        mode: config.mode,
+      });
+    }
     return;
   }
 
@@ -160,6 +167,13 @@ export const processKeyDown = (
   }
 
   syncInputSnapshot(store);
+
+  if (store.phase === "active") {
+    syncLiveSnapshot(store, {
+      words: wordsRef.current,
+      mode: config.mode,
+    });
+  }
 
   // Zen has no pre-generated word list — grow empty slots as the user advances.
   if (config.mode === "zen") {

@@ -6,7 +6,7 @@
  * Timed/custom-time modes append words when fewer than 30 lie ahead of the caret.
  */
 
-import { calculateBurst } from "@/modules/typing/calculations/wpm";
+import { syncLiveSnapshot } from "@/modules/typing/engine/input/sync-live-snapshot";
 import {
   getNextWord,
   shouldAppendWordsDuringTest,
@@ -40,26 +40,19 @@ export const handleTimerTick = (
     refs.wordsRef.current,
     c.mode === "zen",
   );
-  const acc = TestStats.getLiveAccuracy();
-  const burst = calculateBurst(
-    TestInput.currentInput.length,
-    (performance.now() - TestInput.currentBurstStart) / 1000,
-  );
-
-  s.setLiveStats({
-    wpm: liveWpm.wpm,
-    raw: liveWpm.raw,
-    acc,
-    burst,
-    elapsed: Math.floor(elapsed),
-    remaining: remaining !== null ? Math.ceil(remaining) : null,
-  });
 
   TestInput.pushToWpmHistory(liveWpm.wpm);
   TestInput.pushToRawHistory(liveWpm.raw);
   TestInput.pushKeypressesToHistory();
   TestInput.pushErrorToHistory();
   TestInput.pushAfkToHistory();
+
+  syncLiveSnapshot(s, {
+    words: refs.wordsRef.current,
+    mode: c.mode,
+    elapsed: Math.floor(elapsed),
+    remaining: remaining !== null ? Math.ceil(remaining) : null,
+  });
 
   const warningBase = getTimedDurationSeconds({
     config: c,

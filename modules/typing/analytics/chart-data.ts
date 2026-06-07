@@ -121,8 +121,11 @@ const computeChartSummary = (
  * Converts raw ChartData arrays into Chart.js-compatible datasets.
  * Each point's x-axis is the second index (1-based).
  */
-export const prepareChartData = (data: ChartData): PreparedChartData => {
-  const sampled = downsampleChartSeries(data);
+export const prepareChartData = (
+  data: ChartData,
+  maxPoints = MAX_CHART_POINTS,
+): PreparedChartData => {
+  const sampled = downsampleChartSeries(data, maxPoints);
   const summary = computeChartSummary(
     data,
     sampled.wpm.length,

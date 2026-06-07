@@ -27,6 +27,7 @@ export const DEFAULT_CONFIG: TypingConfig = {
   showLiveAcc: false,
   showLiveBurst: false,
   showTimerProgress: true,
+  showLiveStatusBar: false,
   showFingerMap: {
     keyboard: true,
     hands: true,

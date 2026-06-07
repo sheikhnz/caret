@@ -12,7 +12,17 @@ import { useConfigStore } from "@/modules/typing/stores/config-store";
 
 export const DisplaySettings = () => {
   const showFingerMap = useConfigStore((state) => state.config.showFingerMap);
+  const showLiveStatusBar = useConfigStore(
+    (state) => state.config.showLiveStatusBar,
+  );
   const setConfig = useConfigStore((state) => state.setConfig);
+
+  const handleLiveStatusBarChange = useCallback(
+    (checked: boolean) => {
+      setConfig("showLiveStatusBar", checked);
+    },
+    [setConfig],
+  );
 
   const handleKeyboardChange = useCallback(
     (checked: boolean) => {
@@ -33,6 +43,13 @@ export const DisplaySettings = () => {
       title="Display"
       description="Customize what appears while you type."
     >
+      <ToggleField
+        id="show-live-status-bar"
+        label="Live status bar"
+        description="Opens a side panel with live WPM, accuracy, errors, and other stats while you type."
+        checked={showLiveStatusBar}
+        onChange={handleLiveStatusBarChange}
+      />
       <ToggleField
         id="show-finger-map-keyboard"
         label="Show finger map"

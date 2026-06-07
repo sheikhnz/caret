@@ -59,6 +59,8 @@ describe("handleTimerTick", () => {
     expect(liveStats.wpm).toBeGreaterThanOrEqual(0);
     expect(TestInput.wpmHistory).toHaveLength(1);
     expect(TestInput.keypressCountHistory).toHaveLength(1);
+    expect(useTestStore.getState().liveChartData.wpm).toHaveLength(1);
+    expect(useTestStore.getState().liveStats.errors).toBe(0);
     expect(wordIndex).toBe(0);
   });
 
