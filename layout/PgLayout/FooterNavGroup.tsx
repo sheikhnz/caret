@@ -57,11 +57,7 @@ const FooterItemLink = ({ item }: FooterItemLinkProps) => {
   );
 };
 
-export const FooterNavGroup = ({
-  ariaLabel,
-  items,
-  side,
-}: FooterNavGroupProps) => {
+export const FooterNavGroup = ({ ariaLabel, items }: FooterNavGroupProps) => {
   if (items.length === 0) {
     return null;
   }
