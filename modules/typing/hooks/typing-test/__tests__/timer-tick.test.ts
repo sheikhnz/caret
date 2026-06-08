@@ -58,7 +58,11 @@ describe("handleTimerTick", () => {
     expect(liveStats.remaining).toBe(29);
     expect(liveStats.wpm).toBeGreaterThanOrEqual(0);
     expect(TestInput.wpmHistory).toHaveLength(1);
+    expect(TestInput.rawHistory).toHaveLength(1);
+    expect(TestInput.accHistory).toHaveLength(1);
+    expect(TestInput.burstSecondHistory).toHaveLength(1);
     expect(TestInput.keypressCountHistory).toHaveLength(1);
+    expect(useTestStore.getState().typingHistory.wpm).toHaveLength(1);
     expect(useTestStore.getState().liveStats.errors).toBe(0);
     expect(wordIndex).toBe(0);
   });

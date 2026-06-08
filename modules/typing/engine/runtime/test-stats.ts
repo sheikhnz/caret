@@ -133,6 +133,8 @@ export const removeAfkData = (): void => {
   TestInput.keypressCountHistory.splice(testSeconds);
   TestInput.wpmHistory.splice(testSeconds);
   TestInput.rawHistory.splice(testSeconds);
+  TestInput.accHistory.splice(testSeconds);
+  TestInput.burstSecondHistory.splice(testSeconds);
 };
 
 export const resetStats = (): void => {

@@ -9,10 +9,13 @@ import type { CompletedEvent, FinalStats } from "../types/result";
 import type { TypingConfig } from "../types/config";
 import { roundTo2 } from "../calculations/numbers";
 import {
-  calculateConsistency,
   calculateKeyConsistency,
   calculateWpmConsistency,
 } from "../calculations/consistency";
+import {
+  buildChartDataFromEngine,
+  calculateChartConsistency,
+} from "./chart-history";
 import { calculateAfkSeconds } from "../calculations/accuracy";
 import * as TestInput from "../engine/input/test-input";
 import * as TestState from "../engine/runtime/test-state";
@@ -44,38 +47,13 @@ export const buildCompletedEvent = ({
   );
   if (lastKeyToEnd < 0 || config.mode === "zen") lastKeyToEnd = 0;
 
-  // raw per second from keypress count history
-  const rawPerSecond = TestInput.keypressCountHistory.map((count) =>
-    Math.round((count / 5) * 60),
-  );
-
-  // adjust last second if not round (for non-time modes)
-  if (
-    config.mode !== "time" &&
-    TestStats.lastSecondNotRound &&
-    stats.time % 1 >= 0.5
-  ) {
-    const timescale = 1 / (stats.time % 1);
-    const lastIdx = rawPerSecond.length - 1;
-    rawPerSecond[lastIdx] = Math.round(
-      (rawPerSecond[lastIdx] ?? 0) * timescale,
-    );
-  }
-
-  // consistency
-  const consistency = calculateConsistency(rawPerSecond);
+  const consistency = calculateChartConsistency({ stats, config });
   const keyConsistency = calculateKeyConsistency(
     TestInput.keypressTimings.spacing.array,
   );
   const wpmConsistency = calculateWpmConsistency(TestInput.wpmHistory);
 
-  // chart error history
-  const chartErr = TestInput.errorHistory.map((e) => e.count ?? 0);
-  const chartData = {
-    wpm: TestInput.wpmHistory,
-    burst: rawPerSecond,
-    err: chartErr,
-  };
+  const chartData = buildChartDataFromEngine({ stats, config });
 
   const duration = stats.time;
   const afkDuration = calculateAfkSeconds(
