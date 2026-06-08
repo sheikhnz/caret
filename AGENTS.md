@@ -48,7 +48,8 @@ Follows [Ant Design theme](https://ant.design/docs/react/customize-theme) + [CSS
 | Ant              | `ui/theme.ts` → `providers/antd/`          | `ConfigProvider` + `algorithm` + `token` + `cssVar: { prefix: 'tp', key: 'tp' }`                                                        |
 | OS sync          | `providers/theme/ThemeProvider.tsx`        | `useSyncExternalStore` + `matchMedia('(prefers-color-scheme: dark)')` ([React](https://react.dev/reference/react/useSyncExternalStore)) |
 | Flash prevention | `proxy.ts` + `providers/theme/bootstrap.*` | `Accept-CH` client hint → `initialIsDark` in layout; `tp-theme-init` script in `<head>` for Safari / first visit                        |
-| Provider shell   | `providers/AppProviders.tsx`               | `composeProviders` chain — add `providers/<name>/` + append to `STATIC_PROVIDER_CHAIN`; pass `initialIsDark` from `app/layout.tsx`      |
+| Provider shell   | `providers/AppProviders.tsx`               | `composeProviders` chain — add `providers/<name>/` + append to `STATIC_PROVIDER_CHAIN`; pass `initialIsDark` from `app/(Pg)/layout.tsx` |
+| Site chrome      | `layout/common/`                           | `SiteHeader`, `SiteFooter`, `PageShell`, `SITE_METADATA` — shared by `AppLayout` and `PgLayout`                                         |
 | Document head    | `app-head/theme/ThemeStyle.tsx`            | Init script + inline `:root` vars from `palette.ts` (`@media prefers-color-scheme`) for custom CSS before React                         |
 | Aliases          | `styles/tokens.css`                        | Fonts, radii; `--tp-text-primary` → `var(--tp-color-text)`                                                                              |
 
@@ -66,7 +67,9 @@ Follows [Ant Design theme](https://ant.design/docs/react/customize-theme) + [CSS
 - Shortcut keys: `ShortcutKeys` + `Kbd`; inside primary buttons, `Kbd` / separators inherit contrast via `.tp-kbd` / `.tp-kbd-separator` in `globals.css`.
 - Form focus: keep rings light via `controlFocus` in `ui/theme.ts` only (do not duplicate in `globals.css`).
 - Shared layout/CSS utilities in `app/globals.css` — prefer these over inline layout styles:
-  - Page: `tp-page-shell`, `tp-page-content`, `tp-page-chrome`, `data-tp-pg-focus` (opt-in via `TypingPlayground` `isolateOnFocus`), `tp-pg-focus-dim`
+  - Page shell: `tp-page-shell`, `tp-page-chrome`, `tp-page-inner`
+  - AppLayout main: `tp-app-content` (document column, left-aligned)
+  - PgLayout main: `tp-pg-content`, `data-tp-pg-focus` (opt-in via `TypingPlayground` `isolateOnFocus`), `tp-pg-focus-dim`
   - Results: `tp-results-card`, `tp-results-chart-col` (use Flex, not `Row` gutter inside cards)
   - Sections: `tp-section-*`, `tp-stat-card*`, `tp-shortcuts-*`
 - Results card layout: Flex only inside `tp-results-card` — Ant `Row` gutter negative margins break card padding.

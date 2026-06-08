@@ -6,4 +6,4 @@
 
 import { AccountAvatarButton } from "@/ui";
 
-export const PgLayoutAccountButton = () => <AccountAvatarButton />;
+export const SiteAccountButton = () => <AccountAvatarButton />;

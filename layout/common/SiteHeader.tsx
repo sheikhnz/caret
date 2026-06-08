@@ -9,9 +9,9 @@ import { Flex, Typography } from "antd";
 
 import { BRAND_TAGLINE, CaretWordmark } from "@/layout/brand";
 
-import { PgLayoutAccountButton } from "./PgLayoutAccountButton";
+import { SiteAccountButton } from "./SiteAccountButton";
 
-export const PgLayoutHeader = () => (
+export const SiteHeader = () => (
   <header className="tp-page-chrome tp-page-header">
     <div className="tp-page-inner">
       <Flex
@@ -24,7 +24,7 @@ export const PgLayoutHeader = () => (
           <CaretWordmark />
           <Typography.Text type="secondary">{BRAND_TAGLINE}</Typography.Text>
         </Flex>
-        <PgLayoutAccountButton />
+        <SiteAccountButton />
       </Flex>
     </div>
   </header>
