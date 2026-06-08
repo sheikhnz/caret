@@ -9,6 +9,7 @@ import {
   formatLiveStatusWpm,
   getLiveStatusContextLabel,
   getLiveStatusProgress,
+  isTimeBasedLiveStatusTest,
 } from "@/modules/typing/analytics/live-status-display";
 import type { LiveStats } from "@/modules/typing/stores/test-store";
 
@@ -117,6 +118,25 @@ describe("getLiveStatusContextLabel", () => {
         languageName: "English",
       }),
     ).toBe("30s · English");
+  });
+});
+
+describe("isTimeBasedLiveStatusTest", () => {
+  it("is true for timed mode and custom time limits only", () => {
+    expect(isTimeBasedLiveStatusTest({ mode: "time" })).toBe(true);
+    expect(
+      isTimeBasedLiveStatusTest({
+        mode: "custom",
+        customLimit: { mode: "time", value: 60 },
+      }),
+    ).toBe(true);
+    expect(isTimeBasedLiveStatusTest({ mode: "words" })).toBe(false);
+    expect(
+      isTimeBasedLiveStatusTest({
+        mode: "custom",
+        customLimit: { mode: "word", value: 50 },
+      }),
+    ).toBe(false);
   });
 });
 

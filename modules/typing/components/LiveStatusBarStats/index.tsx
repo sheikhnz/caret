@@ -15,6 +15,7 @@ import {
   formatLiveStatusWpm,
   getLiveStatusContextLabel,
   getLiveStatusProgress,
+  isTimeBasedLiveStatusTest,
   LIVE_STATUS_BAR_DETAIL_STATS,
   LIVE_STATUS_BAR_GRID_STATS,
 } from "@/modules/typing/analytics/live-status-display";
@@ -191,6 +192,11 @@ export const LiveStatusBarStats = () => {
     [liveStats.elapsed, liveStats.wpm, phase],
   );
 
+  const isTimeBasedTest = isTimeBasedLiveStatusTest({
+    mode,
+    customLimit: mode === "custom" ? customLimit : undefined,
+  });
+
   const elapsedValue = useMemo(
     () =>
       formatLiveStatusElapsed({
@@ -200,6 +206,8 @@ export const LiveStatusBarStats = () => {
       }),
     [liveStats.elapsed, liveStats.remaining, phase],
   );
+
+  const showHeaderElapsed = !isTimeBasedTest;
 
   const showIdleHint = !isActive && liveStats.elapsed <= 0 && !isLoadingWords;
 
@@ -211,7 +219,12 @@ export const LiveStatusBarStats = () => {
         {contextLabel}
       </Typography.Text>
 
-      <Flex align="center" className="tp-live-status-bar-live-header" justify="space-between">
+      <Flex
+        align="center"
+        className="tp-live-status-bar-live-header"
+        justify={showHeaderElapsed ? "space-between" : undefined}
+        gap={showHeaderElapsed ? undefined : 8}
+      >
         <Flex align="center" gap={8}>
           <span
             aria-hidden
@@ -221,9 +234,11 @@ export const LiveStatusBarStats = () => {
             {LIVE_STATUS_LABEL}
           </Typography.Text>
         </Flex>
-        <Typography.Text className="tp-live-status-bar-live-time" type="secondary">
-          {elapsedValue}
-        </Typography.Text>
+        {showHeaderElapsed ? (
+          <Typography.Text className="tp-live-status-bar-live-time" type="secondary">
+            {elapsedValue}
+          </Typography.Text>
+        ) : null}
       </Flex>
 
       {progress !== null ? (

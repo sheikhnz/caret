@@ -8,6 +8,8 @@ import {
 } from "@/modules/typing/calculations/live-stats-display";
 import { getModeLabel } from "@/modules/typing/components/Results/mode-label";
 import type { LiveStats } from "@/modules/typing/stores/test-store";
+import type { TestMode } from "@/modules/typing/types/config";
+import type { CustomTextLimit } from "@/modules/typing/types/custom-text";
 import type { TestPhase } from "@/modules/typing/types/engine";
 import { formatTimerSeconds } from "@/modules/typing/utils/format-time";
 
@@ -57,6 +59,21 @@ const isLive = (phase: TestPhase): boolean => phase === "active";
 
 const hasLiveData = (phase: TestPhase, elapsed: number): boolean =>
   isLive(phase) || elapsed > 0;
+
+/** True for timed mode and custom text with a time limit. */
+export const isTimeBasedLiveStatusTest = ({
+  mode,
+  customLimit,
+}: {
+  mode: TestMode;
+  customLimit?: CustomTextLimit;
+}): boolean => {
+  if (mode === "time") {
+    return true;
+  }
+
+  return mode === "custom" && customLimit?.mode === "time";
+};
 
 export const countLiveStatusCharsTyped = ({
   inputHistory,
