@@ -11,6 +11,8 @@ import type { LiveStats } from "@/modules/typing/stores/test-store";
 import type { TestPhase } from "@/modules/typing/types/engine";
 import { formatTimerSeconds } from "@/modules/typing/utils/format-time";
 
+import type { LiveStatusSparklineStatId } from "./sparkline-area";
+
 export type LiveStatusBarStatId =
   | "wpm"
   | "raw"
@@ -27,8 +29,12 @@ export type LiveStatusBarStatDefinition = {
   label: string;
 };
 
+export type LiveStatusBarGridStatDefinition = LiveStatusBarStatDefinition & {
+  id: LiveStatusSparklineStatId;
+};
+
 /** Compact 2×2 grid — primary live metrics. */
-export const LIVE_STATUS_BAR_GRID_STATS: readonly LiveStatusBarStatDefinition[] =
+export const LIVE_STATUS_BAR_GRID_STATS: readonly LiveStatusBarGridStatDefinition[] =
   [
     { id: "raw", label: "Raw" },
     { id: "accuracy", label: "Acc" },

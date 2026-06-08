@@ -18,9 +18,17 @@ import {
   LIVE_STATUS_BAR_DETAIL_STATS,
   LIVE_STATUS_BAR_GRID_STATS,
 } from "@/modules/typing/analytics/live-status-display";
+import {
+  buildSparklineAreaPath,
+  SPARKLINE_VIEWBOX_HEIGHT,
+  SPARKLINE_VIEWBOX_WIDTH,
+  type LiveStatusSparklineStatId,
+} from "@/modules/typing/analytics/sparkline-area";
+import { useLiveStatusSparklines } from "@/modules/typing/hooks/use-live-status-sparklines";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
 import { useCustomTextStore } from "@/modules/typing/stores";
 import { useTestStore } from "@/modules/typing/stores/test-store";
+import { joinClassNames } from "@/utils";
 
 const LIVE_STATUS_LABEL = "Live";
 const LIVE_STATUS_IDLE_HINT = "Start typing to see live stats";
@@ -42,16 +50,45 @@ const LiveStatusStatRow = ({ label, value }: LiveStatusStatRowProps) => (
 type LiveStatusStatTileProps = {
   label: string;
   value: string;
+  statId: LiveStatusSparklineStatId;
+  sparklineSamples: number[];
 };
 
-const LiveStatusStatTile = ({ label, value }: LiveStatusStatTileProps) => (
-  <div className="tp-live-status-bar__tile">
-    <Typography.Text className="tp-live-status-bar__tile-label" type="secondary">
-      {label}
-    </Typography.Text>
-    <span className="tp-live-status-bar__tile-value">{value}</span>
-  </div>
-);
+const LiveStatusStatTile = ({
+  label,
+  value,
+  statId,
+  sparklineSamples,
+}: LiveStatusStatTileProps) => {
+  const sparklinePath = buildSparklineAreaPath({ samples: sparklineSamples });
+  const showSparkline = sparklinePath.length > 0;
+
+  return (
+    <div
+      className={joinClassNames(
+        "tp-live-status-bar__tile",
+        `tp-live-status-bar__tile--${statId}`,
+      )}
+    >
+      {showSparkline ? (
+        <svg
+          aria-hidden
+          className="tp-live-status-bar__tile-sparkline"
+          preserveAspectRatio="none"
+          viewBox={`0 0 ${SPARKLINE_VIEWBOX_WIDTH} ${SPARKLINE_VIEWBOX_HEIGHT}`}
+        >
+          <path d={sparklinePath} />
+        </svg>
+      ) : null}
+      <div className="tp-live-status-bar__tile-content">
+        <Typography.Text className="tp-live-status-bar__tile-label" type="secondary">
+          {label}
+        </Typography.Text>
+        <span className="tp-live-status-bar__tile-value">{value}</span>
+      </div>
+    </div>
+  );
+};
 
 type LiveStatusProgressBarProps = {
   label: string;
@@ -114,6 +151,7 @@ export const LiveStatusBarStats = () => {
   );
 
   const customLimit = useCustomTextStore((state) => state.settings.limit);
+  const sparklineHistory = useLiveStatusSparklines();
 
   const isActive = phase === "active";
   const charsTyped = useMemo(
@@ -221,6 +259,8 @@ export const LiveStatusBarStats = () => {
           <LiveStatusStatTile
             key={stat.id}
             label={stat.label}
+            sparklineSamples={sparklineHistory[stat.id]}
+            statId={stat.id}
             value={formatLiveStatusStatValue(stat.id, liveStats, phase, statExtras)}
           />
         ))}
