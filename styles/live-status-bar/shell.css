@@ -1,0 +1,72 @@
+/* Live status bar shell — Ant inline drawer + pushed primary column */
+
+.tp-pg-layout-drawer-host {
+  position: relative;
+  overflow: hidden;
+}
+
+.tp-pg-layout-primary {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  transition: margin-inline-end 0.3s ease;
+}
+
+.tp-page-shell--live-status-bar .tp-pg-layout-primary {
+  margin-inline-end: var(--tp-live-status-bar-width);
+}
+
+.tp-live-status-bar-drawer.ant-drawer {
+  position: absolute;
+  inset: 0;
+  /* Root spans the host; only the panel should capture input. */
+  pointer-events: none;
+}
+
+.tp-live-status-bar-drawer.ant-drawer .ant-drawer-content-wrapper {
+  box-shadow: none;
+  pointer-events: auto;
+  transition: opacity 0.15s ease;
+}
+
+/*
+ * Match finger-map focus dim: bright while typing, faded when the test is not focused.
+ * Only applies on pages that render the playground.
+ */
+.tp-page-shell[data-tp-live-status-bar]:has(.tp-playground-root):not(
+    :has([data-tp-test-focused])
+  )
+  .tp-live-status-bar-drawer.ant-drawer
+  .ant-drawer-content-wrapper {
+  opacity: 0.44;
+  pointer-events: none;
+}
+
+.tp-live-status-bar-drawer.ant-drawer .ant-drawer-content {
+  background: var(--tp-page-bg);
+}
+
+.tp-live-status-bar-drawer__body {
+  padding-top: 8px;
+}
+
+.tp-live-status-bar__slots {
+  width: 100%;
+}
+
+.tp-live-status-bar__slot-title {
+  display: block;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 768px) {
+  .tp-page-shell--live-status-bar .tp-pg-layout-primary {
+    margin-inline-end: 0;
+  }
+
+  .tp-live-status-bar-drawer.ant-drawer {
+    display: none;
+  }
+}
