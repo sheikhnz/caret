@@ -8,11 +8,17 @@ import { useCallback } from "react";
 
 import { ToggleField } from "@/ui";
 import { SettingsSection } from "@/modules/typing/components/SettingsDrawer/SettingsSection";
+import { setShowLiveStatus } from "@/modules/typing/config/live-status";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
 
 export const DisplaySettings = () => {
   const showFingerMap = useConfigStore((state) => state.config.showFingerMap);
+  const showLiveStatus = useConfigStore((state) => state.config.showLiveStatus);
   const setConfig = useConfigStore((state) => state.setConfig);
+
+  const handleLiveStatusChange = useCallback((checked: boolean) => {
+    setShowLiveStatus(checked);
+  }, []);
 
   const handleKeyboardChange = useCallback(
     (checked: boolean) => {
@@ -29,21 +35,25 @@ export const DisplaySettings = () => {
   );
 
   return (
-    <SettingsSection
-      title="Display"
-      description="Customize what appears while you type."
-    >
+    <SettingsSection title="Display">
+      <ToggleField
+        id="show-live-status"
+        label="Live status"
+        description="Side panel with live WPM, accuracy, and errors."
+        checked={showLiveStatus}
+        onChange={handleLiveStatusChange}
+      />
       <ToggleField
         id="show-finger-map-keyboard"
         label="Show finger map"
-        description="Highlights which finger to use for the next key on a color-coded keyboard."
+        description="Color-coded keyboard for the next key."
         checked={showFingerMap.keyboard}
         onChange={handleKeyboardChange}
       />
       <ToggleField
         id="show-finger-map-hands"
         label="Show typing hands"
-        description="Displays hand icons below the keyboard with the active finger highlighted."
+        description="Hand icons with the active finger highlighted."
         checked={showFingerMap.hands}
         onChange={handleHandsChange}
       />

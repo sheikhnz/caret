@@ -10,7 +10,7 @@ import { Flex } from "antd";
 import { FOOTER_CONFIG } from "./footer-config";
 import { FooterNavGroup } from "./FooterNavGroup";
 
-export const PgLayoutFooter = () => (
+export const SiteFooter = () => (
   <footer className="tp-page-chrome tp-page-footer">
     <div className="tp-page-inner">
       <Flex

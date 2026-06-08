@@ -15,6 +15,8 @@
   --tp-radius-sm: 2px;
   --tp-radius-md: 4px;
   --tp-layout-max-width: 870px;
+  /* Laptop-first: 13–16″ MacBook logical widths are often 1280–1728 (above old 1440 cut-off) */
+  --tp-live-status-bar-width: clamp(300px, 25vw, 400px);
   --tp-page-content-offset-top: 32px;
 
   /* Semantic aliases (Ant cssVar names) */

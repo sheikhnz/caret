@@ -7,7 +7,7 @@
 
 import { useCallback } from "react";
 
-import { TP_PG_FOCUS_ATTR } from "@/layout";
+import { TP_PG_FOCUS_ATTR, TP_TEST_FOCUS_ATTR } from "@/layout";
 import { joinClassNames } from "@/utils";
 import { useIsMobileDevice } from "@/hooks";
 import { FingerMapGuidance } from "@/modules/typing/components/FingerMap";
@@ -17,6 +17,7 @@ import { Results } from "@/modules/typing/components/Results";
 import { TestConfig } from "@/modules/typing/components/TestConfig";
 import { TypingTest } from "@/modules/typing/components/TypingTest";
 import { TypingTestShortcuts } from "@/modules/typing/components/TypingTest/TypingTestShortcuts";
+import { useRegisterPlaygroundPresence } from "@/modules/typing/hooks/use-register-playground-presence";
 import { useTypingTestDisplayConfig } from "@/modules/typing/hooks/use-typing-test-display-config";
 import { PLAYGROUND_DIALOGS } from "@/modules/typing/constants/playground-dialogs";
 import type { TypingPlaygroundState } from "@/modules/typing/hooks/use-typing-playground";
@@ -35,6 +36,8 @@ export const TypingPlayground = ({
   playground,
   isolateOnFocus = false,
 }: TypingPlaygroundProps) => {
+  useRegisterPlaygroundPresence();
+
   const { phase, isTestFocused, typing, dialogs } = playground;
   const { restart, bailOut, focusInput } = typing;
   const { mode } = useTypingTestDisplayConfig();
@@ -71,6 +74,7 @@ export const TypingPlayground = ({
 
   const isFocusIsolateActive =
     isolateOnFocus && isTestFocused && phase !== "finished";
+  const isTypingFocusActive = isTestFocused && phase !== "finished";
 
   if (isMobileDevice) return <MobileUnsupportedNotice />;
 
@@ -79,6 +83,7 @@ export const TypingPlayground = ({
       className="tp-playground-root"
       {...{
         [TP_PG_FOCUS_ATTR]: isFocusIsolateActive ? true : undefined,
+        [TP_TEST_FOCUS_ATTR]: isTypingFocusActive ? true : undefined,
       }}
     >
       <PlaygroundDrawers

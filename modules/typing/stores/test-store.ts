@@ -5,6 +5,13 @@
 "use client";
 
 import { create } from "zustand/react";
+
+import {
+  appendTypingHistorySample,
+  EMPTY_TYPING_HISTORY,
+  type TypingHistory,
+  type TypingHistorySample,
+} from "@/modules/typing/analytics/typing-history";
 import type { TestPhase } from "@/modules/typing/types/engine";
 import type { CompletedEvent } from "@/modules/typing/types/result";
 import type { LanguageObject } from "@/modules/typing/types/language";
@@ -16,6 +23,8 @@ export type LiveStats = {
   burst: number;
   elapsed: number;
   remaining: number | null;
+  errors: number;
+  row: number;
 };
 
 type TestStore = {
@@ -25,6 +34,7 @@ type TestStore = {
   currentInput: string;
   inputHistory: string[];
   liveStats: LiveStats;
+  typingHistory: TypingHistory;
   result: CompletedEvent | null;
   language: LanguageObject | null;
   isLoadingWords: boolean;
@@ -43,6 +53,8 @@ type TestStore = {
     inputHistory: string[];
   }) => void;
   setLiveStats: (stats: Partial<LiveStats>) => void;
+  appendTypingHistorySample: (sample: TypingHistorySample) => void;
+  setTypingHistory: (history: TypingHistory) => void;
   setResult: (result: CompletedEvent) => void;
   setIsLoadingWords: (v: boolean) => void;
   incrementRestartCount: () => void;
@@ -57,6 +69,8 @@ const INITIAL_LIVE_STATS: LiveStats = {
   burst: 0,
   elapsed: 0,
   remaining: null,
+  errors: 0,
+  row: 0,
 };
 
 export const useTestStore = create<TestStore>()((set) => ({
@@ -66,6 +80,7 @@ export const useTestStore = create<TestStore>()((set) => ({
   currentInput: "",
   inputHistory: [],
   liveStats: INITIAL_LIVE_STATS,
+  typingHistory: EMPTY_TYPING_HISTORY,
   result: null,
   language: null,
   isLoadingWords: true,
@@ -82,6 +97,11 @@ export const useTestStore = create<TestStore>()((set) => ({
     set({ currentInput, wordIndex, inputHistory }),
   setLiveStats: (stats) =>
     set((state) => ({ liveStats: { ...state.liveStats, ...stats } })),
+  appendTypingHistorySample: (sample) =>
+    set((state) => ({
+      typingHistory: appendTypingHistorySample(state.typingHistory, sample),
+    })),
+  setTypingHistory: (typingHistory) => set({ typingHistory }),
   setResult: (result) => set({ result }),
   setIsLoadingWords: (isLoadingWords) => set({ isLoadingWords }),
   incrementRestartCount: () =>
@@ -98,6 +118,7 @@ export const useTestStore = create<TestStore>()((set) => ({
       currentInput: "",
       inputHistory: [],
       liveStats: INITIAL_LIVE_STATS,
+      typingHistory: EMPTY_TYPING_HISTORY,
       result: null,
     }),
 }));

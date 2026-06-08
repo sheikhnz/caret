@@ -72,8 +72,15 @@ export const runFinishTest = ({
     Math.round(stats.time % 1) >= 0.5
   ) {
     const liveWpm = TestStats.getLiveWpmAndRaw(words, isZenMode);
+    const burst = calculateBurst(
+      TestInput.currentInput.length,
+      (now - TestInput.currentBurstStart) / 1000,
+    );
+
     TestInput.pushToWpmHistory(liveWpm.wpm);
     TestInput.pushToRawHistory(liveWpm.raw);
+    TestInput.pushAccToHistory(TestStats.getLiveAccuracy());
+    TestInput.pushBurstSecondToHistory(burst);
     TestInput.pushKeypressesToHistory();
     TestInput.pushErrorToHistory();
     TestInput.pushAfkToHistory();

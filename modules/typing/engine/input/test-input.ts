@@ -28,6 +28,8 @@ export let correctedHistory: string[] = [];
 
 export let wpmHistory: number[] = [];
 export let rawHistory: number[] = [];
+export let accHistory: number[] = [];
+export let burstSecondHistory: number[] = [];
 export let burstHistory: number[] = [];
 export let keypressCountHistory: number[] = [];
 export let afkHistory: boolean[] = [];
@@ -170,6 +172,14 @@ export const pushToRawHistory = (raw: number): void => {
   rawHistory.push(raw);
 };
 
+export const pushAccToHistory = (acc: number): void => {
+  accHistory.push(acc);
+};
+
+export const pushBurstSecondToHistory = (burst: number): void => {
+  burstSecondHistory.push(burst);
+};
+
 // ─── Missed words ────────────────────────────────────────────────────────────
 
 export const pushMissedWord = (word: string): void => {
@@ -307,6 +317,8 @@ export const resetInput = (): void => {
   correctedHistory = [];
   wpmHistory = [];
   rawHistory = [];
+  accHistory = [];
+  burstSecondHistory = [];
   burstHistory = [];
   keypressCountHistory = [];
   currentKeypressCount = 0;

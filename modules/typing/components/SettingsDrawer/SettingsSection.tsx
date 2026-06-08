@@ -16,17 +16,19 @@ export const SettingsSection = ({
   description,
   children,
 }: SettingsSectionProps) => (
-  <section>
+  <section className="tp-settings-section">
     <Flex vertical gap={12}>
       <Flex vertical gap={4}>
-        <Typography.Title level={5} className="tp-section-title">
+        <Typography.Title level={4} className="tp-section-title">
           {title}
         </Typography.Title>
         {description ? (
-          <Typography.Text type="secondary">{description}</Typography.Text>
+          <Typography.Text type="secondary" className="tp-section-note">
+            {description}
+          </Typography.Text>
         ) : null}
       </Flex>
-      <Flex vertical gap={12}>
+      <Flex vertical gap={12} className="tp-settings-section-fields">
         {children}
       </Flex>
     </Flex>

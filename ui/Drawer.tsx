@@ -17,6 +17,7 @@ type DrawerProps = {
   className?: string;
   width?: number;
   closeLabel?: string;
+  destroyOnHidden?: boolean;
 };
 
 export const Drawer = ({
@@ -29,6 +30,7 @@ export const Drawer = ({
   className,
   width = 520,
   closeLabel = "Esc",
+  destroyOnHidden = true,
 }: DrawerProps) => (
   <AntDrawer
     open={open}
@@ -41,6 +43,7 @@ export const Drawer = ({
     className={className}
     closable={{ placement: "end" }}
     size={width}
+    destroyOnHidden={destroyOnHidden}
     closeIcon={<Typography.Text type="secondary">{closeLabel}</Typography.Text>}
   >
     {children}

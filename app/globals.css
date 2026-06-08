@@ -6,12 +6,16 @@
 @import "../styles/base.css";
 @import "../styles/layout/shared.css";
 @import "../styles/layout/page.css";
+@import "../styles/layout/app-content.css";
+@import "../styles/layout/pg-content.css";
 @import "../styles/layout/utilities.css";
 @import "../styles/chrome/kbd.css";
 @import "../styles/typing/test-config.css";
 @import "../styles/typing/typing-test.css";
 @import "../styles/typing/letter-status.css";
 @import "../styles/typing/live-stats.css";
+@import "../styles/live-status-bar/shell.css";
+@import "../styles/live-status-bar/stats.css";
 @import "../styles/typing/finger-map.css";
 @import "../styles/typing/typing-hands.css";
 @import "../styles/typing/shortcuts-bar.css";
@@ -20,5 +24,6 @@
 @import "../styles/results/results.css";
 @import "../styles/forms/sections.css";
 @import "../styles/forms/switch.css";
+@import "../styles/ui/progress.css";
 @import "../styles/typing/config-pill.css";
 @import "../styles/shortcuts/drawer.css";

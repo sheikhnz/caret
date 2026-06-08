@@ -46,6 +46,8 @@ describe("buildCompletedEvent", () => {
     TestInput.keypressTimings.duration.array.push(80, 90);
     TestInput.pushToWpmHistory(55);
     TestInput.pushToWpmHistory(60);
+    TestInput.pushToRawHistory(58);
+    TestInput.pushToRawHistory(60);
     TestInput.keypressCountHistory.push(5, 5);
     TestInput.errorHistory.push(
       { count: 0, words: [] },
@@ -63,7 +65,7 @@ describe("buildCompletedEvent", () => {
     expect(event.mode2).toBe("30");
     expect(event.chartData).toEqual({
       wpm: [55, 60],
-      burst: [60, 60],
+      burst: [58, 60],
       err: [0, 1],
     });
     expect(event.incompleteTestSeconds).toBe(0);

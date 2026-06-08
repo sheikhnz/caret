@@ -1,0 +1,92 @@
+/* Live status bar shell — Ant inline drawer + pushed primary column */
+
+/* Margin-only push — width/max-width snap without transition; margin animates both ways */
+.tp-page-shell-drawer-host .tp-page-shell-primary {
+  margin-inline-end: 0;
+  transition:
+    margin-inline-end 0.3s ease,
+    width 0.3s ease,
+    max-width 0.3s ease;
+}
+
+.tp-page-shell-drawer-host.tp-page-shell--live-status-bar
+  .tp-page-shell-primary {
+  margin-inline-end: var(--tp-live-status-bar-width);
+}
+
+.tp-live-status-bar-drawer.ant-drawer {
+  position: absolute;
+  inset: 0;
+  /* Root spans the host; only the panel should capture input. */
+  pointer-events: none;
+}
+
+.tp-live-status-bar-drawer.ant-drawer .ant-drawer-content-wrapper {
+  box-shadow: none;
+  pointer-events: auto;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+  width: var(--tp-live-status-bar-width) !important;
+  height: 100%;
+}
+
+/*
+ * Match finger-map focus dim: bright while typing, faded when the test is not focused.
+ * Only applies on pages that render the playground.
+ */
+.tp-page-shell[data-tp-live-status-bar]:has(.tp-playground-root):not(
+    :has([data-tp-test-focused])
+  )
+  .tp-live-status-bar-drawer.ant-drawer
+  .ant-drawer-content-wrapper {
+  opacity: 0.44;
+  pointer-events: none;
+}
+
+.tp-live-status-bar-drawer.ant-drawer .ant-drawer-content {
+  background: var(--tp-page-bg);
+  overflow: hidden;
+}
+
+.tp-live-status-bar-drawer__body {
+  box-sizing: border-box;
+  max-width: 100%;
+  padding: 8px 12px 16px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.tp-live-status-bar__slots {
+  width: 100%;
+}
+
+.tp-live-status-bar__slot-title {
+  display: block;
+  margin-bottom: 12px;
+}
+
+/* Medium desktop — between laptop and large external monitor */
+@media (min-width: 1729px) {
+  :root {
+    --tp-live-status-bar-width: clamp(300px, 26vw, 420px);
+  }
+}
+
+/* Large monitors (21″+) */
+@media (min-width: 1920px) {
+  :root {
+    --tp-live-status-bar-width: clamp(380px, 28vw, 560px);
+  }
+}
+
+@media (max-width: 768px) {
+  .tp-page-shell--live-status-bar .tp-page-shell-primary {
+    margin-inline-end: 0;
+  }
+
+  .tp-live-status-bar-drawer.ant-drawer {
+    display: none;
+  }
+}

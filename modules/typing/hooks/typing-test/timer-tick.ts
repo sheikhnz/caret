@@ -7,6 +7,7 @@
  */
 
 import { calculateBurst } from "@/modules/typing/calculations/wpm";
+import { syncLiveSnapshot } from "@/modules/typing/engine/input/sync-live-snapshot";
 import {
   getNextWord,
   shouldAppendWordsDuringTest,
@@ -15,6 +16,7 @@ import { getTimedDurationSeconds } from "@/modules/typing/engine/generation/mode
 import * as TestInput from "@/modules/typing/engine/input/test-input";
 import * as TestStats from "@/modules/typing/engine/runtime/test-stats";
 import { playTimeWarning } from "@/modules/typing/services/sound";
+import { useConfigStore } from "@/modules/typing/stores/config-store";
 import { useTestStore } from "@/modules/typing/stores/test-store";
 import type { CustomTextSettings } from "@/modules/typing/types/custom-text";
 import type { LanguageObject } from "@/modules/typing/types/language";
@@ -40,26 +42,37 @@ export const handleTimerTick = (
     refs.wordsRef.current,
     c.mode === "zen",
   );
+
   const acc = TestStats.getLiveAccuracy();
   const burst = calculateBurst(
     TestInput.currentInput.length,
     (performance.now() - TestInput.currentBurstStart) / 1000,
   );
 
-  s.setLiveStats({
-    wpm: liveWpm.wpm,
-    raw: liveWpm.raw,
-    acc,
-    burst,
-    elapsed: Math.floor(elapsed),
-    remaining: remaining !== null ? Math.ceil(remaining) : null,
-  });
-
   TestInput.pushToWpmHistory(liveWpm.wpm);
   TestInput.pushToRawHistory(liveWpm.raw);
+  TestInput.pushAccToHistory(acc);
+  TestInput.pushBurstSecondToHistory(burst);
   TestInput.pushKeypressesToHistory();
   TestInput.pushErrorToHistory();
   TestInput.pushAfkToHistory();
+
+  if (useConfigStore.getState().config.showLiveStatus) {
+    s.appendTypingHistorySample({
+      wpm: liveWpm.wpm,
+      raw: liveWpm.raw,
+      acc,
+      burst,
+      err: TestInput.errorHistory.at(-1)?.count ?? 0,
+    });
+  }
+
+  syncLiveSnapshot(s, {
+    words: refs.wordsRef.current,
+    mode: c.mode,
+    elapsed: Math.floor(elapsed),
+    remaining: remaining !== null ? Math.ceil(remaining) : null,
+  });
 
   const warningBase = getTimedDurationSeconds({
     config: c,

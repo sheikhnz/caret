@@ -22,6 +22,8 @@ export {
   TEST_CONFIG_PILL_CLASS,
   type SegmentedOption,
 } from "./SegmentedControl";
+export { Progress } from "./Progress";
+export type { ProgressProps } from "./Progress";
 export { Separator } from "./Separator";
 export {
   Skeleton,
@@ -46,6 +48,7 @@ export const UI_COMPONENTS = [
   "Badge",
   "Button",
   "Card",
+  "Progress",
   "Separator",
   "Input",
   "Select",

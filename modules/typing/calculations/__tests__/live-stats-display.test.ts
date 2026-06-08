@@ -14,6 +14,8 @@ const baseStats: LiveStats = {
   burst: 0,
   elapsed: 0,
   remaining: 30,
+  errors: 0,
+  row: 1,
 };
 
 const baseInput = (
