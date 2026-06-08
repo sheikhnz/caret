@@ -28,7 +28,11 @@ export const LiveStatusBarSlotSection = ({
       data-tp-live-status-bar-slot={slotId}
     >
       {title ? (
-        <Typography.Text className="tp-live-status-bar__slot-title" strong id={titleId}>
+        <Typography.Text
+          className="tp-live-status-bar__slot-title"
+          strong
+          id={titleId}
+        >
           {title}
         </Typography.Text>
       ) : null}

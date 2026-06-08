@@ -11,7 +11,5 @@ export const syncTypingHistoryForLiveStatus = (): void => {
     return;
   }
 
-  useTestStore
-    .getState()
-    .setTypingHistory(backfillTypingHistoryFromEngine());
+  useTestStore.getState().setTypingHistory(backfillTypingHistoryFromEngine());
 };

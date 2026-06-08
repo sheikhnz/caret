@@ -20,10 +20,12 @@ const BASE_STATS: LiveStats = {
 
 describe("getLiveStatSparklineValue", () => {
   it("reads the matching live stat field", () => {
-    expect(getLiveStatSparklineValue({ id: "raw", stats: BASE_STATS })).toBe(80);
-    expect(getLiveStatSparklineValue({ id: "accuracy", stats: BASE_STATS })).toBe(
-      98,
+    expect(getLiveStatSparklineValue({ id: "raw", stats: BASE_STATS })).toBe(
+      80,
     );
+    expect(
+      getLiveStatSparklineValue({ id: "accuracy", stats: BASE_STATS }),
+    ).toBe(98);
   });
 });
 

@@ -27,12 +27,9 @@ export const syncLiveSnapshot = (
     TestInput.currentInput.length,
     (performance.now() - TestInput.currentBurstStart) / 1000,
   );
-  const elapsed =
-    input.elapsed ?? Math.floor(TestStats.calculateTestSeconds());
+  const elapsed = input.elapsed ?? Math.floor(TestStats.calculateTestSeconds());
   const remaining =
-    input.remaining !== undefined
-      ? input.remaining
-      : store.liveStats.remaining;
+    input.remaining !== undefined ? input.remaining : store.liveStats.remaining;
   const wordIndex = TestState.getActiveWordIndex();
 
   store.setLiveStats({

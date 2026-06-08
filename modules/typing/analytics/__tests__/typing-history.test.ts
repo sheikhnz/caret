@@ -63,13 +63,17 @@ describe("appendTypingHistorySample", () => {
 
     const capped = [1, 2, 3].reduce(
       (current, value) =>
-        appendTypingHistorySample(current, {
-          wpm: value,
-          raw: value,
-          acc: value,
-          burst: value,
-          err: value,
-        }, 2),
+        appendTypingHistorySample(
+          current,
+          {
+            wpm: value,
+            raw: value,
+            acc: value,
+            burst: value,
+            err: value,
+          },
+          2,
+        ),
       EMPTY_TYPING_HISTORY,
     );
 

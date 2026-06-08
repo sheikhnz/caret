@@ -9,10 +9,7 @@ import { useLayoutEffect } from "react";
 
 import { LiveStatusBarDrawer } from "./LiveStatusBarDrawer";
 import { LiveStatusBarProvider } from "./LiveStatusBarContext";
-import {
-  LIVE_STATUS_BAR_HOST_ID,
-  TP_LIVE_STATUS_BAR_ATTR,
-} from "./constants";
+import { LIVE_STATUS_BAR_HOST_ID, TP_LIVE_STATUS_BAR_ATTR } from "./constants";
 import { useLiveStatusBar } from "./use-live-status-bar";
 
 const LIVE_STATUS_BAR_ENABLED_CLASS = "tp-page-shell--live-status-bar";

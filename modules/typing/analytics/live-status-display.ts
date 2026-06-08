@@ -82,7 +82,8 @@ export const countLiveStatusCharsTyped = ({
   inputHistory: string[];
   currentInput: string;
 }): number =>
-  inputHistory.reduce((sum, word) => sum + word.length, 0) + currentInput.length;
+  inputHistory.reduce((sum, word) => sum + word.length, 0) +
+  currentInput.length;
 
 export type LiveStatusProgress = {
   label: string;
@@ -218,7 +219,9 @@ export const formatLiveStatusPenalty = ({
   wpm,
   phase,
   elapsed,
-}: Pick<LiveStats, "raw" | "wpm" | "elapsed"> & { phase: TestPhase }): string => {
+}: Pick<LiveStats, "raw" | "wpm" | "elapsed"> & {
+  phase: TestPhase;
+}): string => {
   if (!hasLiveData(phase, elapsed)) {
     return IDLE_VALUE;
   }
@@ -245,7 +248,11 @@ export const formatLiveStatusStatValue = (
 
   switch (id) {
     case "wpm":
-      return formatLiveStatusWpm({ wpm: stats.wpm, phase, elapsed: stats.elapsed });
+      return formatLiveStatusWpm({
+        wpm: stats.wpm,
+        phase,
+        elapsed: stats.elapsed,
+      });
     case "raw":
       return String(Math.round(stats.raw));
     case "accuracy":

@@ -38,10 +38,15 @@ type LiveStatusStatRowProps = {
 
 const LiveStatusStatRow = ({ label, value }: LiveStatusStatRowProps) => (
   <div className="tp-live-status-bar__stat">
-    <Typography.Text className="tp-live-status-bar__stat-label" type="secondary">
+    <Typography.Text
+      className="tp-live-status-bar__stat-label"
+      type="secondary"
+    >
       {label}
     </Typography.Text>
-    <Typography.Text className="tp-live-status-bar__stat-value">{value}</Typography.Text>
+    <Typography.Text className="tp-live-status-bar__stat-value">
+      {value}
+    </Typography.Text>
   </div>
 );
 
@@ -67,7 +72,10 @@ const LiveStatusStatTile = ({
     >
       <LiveStatusSparkline samples={sparklineSamples} statId={statId} />
       <div className="tp-live-status-bar__tile-content">
-        <Typography.Text className="tp-live-status-bar__tile-label" type="secondary">
+        <Typography.Text
+          className="tp-live-status-bar__tile-label"
+          type="secondary"
+        >
           {label}
         </Typography.Text>
         <span className="tp-live-status-bar__tile-value">{value}</span>
@@ -81,13 +89,26 @@ type LiveStatusProgressBarProps = {
   percent: number;
 };
 
-const LiveStatusProgressBar = ({ label, percent }: LiveStatusProgressBarProps) => (
+const LiveStatusProgressBar = ({
+  label,
+  percent,
+}: LiveStatusProgressBarProps) => (
   <div className="tp-live-status-bar__progress">
-    <Flex align="center" className="tp-live-status-bar__progress-header" justify="space-between">
-      <Typography.Text className="tp-live-status-bar__progress-label" type="secondary">
+    <Flex
+      align="center"
+      className="tp-live-status-bar__progress-header"
+      justify="space-between"
+    >
+      <Typography.Text
+        className="tp-live-status-bar__progress-label"
+        type="secondary"
+      >
         Progress
       </Typography.Text>
-      <Typography.Text className="tp-live-status-bar__progress-value" type="secondary">
+      <Typography.Text
+        className="tp-live-status-bar__progress-value"
+        type="secondary"
+      >
         {label}
       </Typography.Text>
     </Flex>
@@ -215,7 +236,10 @@ export const LiveStatusBarStats = () => {
     <div
       className={`tp-live-status-bar-live-panel${isActive ? " tp-live-status-bar-live-panel--active" : ""}`}
     >
-      <Typography.Text className="tp-live-status-bar-live-context" type="secondary">
+      <Typography.Text
+        className="tp-live-status-bar-live-context"
+        type="secondary"
+      >
         {contextLabel}
       </Typography.Text>
 
@@ -230,26 +254,38 @@ export const LiveStatusBarStats = () => {
             aria-hidden
             className={`tp-live-status-bar-live-dot${isActive ? " tp-live-status-bar-live-dot--pulse" : ""}`}
           />
-          <Typography.Text className="tp-live-status-bar-live-label" type="secondary">
+          <Typography.Text
+            className="tp-live-status-bar-live-label"
+            type="secondary"
+          >
             {LIVE_STATUS_LABEL}
           </Typography.Text>
         </Flex>
         {showHeaderElapsed ? (
-          <Typography.Text className="tp-live-status-bar-live-time" type="secondary">
+          <Typography.Text
+            className="tp-live-status-bar-live-time"
+            type="secondary"
+          >
             {elapsedValue}
           </Typography.Text>
         ) : null}
       </Flex>
 
       {progress !== null ? (
-        <LiveStatusProgressBar label={progress.label} percent={progress.percent} />
+        <LiveStatusProgressBar
+          label={progress.label}
+          percent={progress.percent}
+        />
       ) : null}
 
       <div className="tp-live-status-bar-live-hero">
         <span className="tp-live-status-bar-live-wpm" key={wpmValue}>
           {wpmValue}
         </span>
-        <Typography.Text className="tp-live-status-bar-live-wpm-label" type="secondary">
+        <Typography.Text
+          className="tp-live-status-bar-live-wpm-label"
+          type="secondary"
+        >
           WPM
         </Typography.Text>
       </div>
@@ -261,7 +297,12 @@ export const LiveStatusBarStats = () => {
             label={stat.label}
             sparklineSamples={sparklineHistory[stat.id]}
             statId={stat.id}
-            value={formatLiveStatusStatValue(stat.id, liveStats, phase, statExtras)}
+            value={formatLiveStatusStatValue(
+              stat.id,
+              liveStats,
+              phase,
+              statExtras,
+            )}
           />
         ))}
       </div>
@@ -273,13 +314,21 @@ export const LiveStatusBarStats = () => {
           <LiveStatusStatRow
             key={stat.id}
             label={stat.label}
-            value={formatLiveStatusStatValue(stat.id, liveStats, phase, statExtras)}
+            value={formatLiveStatusStatValue(
+              stat.id,
+              liveStats,
+              phase,
+              statExtras,
+            )}
           />
         ))}
       </Flex>
 
       {showIdleHint ? (
-        <Typography.Text className="tp-live-status-bar-live-hint" type="secondary">
+        <Typography.Text
+          className="tp-live-status-bar-live-hint"
+          type="secondary"
+        >
           {LIVE_STATUS_IDLE_HINT}
         </Typography.Text>
       ) : null}

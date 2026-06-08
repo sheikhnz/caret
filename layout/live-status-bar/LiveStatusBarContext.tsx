@@ -5,12 +5,7 @@
 
 "use client";
 
-import {
-  createContext,
-  useCallback,
-  useMemo,
-  type ReactNode,
-} from "react";
+import { createContext, useCallback, useMemo, type ReactNode } from "react";
 
 import { setShowLiveStatus } from "@/modules/typing/config/live-status";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
@@ -33,7 +28,9 @@ type LiveStatusBarProviderProps = {
   children: ReactNode;
 };
 
-export const LiveStatusBarProvider = ({ children }: LiveStatusBarProviderProps) => {
+export const LiveStatusBarProvider = ({
+  children,
+}: LiveStatusBarProviderProps) => {
   const hasHydrated = useConfigStore((state) => state.hasHydrated);
   const showLiveStatus = useConfigStore((state) => state.config.showLiveStatus);
   const isPlaygroundPresent = usePlaygroundPresenceStore(
@@ -46,8 +43,7 @@ export const LiveStatusBarProvider = ({ children }: LiveStatusBarProviderProps) 
   }, []);
 
   const enabled = hasHydrated && showLiveStatus;
-  const visible =
-    enabled && isPlaygroundPresent && phase !== "finished";
+  const visible = enabled && isPlaygroundPresent && phase !== "finished";
 
   const value = useMemo(
     () => ({

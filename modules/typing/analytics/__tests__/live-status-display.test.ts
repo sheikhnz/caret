@@ -26,9 +26,9 @@ const BASE_STATS: LiveStats = {
 
 describe("formatLiveStatusWpm", () => {
   it("shows a dash when idle with no elapsed time", () => {
-    expect(
-      formatLiveStatusWpm({ wpm: 0, elapsed: 0, phase: "idle" }),
-    ).toBe("—");
+    expect(formatLiveStatusWpm({ wpm: 0, elapsed: 0, phase: "idle" })).toBe(
+      "—",
+    );
   });
 
   it("rounds live WPM during an active test", () => {
