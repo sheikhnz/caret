@@ -16,7 +16,11 @@ export {
 } from "./common";
 export type { FooterConfig, FooterIconId, FooterItem } from "./common";
 export { PgLayout } from "./PgLayout";
-export { TP_PG_FOCUS_ATTR, TP_TEST_FOCUS_ATTR } from "./PgLayout/constants";
+export {
+  TP_PG_FOCUS_ATTR,
+  TP_TEST_FOCUS_ATTR,
+  TP_TEST_SLEEPING_ATTR,
+} from "./PgLayout/constants";
 export {
   defineLiveStatusBarSlot,
   LIVE_STATUS_BAR_HOST_ID,

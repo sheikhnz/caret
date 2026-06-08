@@ -7,7 +7,11 @@
 
 import { useCallback } from "react";
 
-import { TP_PG_FOCUS_ATTR, TP_TEST_FOCUS_ATTR } from "@/layout";
+import {
+  TP_PG_FOCUS_ATTR,
+  TP_TEST_FOCUS_ATTR,
+  TP_TEST_SLEEPING_ATTR,
+} from "@/layout";
 import { joinClassNames } from "@/utils";
 import { useIsMobileDevice } from "@/hooks";
 import { FingerMapGuidance } from "@/modules/typing/components/FingerMap";
@@ -38,7 +42,7 @@ export const TypingPlayground = ({
 }: TypingPlaygroundProps) => {
   useRegisterPlaygroundPresence();
 
-  const { phase, isTestFocused, typing, dialogs } = playground;
+  const { phase, isTestFocused, isSleeping, typing, dialogs } = playground;
   const { restart, bailOut, focusInput } = typing;
   const { mode } = useTypingTestDisplayConfig();
   const isMobileDevice = useIsMobileDevice();
@@ -75,6 +79,7 @@ export const TypingPlayground = ({
   const isFocusIsolateActive =
     isolateOnFocus && isTestFocused && phase !== "finished";
   const isTypingFocusActive = isTestFocused && phase !== "finished";
+  const isTypingSleepActive = phase === "active" && isSleeping;
 
   if (isMobileDevice) return <MobileUnsupportedNotice />;
 
@@ -84,6 +89,7 @@ export const TypingPlayground = ({
       {...{
         [TP_PG_FOCUS_ATTR]: isFocusIsolateActive ? true : undefined,
         [TP_TEST_FOCUS_ATTR]: isTypingFocusActive ? true : undefined,
+        [TP_TEST_SLEEPING_ATTR]: isTypingSleepActive ? true : undefined,
       }}
     >
       <PlaygroundDrawers

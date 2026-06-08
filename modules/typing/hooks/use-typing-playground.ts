@@ -27,12 +27,14 @@ import type { TestPhase } from "@/modules/typing/types/engine";
 export type TypingPlaygroundState = {
   phase: TestPhase;
   isTestFocused: boolean;
+  isSleeping: boolean;
   typing: UseTypingTestReturn;
   dialogs: PlaygroundDialogsApi;
 };
 
 export const useTypingPlayground = (): TypingPlaygroundState => {
   const phase = useTestStore((state) => state.phase);
+  const isSleeping = useTestStore((state) => state.isSleeping);
   const isLoadingWords = useTestStore((state) => state.isLoadingWords);
 
   const focusInputRef = useRef<() => void>(() => {});
@@ -68,5 +70,5 @@ export const useTypingPlayground = (): TypingPlaygroundState => {
 
   usePlaygroundKeyboardShortcuts({ phase, typing, dialogs });
 
-  return { phase, isTestFocused, typing, dialogs };
+  return { phase, isTestFocused, isSleeping, typing, dialogs };
 };
