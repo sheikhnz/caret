@@ -13,10 +13,26 @@
 /* Drawer / section headings — avoid default Title bottom margin */
 .tp-section-title.ant-typography {
   margin-bottom: 0;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--tp-text-primary);
 }
 
 .tp-section-note.ant-typography {
   margin-bottom: 0;
   font-size: 12px;
+}
+
+/* Settings drawer — field name above quieter helper text */
+.tp-settings-section-fields .tp-form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--tp-text-primary);
+}
+
+.tp-settings-section-fields .tp-form-label + .ant-typography {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--tp-text-muted);
 }
