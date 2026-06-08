@@ -6,8 +6,8 @@
 import type { ReactNode } from "react";
 
 import { PageShell } from "@/layout/common";
-import { LIVE_STATUS_BAR_HOST_ID } from "@/layout/live-status-bar/constants";
-import { LiveStatusBarMount } from "@/layout/live-status-bar/LiveStatusBarMount";
+import { LIVE_STATUS_BAR_HOST_ID } from "@/layout/PgLayout/live-status-bar/constants";
+import { LiveStatusBarMount } from "@/layout/PgLayout/live-status-bar/LiveStatusBarMount";
 
 type PgLayoutProps = {
   children: ReactNode;

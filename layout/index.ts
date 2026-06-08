@@ -33,4 +33,4 @@ export {
   useLiveStatusBar,
   type LiveStatusBarSlotDefinition,
   type LiveStatusBarSlotProps,
-} from "./live-status-bar";
+} from "./PgLayout/live-status-bar";
