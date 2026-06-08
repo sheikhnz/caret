@@ -14,7 +14,6 @@ import { useWordsRenderer } from "@/modules/typing/hooks/use-words-renderer";
 import { SkeletonLoader, SKELETON_IDS } from "@/ui";
 
 import { Caret } from "./Caret";
-import { SleepIndicator } from "./SleepIndicator";
 import { TypingTestLiveStats } from "./TypingTestLiveStats";
 import { useWordScroll } from "./use-word-scroll";
 import { WordsDisplay } from "./WordsDisplay";
@@ -82,7 +81,6 @@ export const TypingTest = ({
         <TypingTestLiveStats isTestFocused={isTestFocused} />
 
         <div ref={wordsContainerRef} className="tp-typing-viewport">
-          <SleepIndicator />
           {store.isPreparingWords ? (
             <SkeletonLoader
               id={SKELETON_IDS.typingTestWords}

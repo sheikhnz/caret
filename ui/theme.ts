@@ -116,6 +116,10 @@ export const buildAntdTheme = (isDark: boolean): ThemeConfig => {
         colorPrimary: palette.colorPrimary,
         colorPrimaryHover: palette.colorPrimaryHover,
       },
+      Tooltip: {
+        colorBgSpotlight: palette.colorBgContainer,
+        colorTextLightSolid: palette.colorText,
+      },
     },
   };
 };
