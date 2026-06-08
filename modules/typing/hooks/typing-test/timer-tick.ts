@@ -6,7 +6,6 @@
  * Timed/custom-time modes append words when fewer than 30 lie ahead of the caret.
  */
 
-import { buildTypingHistoryFromEngine } from "@/modules/typing/analytics/typing-history";
 import { calculateBurst } from "@/modules/typing/calculations/wpm";
 import { syncLiveSnapshot } from "@/modules/typing/engine/input/sync-live-snapshot";
 import {
@@ -57,7 +56,13 @@ export const handleTimerTick = (
   TestInput.pushErrorToHistory();
   TestInput.pushAfkToHistory();
 
-  s.setTypingHistory(buildTypingHistoryFromEngine());
+  s.appendTypingHistorySample({
+    wpm: liveWpm.wpm,
+    raw: liveWpm.raw,
+    acc,
+    burst,
+    err: TestInput.errorHistory.at(-1)?.count ?? 0,
+  });
 
   syncLiveSnapshot(s, {
     words: refs.wordsRef.current,

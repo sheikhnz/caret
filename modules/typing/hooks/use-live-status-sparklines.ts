@@ -6,7 +6,6 @@
 
 import { useMemo } from "react";
 
-import { tailHistorySamples } from "@/modules/typing/analytics/typing-history";
 import type { LiveStatusSparklineStatId } from "@/modules/typing/analytics/sparkline-area";
 import { useTestStore } from "@/modules/typing/stores/test-store";
 
@@ -18,10 +17,10 @@ export const useLiveStatusSparklines = (): Record<
 
   return useMemo(
     () => ({
-      raw: tailHistorySamples(typingHistory.raw),
-      accuracy: tailHistorySamples(typingHistory.acc),
-      burst: tailHistorySamples(typingHistory.burst),
-      errors: tailHistorySamples(typingHistory.err),
+      raw: typingHistory.raw,
+      accuracy: typingHistory.acc,
+      burst: typingHistory.burst,
+      errors: typingHistory.err,
     }),
     [typingHistory],
   );

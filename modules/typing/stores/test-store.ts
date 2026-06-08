@@ -7,8 +7,10 @@
 import { create } from "zustand/react";
 
 import {
+  appendTypingHistorySample,
   EMPTY_TYPING_HISTORY,
   type TypingHistory,
+  type TypingHistorySample,
 } from "@/modules/typing/analytics/typing-history";
 import type { TestPhase } from "@/modules/typing/types/engine";
 import type { CompletedEvent } from "@/modules/typing/types/result";
@@ -51,7 +53,7 @@ type TestStore = {
     inputHistory: string[];
   }) => void;
   setLiveStats: (stats: Partial<LiveStats>) => void;
-  setTypingHistory: (history: TypingHistory) => void;
+  appendTypingHistorySample: (sample: TypingHistorySample) => void;
   setResult: (result: CompletedEvent) => void;
   setIsLoadingWords: (v: boolean) => void;
   incrementRestartCount: () => void;
@@ -94,7 +96,10 @@ export const useTestStore = create<TestStore>()((set) => ({
     set({ currentInput, wordIndex, inputHistory }),
   setLiveStats: (stats) =>
     set((state) => ({ liveStats: { ...state.liveStats, ...stats } })),
-  setTypingHistory: (typingHistory) => set({ typingHistory }),
+  appendTypingHistorySample: (sample) =>
+    set((state) => ({
+      typingHistory: appendTypingHistorySample(state.typingHistory, sample),
+    })),
   setResult: (result) => set({ result }),
   setIsLoadingWords: (isLoadingWords) => set({ isLoadingWords }),
   incrementRestartCount: () =>
