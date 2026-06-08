@@ -186,6 +186,11 @@ export const formatLiveStatusElapsed = ({
   return formatTimerSeconds(Math.max(0, elapsed));
 };
 
+/**
+ * Live status bar stat formatters — integers only (WPM, raw, burst, CPM).
+ * Final results keep two decimal places via calculateWpmAndRaw(..., true);
+ * live values round here for quick reading while typing (e.g. 22 vs 22.22).
+ */
 export const formatLiveStatusWpm = ({
   wpm,
   phase,
