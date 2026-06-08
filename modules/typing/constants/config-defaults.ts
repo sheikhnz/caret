@@ -37,7 +37,7 @@ export const DEFAULT_CONFIG: TypingConfig = {
   playSoundOnError: "1",
   playTimeWarning: "off",
   autoSleep: {
-    enabled: true,
+    enabled: false,
     seconds: 30,
   },
 };

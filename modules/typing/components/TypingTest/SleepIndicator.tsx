@@ -6,12 +6,12 @@
 
 import { Typography } from "antd";
 
-type SleepIndicatorProps = {
-  visible: boolean;
-};
+import { useTestStore } from "@/modules/typing/stores/test-store";
 
-export const SleepIndicator = ({ visible }: SleepIndicatorProps) => {
-  if (!visible) return null;
+export const SleepIndicator = () => {
+  const isSleeping = useTestStore((state) => state.isSleeping);
+
+  if (!isSleeping) return null;
 
   return (
     <div className="tp-typing-sleep-indicator" role="status" aria-live="polite">

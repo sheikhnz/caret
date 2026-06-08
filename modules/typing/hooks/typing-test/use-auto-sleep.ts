@@ -1,5 +1,8 @@
 /**
  * React wiring for auto-sleep — starts the idle monitor and syncs store state.
+ *
+ * The interval runs only while auto-sleep is enabled and the test phase is
+ * active, so idle/finished tests do not poll in the background.
  */
 
 "use client";
@@ -19,18 +22,27 @@ import {
 } from "@/modules/typing/engine/runtime/test-timer";
 import { useTestStore } from "@/modules/typing/stores/test-store";
 import type { AutoSleepSeconds } from "@/modules/typing/types/config";
+import type { TestPhase } from "@/modules/typing/types/engine";
 
 import type { TimerTickRefs } from "./timer-tick";
 
 type UseAutoSleepOptions = {
   enabled: boolean;
   idleSeconds: AutoSleepSeconds;
+  phase: TestPhase;
   timerTickRefs: TimerTickRefs;
+};
+
+const clearAutoSleepState = (): void => {
+  resetAutoSleep();
+  useTestStore.getState().setIsSleeping(false);
+  stopAutoSleepMonitor();
 };
 
 export const useAutoSleep = ({
   enabled,
   idleSeconds,
+  phase,
   timerTickRefs,
 }: UseAutoSleepOptions): void => {
   const timerTickRefsRef = useRef(timerTickRefs);
@@ -40,11 +52,10 @@ export const useAutoSleep = ({
   });
 
   useEffect(() => {
-    if (!enabled) {
-      configureAutoSleep({ enabled: false, idleSeconds });
-      resetAutoSleep();
-      useTestStore.getState().setIsSleeping(false);
-      stopAutoSleepMonitor();
+    configureAutoSleep({ enabled, idleSeconds });
+
+    if (!enabled || phase !== "active") {
+      clearAutoSleepState();
       return;
     }
 
@@ -77,10 +88,6 @@ export const useAutoSleep = ({
       },
     );
 
-    return () => {
-      stopAutoSleepMonitor();
-      resetAutoSleep();
-      useTestStore.getState().setIsSleeping(false);
-    };
-  }, [enabled, idleSeconds]);
+    return clearAutoSleepState;
+  }, [enabled, idleSeconds, phase]);
 };

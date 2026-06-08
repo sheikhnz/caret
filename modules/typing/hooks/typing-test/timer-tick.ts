@@ -15,6 +15,7 @@ import {
 import { getTimedDurationSeconds } from "@/modules/typing/engine/generation/mode-helpers";
 import * as TestInput from "@/modules/typing/engine/input/test-input";
 import * as TestStats from "@/modules/typing/engine/runtime/test-stats";
+import { getTimerNow } from "@/modules/typing/engine/runtime/test-timer";
 import { playTimeWarning } from "@/modules/typing/services/sound";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
 import { useTestStore } from "@/modules/typing/stores/test-store";
@@ -46,7 +47,7 @@ export const handleTimerTick = (
   const acc = TestStats.getLiveAccuracy();
   const burst = calculateBurst(
     TestInput.currentInput.length,
-    (performance.now() - TestInput.currentBurstStart) / 1000,
+    (getTimerNow() - TestInput.currentBurstStart) / 1000,
   );
 
   TestInput.pushToWpmHistory(liveWpm.wpm);

@@ -9,7 +9,6 @@ import { useCallback, type ReactNode } from "react";
 import type { UseTypingTestReturn } from "@/modules/typing/hooks/use-typing-test";
 import { useTypingTestDisplayConfig } from "@/modules/typing/hooks/use-typing-test-display-config";
 import { useTypingTestView } from "@/modules/typing/hooks/use-typing-test-view";
-import { useTestStore } from "@/modules/typing/stores/test-store";
 import { useCaretPosition } from "@/modules/typing/hooks/use-caret-position";
 import { useWordsRenderer } from "@/modules/typing/hooks/use-words-renderer";
 import { SkeletonLoader, SKELETON_IDS } from "@/ui";
@@ -33,7 +32,6 @@ export const TypingTest = ({
   afterViewport,
 }: TypingTestProps) => {
   const store = useTypingTestView();
-  const isSleeping = useTestStore((state) => state.isSleeping);
   const { mode, blindMode, caretStyle, smoothCaret } =
     useTypingTestDisplayConfig();
   const { inputRef, wordsContainerRef, handleKeyDown, focusInput } = typing;
@@ -84,7 +82,7 @@ export const TypingTest = ({
         <TypingTestLiveStats isTestFocused={isTestFocused} />
 
         <div ref={wordsContainerRef} className="tp-typing-viewport">
-          <SleepIndicator visible={isSleeping} />
+          <SleepIndicator />
           {store.isPreparingWords ? (
             <SkeletonLoader
               id={SKELETON_IDS.typingTestWords}

@@ -56,6 +56,7 @@ export const useTypingTest = (
   const wordsContainerRef = useRef<HTMLDivElement | null>(null);
 
   const { config } = useConfigStore();
+  const phase = useTestStore((state) => state.phase);
   const customText = useCustomTextStore((state) => state.settings);
   const customTextRevision = useCustomTextStore((state) => state.revision);
   const persistedStoresHydrated = usePersistedStoresHydrated();
@@ -132,6 +133,7 @@ export const useTypingTest = (
   useAutoSleep({
     enabled: config.autoSleep.enabled,
     idleSeconds: config.autoSleep.seconds,
+    phase,
     timerTickRefs: {
       configRef,
       customTextRef,

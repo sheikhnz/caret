@@ -7,6 +7,7 @@ import { joinClassNames } from "@/utils";
 
 import type { PlaygroundFingerMapKeyboardState } from "@/modules/typing/hooks/use-playground-finger-map";
 
+import { isFingerMapDimmed } from "../is-finger-map-dimmed";
 import { Keyboard } from "./Keyboard";
 
 type FingerMapKeyboardProps = {
@@ -21,7 +22,11 @@ export const FingerMapKeyboard = memo(
   ({ fingerMap, isTestFocused }: FingerMapKeyboardProps) => {
     if (!fingerMap.enabled) return null;
 
-    const dimmed = fingerMap.phase === "finished" || !isTestFocused;
+    const dimmed = isFingerMapDimmed({
+      phase: fingerMap.phase,
+      isSleeping: fingerMap.isSleeping,
+      isTestFocused,
+    });
 
     return (
       <Flex
