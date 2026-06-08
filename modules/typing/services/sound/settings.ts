@@ -4,6 +4,8 @@ import type {
   SoundVolume,
 } from "@/modules/typing/types/config";
 
+import { setHowlerVolume } from "./howler/client";
+
 export type SoundSettings = {
   playSoundOnClick: PlaySoundOnClick;
   playSoundOnError: PlaySoundOnError;
@@ -20,4 +22,8 @@ export const getSoundSettings = (): SoundSettings => settings;
 
 export const setSoundSettings = (next: Partial<SoundSettings>): void => {
   settings = { ...settings, ...next };
+
+  if (next.soundVolume !== undefined) {
+    void setHowlerVolume(next.soundVolume);
+  }
 };
