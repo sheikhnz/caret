@@ -63,10 +63,7 @@ export const Progress = ({
         className="tp-progress__track"
         role={decorative ? "presentation" : "progressbar"}
       >
-        <div
-          className="tp-progress__fill"
-          style={{ width: `${clamped}%` }}
-        />
+        <div className="tp-progress__fill" style={{ width: `${clamped}%` }} />
       </div>
     </div>
   );

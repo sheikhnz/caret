@@ -97,7 +97,8 @@
   line-height: 1;
 }
 
-.tp-live-status-bar-live-panel--active .tp-live-status-bar__tile-value--featured {
+.tp-live-status-bar-live-panel--active
+  .tp-live-status-bar__tile-value--featured {
   animation: tp-live-status-bar-wpm-tick 0.16s ease;
 }
 
