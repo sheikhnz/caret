@@ -18,12 +18,7 @@ type CaretSleepHintProps = {
 };
 
 export const CaretSleepHint = ({ layout, style }: CaretSleepHintProps) => (
-  <Tooltip
-    open
-    placement="topLeft"
-    title={CARET_SLEEP_HINT_LABEL}
-    trigger={[]}
-  >
+  <Tooltip open placement="topLeft" title={CARET_SLEEP_HINT_LABEL} trigger={[]}>
     <span
       aria-hidden
       className="tp-caret-tooltip-anchor"
