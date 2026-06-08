@@ -28,10 +28,21 @@ const state: TimerState = {
 
 let nextTick = 0;
 let tickCount = 0;
+let pausedAt: number | null = null;
+let timerRunning = false;
+
+export const hasTimerStarted = (): boolean => timerRunning;
+
+export const isTimerPaused = (): boolean => pausedAt !== null;
+
+/** Wall clock for elapsed/burst math — frozen while the timer is paused. */
+export const getTimerNow = (): number => pausedAt ?? performance.now();
 
 function tick(): void {
-  if (!isActive()) {
-    clearTimer();
+  if (!isActive() || isTimerPaused()) {
+    if (!isActive()) {
+      clearTimer();
+    }
     return;
   }
 
@@ -67,6 +78,7 @@ export const startTimer = (
   state.startTime = startTime;
   state.durationSeconds = durationSeconds;
   state.callbacks = callbacks;
+  timerRunning = true;
   tickCount = 0;
   nextTick = startTime + 1000;
   const delay = Math.max(0, nextTick - performance.now());
@@ -80,10 +92,52 @@ export const clearTimer = (final = false): void => {
   }
   if (final) {
     state.callbacks = null;
+    state.startTime = 0;
+    state.durationSeconds = null;
+    pausedAt = null;
+    timerRunning = false;
+    tickCount = 0;
+    nextTick = 0;
   }
 };
 
 export const getTimerElapsed = (): number => {
-  if (state.startTime === 0) return 0;
-  return (performance.now() - state.startTime) / 1000;
+  if (!timerRunning) return 0;
+  return (getTimerNow() - state.startTime) / 1000;
+};
+
+export const pauseTimer = (): boolean => {
+  if (pausedAt !== null || !timerRunning || state.timerId === null) {
+    return false;
+  }
+
+  pausedAt = performance.now();
+  clearTimeout(state.timerId);
+  state.timerId = null;
+  return true;
+};
+
+/** Returns pause duration in ms, or 0 if the timer was not paused. */
+export const resumeTimer = (): number => {
+  if (pausedAt === null) return 0;
+
+  const pauseDuration = performance.now() - pausedAt;
+  state.startTime += pauseDuration;
+  pausedAt = null;
+
+  // Reschedule the next second boundary — do not tick immediately or tickCount
+  // runs ahead of elapsed and the countdown skips a second after wake.
+  const now = performance.now();
+  const elapsed = (now - state.startTime) / 1000;
+  tickCount = Math.floor(elapsed);
+  nextTick = state.startTime + (tickCount + 1) * 1000;
+  const delay = Math.max(0, nextTick - now);
+  state.timerId = setTimeout(tick, delay);
+
+  return pauseDuration;
+};
+
+export const getTimerRemaining = (): number | null => {
+  if (!timerRunning || state.durationSeconds === null) return null;
+  return Math.max(0, state.durationSeconds - getTimerElapsed());
 };

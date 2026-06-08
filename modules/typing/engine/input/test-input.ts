@@ -153,6 +153,12 @@ export const setBurstStart = (time: number): void => {
   currentBurstStart = time;
 };
 
+export const shiftBurstStart = (deltaMs: number): void => {
+  if (currentBurstStart > 0) {
+    currentBurstStart += deltaMs;
+  }
+};
+
 export const pushBurstToHistory = (speed: number): void => {
   const wordIndex = getActiveWordIndex();
   if (burstHistory[wordIndex] === undefined) {

@@ -56,6 +56,13 @@ export type ShowFingerMapConfig = {
   hands: boolean;
 };
 
+export type AutoSleepSeconds = 3 | 5 | 10 | 15 | 30 | 60 | 120 | 300;
+
+export type AutoSleepConfig = {
+  enabled: boolean;
+  seconds: AutoSleepSeconds;
+};
+
 export type TypingConfig = {
   mode: TestMode;
   time: number;
@@ -85,4 +92,5 @@ export type TypingConfig = {
   playSoundOnClick: PlaySoundOnClick;
   playSoundOnError: PlaySoundOnError;
   playTimeWarning: PlayTimeWarning;
+  autoSleep: AutoSleepConfig;
 };

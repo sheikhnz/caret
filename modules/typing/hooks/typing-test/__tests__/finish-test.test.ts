@@ -10,8 +10,22 @@ import { useTestStore } from "@/modules/typing/stores/test-store";
 
 import { runFailTest, runFinishTest } from "../finish-test";
 
-vi.mock("@/modules/typing/engine/runtime/test-timer", () => ({
-  clearTimer: vi.fn(),
+vi.mock(
+  "@/modules/typing/engine/runtime/test-timer",
+  async (importOriginal) => {
+    const actual =
+      await importOriginal<
+        typeof import("@/modules/typing/engine/runtime/test-timer")
+      >();
+    return {
+      ...actual,
+      clearTimer: vi.fn(),
+    };
+  },
+);
+
+vi.mock("@/modules/typing/engine/runtime/auto-sleep", () => ({
+  resetAutoSleep: vi.fn(),
 }));
 
 beforeEach(() => {

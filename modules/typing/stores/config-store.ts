@@ -8,6 +8,7 @@ import { create } from "zustand/react";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 import { DEFAULT_CONFIG } from "@/modules/typing/constants/config-defaults";
+import { normalizeAutoSleep } from "@/modules/typing/constants/auto-sleep-option-labels";
 import { VALID_TIME_WARNING_VALUES } from "@/modules/typing/constants/sound-option-labels";
 import type {
   TypingConfig,
@@ -59,6 +60,7 @@ const normalizeConfig = (config: TypingConfig): TypingConfig => {
     ...config,
     playTimeWarning: normalizePlayTimeWarning(config.playTimeWarning),
     showFingerMap: normalizeShowFingerMap(config.showFingerMap),
+    autoSleep: normalizeAutoSleep(config.autoSleep),
   };
 
   if (normalized.mode === "quote") {

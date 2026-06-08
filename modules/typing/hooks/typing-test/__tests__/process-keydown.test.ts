@@ -15,9 +15,19 @@ import { applyPlaygroundDrawerMap } from "@/modules/typing/utils/playground-draw
 
 import { processKeyDown, type ProcessKeyDownDeps } from "../process-keydown";
 
-vi.mock("@/modules/typing/engine/runtime/test-timer", () => ({
-  startTimer: vi.fn(),
-}));
+vi.mock(
+  "@/modules/typing/engine/runtime/test-timer",
+  async (importOriginal) => {
+    const actual =
+      await importOriginal<
+        typeof import("@/modules/typing/engine/runtime/test-timer")
+      >();
+    return {
+      ...actual,
+      startTimer: vi.fn(),
+    };
+  },
+);
 
 vi.mock("@/modules/typing/services/sound", () => ({
   playInputSound: vi.fn().mockResolvedValue(undefined),

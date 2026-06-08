@@ -31,6 +31,7 @@ import { runFailTest, runFinishTest } from "./typing-test/finish-test";
 import { runInitTest, runRestartTest } from "./typing-test/init-test";
 import { processKeyDown } from "./typing-test/process-keydown";
 import { handleTimerTick, type TimerTickRefs } from "./typing-test/timer-tick";
+import { useAutoSleep } from "./typing-test/use-auto-sleep";
 import type {
   UseTypingTestOptions,
   UseTypingTestReturn,
@@ -127,6 +128,17 @@ export const useTypingTest = (
     },
     [],
   );
+
+  useAutoSleep({
+    enabled: config.autoSleep.enabled,
+    idleSeconds: config.autoSleep.seconds,
+    timerTickRefs: {
+      configRef,
+      customTextRef,
+      wordsRef,
+      languageRef,
+    },
+  });
 
   const restart = useCallback(
     async (withSameWords = false) => {

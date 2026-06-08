@@ -16,6 +16,18 @@
   cursor: pointer;
 }
 
+.tp-typing-sleep-indicator {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  border-radius: var(--tp-radius-md);
+  background: color-mix(in srgb, var(--tp-color-bg-container) 82%, transparent);
+}
+
 /* Finger map / hands — guidance block below the words viewport (sibling of .tp-typing-test) */
 .tp-typing-test + .tp-typing-after-viewport {
   margin-top: 1.5rem;

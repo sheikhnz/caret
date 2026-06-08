@@ -159,6 +159,14 @@
   animation: tp-live-status-bar-pulse 1.2s ease-in-out infinite;
 }
 
+.tp-live-status-bar-live-panel--sleeping .tp-live-status-bar-live-dot {
+  background: var(--tp-text-muted);
+}
+
+.tp-live-status-bar-live-dot--sleeping {
+  animation: none;
+}
+
 @keyframes tp-live-status-bar-pulse {
   0%,
   100% {
