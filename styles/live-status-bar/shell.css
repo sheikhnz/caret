@@ -9,7 +9,8 @@
     max-width 0.3s ease;
 }
 
-.tp-page-shell-drawer-host.tp-page-shell--live-status-bar .tp-page-shell-primary {
+.tp-page-shell-drawer-host.tp-page-shell--live-status-bar
+  .tp-page-shell-primary {
   margin-inline-end: var(--tp-live-status-bar-width);
 }
 
