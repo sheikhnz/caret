@@ -85,12 +85,7 @@
 }
 
 .tp-live-status-bar__tile-sparkline path {
-  fill: color-mix(in srgb, var(--tp-text-primary) 11%, transparent);
   transition: d 0.2s ease;
-}
-
-.tp-live-status-bar__tile--errors .tp-live-status-bar__tile-sparkline path {
-  fill: color-mix(in srgb, var(--tp-color-error) 16%, transparent);
 }
 
 .tp-live-status-bar__tile-content {

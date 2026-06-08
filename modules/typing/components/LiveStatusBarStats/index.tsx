@@ -18,13 +18,10 @@ import {
   LIVE_STATUS_BAR_DETAIL_STATS,
   LIVE_STATUS_BAR_GRID_STATS,
 } from "@/modules/typing/analytics/live-status-display";
-import {
-  buildSparklineAreaPath,
-  SPARKLINE_VIEWBOX_HEIGHT,
-  SPARKLINE_VIEWBOX_WIDTH,
-  type LiveStatusSparklineStatId,
-} from "@/modules/typing/analytics/sparkline-area";
+import type { LiveStatusSparklineStatId } from "@/modules/typing/analytics/sparkline-area";
 import { useLiveStatusSparklines } from "@/modules/typing/hooks/use-live-status-sparklines";
+
+import { LiveStatusSparkline } from "./LiveStatusSparkline";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
 import { useCustomTextStore } from "@/modules/typing/stores";
 import { useTestStore } from "@/modules/typing/stores/test-store";
@@ -60,9 +57,6 @@ const LiveStatusStatTile = ({
   statId,
   sparklineSamples,
 }: LiveStatusStatTileProps) => {
-  const sparklinePath = buildSparklineAreaPath({ samples: sparklineSamples });
-  const showSparkline = sparklinePath.length > 0;
-
   return (
     <div
       className={joinClassNames(
@@ -70,16 +64,7 @@ const LiveStatusStatTile = ({
         `tp-live-status-bar__tile--${statId}`,
       )}
     >
-      {showSparkline ? (
-        <svg
-          aria-hidden
-          className="tp-live-status-bar__tile-sparkline"
-          preserveAspectRatio="none"
-          viewBox={`0 0 ${SPARKLINE_VIEWBOX_WIDTH} ${SPARKLINE_VIEWBOX_HEIGHT}`}
-        >
-          <path d={sparklinePath} />
-        </svg>
-      ) : null}
+      <LiveStatusSparkline samples={sparklineSamples} statId={statId} />
       <div className="tp-live-status-bar__tile-content">
         <Typography.Text className="tp-live-status-bar__tile-label" type="secondary">
           {label}
