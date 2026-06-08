@@ -1,9 +1,8 @@
 /**
- * Engine → Zustand live snapshot — stats + chart update on every keystroke and tick.
+ * Engine → Zustand live snapshot — stats update on every keystroke and tick.
  */
 
 import { calculateBurst } from "@/modules/typing/calculations/wpm";
-import { buildLiveChartData } from "@/modules/typing/analytics/live-chart-data";
 import * as TestInput from "@/modules/typing/engine/input/test-input";
 import * as TestState from "@/modules/typing/engine/runtime/test-state";
 import * as TestStats from "@/modules/typing/engine/runtime/test-stats";
@@ -46,7 +45,4 @@ export const syncLiveSnapshot = (
     errors: TestInput.accuracy.incorrect,
     row: wordIndex + 1,
   });
-  store.setLiveChartData(
-    buildLiveChartData({ wpm: liveWpm.wpm, raw: liveWpm.raw }),
-  );
 };

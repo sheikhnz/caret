@@ -154,19 +154,6 @@
   text-transform: uppercase;
 }
 
-.tp-live-status-bar-chart {
-  height: 168px;
-  width: 100%;
-}
-
-.tp-live-status-bar-chart-empty {
-  display: block;
-  min-height: 168px;
-  padding-top: 12px;
-  font-size: 0.8125rem;
-  line-height: 1.4;
-}
-
 @media (max-width: 768px) {
   .tp-page-shell--live-status-bar .tp-pg-layout-primary {
     margin-inline-end: 0;

@@ -6,8 +6,7 @@
 
 import { create } from "zustand/react";
 import type { TestPhase } from "@/modules/typing/types/engine";
-import { EMPTY_LIVE_CHART_DATA } from "@/modules/typing/analytics/live-chart-data";
-import type { ChartData, CompletedEvent } from "@/modules/typing/types/result";
+import type { CompletedEvent } from "@/modules/typing/types/result";
 import type { LanguageObject } from "@/modules/typing/types/language";
 
 export type LiveStats = {
@@ -28,7 +27,6 @@ type TestStore = {
   currentInput: string;
   inputHistory: string[];
   liveStats: LiveStats;
-  liveChartData: ChartData;
   result: CompletedEvent | null;
   language: LanguageObject | null;
   isLoadingWords: boolean;
@@ -47,7 +45,6 @@ type TestStore = {
     inputHistory: string[];
   }) => void;
   setLiveStats: (stats: Partial<LiveStats>) => void;
-  setLiveChartData: (data: ChartData) => void;
   setResult: (result: CompletedEvent) => void;
   setIsLoadingWords: (v: boolean) => void;
   incrementRestartCount: () => void;
@@ -73,7 +70,6 @@ export const useTestStore = create<TestStore>()((set) => ({
   currentInput: "",
   inputHistory: [],
   liveStats: INITIAL_LIVE_STATS,
-  liveChartData: EMPTY_LIVE_CHART_DATA,
   result: null,
   language: null,
   isLoadingWords: true,
@@ -90,7 +86,6 @@ export const useTestStore = create<TestStore>()((set) => ({
     set({ currentInput, wordIndex, inputHistory }),
   setLiveStats: (stats) =>
     set((state) => ({ liveStats: { ...state.liveStats, ...stats } })),
-  setLiveChartData: (liveChartData) => set({ liveChartData }),
   setResult: (result) => set({ result }),
   setIsLoadingWords: (isLoadingWords) => set({ isLoadingWords }),
   incrementRestartCount: () =>
@@ -107,7 +102,6 @@ export const useTestStore = create<TestStore>()((set) => ({
       currentInput: "",
       inputHistory: [],
       liveStats: INITIAL_LIVE_STATS,
-      liveChartData: EMPTY_LIVE_CHART_DATA,
       result: null,
     }),
 }));
