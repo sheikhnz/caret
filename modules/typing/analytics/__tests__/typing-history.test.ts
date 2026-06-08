@@ -7,6 +7,7 @@ import * as TestStats from "@/modules/typing/engine/runtime/test-stats";
 import {
   appendCappedSeries,
   appendTypingHistorySample,
+  backfillTypingHistoryFromEngine,
   buildTypingHistoryFromEngine,
   EMPTY_TYPING_HISTORY,
   tailHistorySamples,
@@ -73,6 +74,26 @@ describe("appendTypingHistorySample", () => {
     );
 
     expect(capped.wpm).toEqual([2, 3]);
+  });
+});
+
+describe("backfillTypingHistoryFromEngine", () => {
+  it("caps a full engine snapshot for sparklines", () => {
+    for (let index = 1; index <= 5; index += 1) {
+      TestInput.pushToWpmHistory(index * 10);
+      TestInput.pushToRawHistory(index * 11);
+      TestInput.pushAccToHistory(90 + index);
+      TestInput.pushBurstSecondToHistory(index);
+      TestInput.errorHistory.push({ count: index, words: [] });
+    }
+
+    expect(backfillTypingHistoryFromEngine()).toEqual({
+      wpm: [10, 20, 30, 40, 50],
+      raw: [11, 22, 33, 44, 55],
+      acc: [91, 92, 93, 94, 95],
+      burst: [1, 2, 3, 4, 5],
+      err: [1, 2, 3, 4, 5],
+    });
   });
 });
 

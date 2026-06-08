@@ -6,6 +6,7 @@ import { getNextWord } from "@/modules/typing/engine/generation/word-generator";
 import * as TestInput from "@/modules/typing/engine/input/test-input";
 import * as TestStats from "@/modules/typing/engine/runtime/test-stats";
 import { playTimeWarning } from "@/modules/typing/services/sound";
+import { useConfigStore } from "@/modules/typing/stores/config-store";
 import { useTestStore } from "@/modules/typing/stores/test-store";
 import type { LanguageObject } from "@/modules/typing/types/language";
 
@@ -47,7 +48,7 @@ beforeEach(() => {
 });
 
 describe("handleTimerTick", () => {
-  it("updates live stats and per-second histories", () => {
+  it("updates live stats and engine per-second histories", () => {
     TestInput.setCurrentInput("alp");
     TestInput.setBurstStart(0);
 
@@ -62,9 +63,24 @@ describe("handleTimerTick", () => {
     expect(TestInput.accHistory).toHaveLength(1);
     expect(TestInput.burstSecondHistory).toHaveLength(1);
     expect(TestInput.keypressCountHistory).toHaveLength(1);
-    expect(useTestStore.getState().typingHistory.wpm).toHaveLength(1);
     expect(useTestStore.getState().liveStats.errors).toBe(0);
     expect(wordIndex).toBe(0);
+  });
+
+  it("skips store typing history when live status bar is disabled", () => {
+    useConfigStore.getState().setConfig("showLiveStatus", false);
+
+    handleTimerTick(1, 29, createRefs());
+
+    expect(useTestStore.getState().typingHistory.wpm).toHaveLength(0);
+  });
+
+  it("appends store typing history when live status bar is enabled", () => {
+    useConfigStore.getState().setConfig("showLiveStatus", true);
+
+    handleTimerTick(1, 29, createRefs());
+
+    expect(useTestStore.getState().typingHistory.wpm).toHaveLength(1);
   });
 
   it("plays the configured time warning", () => {

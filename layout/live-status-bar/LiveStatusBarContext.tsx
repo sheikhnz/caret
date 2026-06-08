@@ -12,6 +12,7 @@ import {
   type ReactNode,
 } from "react";
 
+import { setShowLiveStatus } from "@/modules/typing/config/live-status";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
 import { useTestStore } from "@/modules/typing/stores/test-store";
 
@@ -33,20 +34,14 @@ type LiveStatusBarProviderProps = {
 
 export const LiveStatusBarProvider = ({ children }: LiveStatusBarProviderProps) => {
   const hasHydrated = useConfigStore((state) => state.hasHydrated);
-  const showLiveStatusBar = useConfigStore(
-    (state) => state.config.showLiveStatusBar,
-  );
-  const setConfig = useConfigStore((state) => state.setConfig);
+  const showLiveStatus = useConfigStore((state) => state.config.showLiveStatus);
   const phase = useTestStore((state) => state.phase);
 
-  const setEnabled = useCallback(
-    (next: boolean) => {
-      setConfig("showLiveStatusBar", next);
-    },
-    [setConfig],
-  );
+  const setEnabled = useCallback((next: boolean) => {
+    setShowLiveStatus(next);
+  }, []);
 
-  const enabled = hasHydrated && showLiveStatusBar;
+  const enabled = hasHydrated && showLiveStatus;
   const visible = enabled && phase !== "finished";
 
   const value = useMemo(

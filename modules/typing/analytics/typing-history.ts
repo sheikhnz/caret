@@ -83,3 +83,19 @@ export const tailHistorySamples = (
 
   return samples.slice(-maxLength);
 };
+
+/** Trims each series to the sparkline window. */
+export const capTypingHistory = (
+  history: TypingHistory,
+  maxLength = LIVE_STATUS_SPARKLINE_MAX_SAMPLES,
+): TypingHistory => ({
+  wpm: tailHistorySamples(history.wpm, maxLength),
+  raw: tailHistorySamples(history.raw, maxLength),
+  acc: tailHistorySamples(history.acc, maxLength),
+  burst: tailHistorySamples(history.burst, maxLength),
+  err: tailHistorySamples(history.err, maxLength),
+});
+
+/** One-shot engine snapshot capped for live status sparklines. */
+export const backfillTypingHistoryFromEngine = (): TypingHistory =>
+  capTypingHistory(buildTypingHistoryFromEngine());

@@ -54,6 +54,7 @@ type TestStore = {
   }) => void;
   setLiveStats: (stats: Partial<LiveStats>) => void;
   appendTypingHistorySample: (sample: TypingHistorySample) => void;
+  setTypingHistory: (history: TypingHistory) => void;
   setResult: (result: CompletedEvent) => void;
   setIsLoadingWords: (v: boolean) => void;
   incrementRestartCount: () => void;
@@ -100,6 +101,7 @@ export const useTestStore = create<TestStore>()((set) => ({
     set((state) => ({
       typingHistory: appendTypingHistorySample(state.typingHistory, sample),
     })),
+  setTypingHistory: (typingHistory) => set({ typingHistory }),
   setResult: (result) => set({ result }),
   setIsLoadingWords: (isLoadingWords) => set({ isLoadingWords }),
   incrementRestartCount: () =>
