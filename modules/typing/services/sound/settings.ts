@@ -21,9 +21,14 @@ let settings: SoundSettings = {
 export const getSoundSettings = (): SoundSettings => settings;
 
 export const setSoundSettings = (next: Partial<SoundSettings>): void => {
+  const prevVolume = settings.soundVolume;
   settings = { ...settings, ...next };
 
-  if (next.soundVolume !== undefined) {
+  // Compare against the previous volume before calling the side effect to avoid unnecessary re-renders.
+  if (
+    next.soundVolume !== undefined &&
+    next.soundVolume !== prevVolume
+  ) {
     void setHowlerVolume(next.soundVolume);
   }
 };
