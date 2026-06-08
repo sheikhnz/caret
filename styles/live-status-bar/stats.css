@@ -37,30 +37,12 @@
   text-transform: uppercase;
 }
 
-.tp-live-status-bar__progress-header {
-  margin-bottom: 6px;
-}
-
-.tp-live-status-bar__progress-label,
-.tp-live-status-bar__progress-value {
+.tp-live-status-bar__progress .tp-progress__title,
+.tp-live-status-bar__progress .tp-progress__label {
   font-family: var(--tp-font-mono);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-}
-
-.tp-live-status-bar__progress-track {
-  height: 4px;
-  border-radius: 999px;
-  background: var(--tp-color-fill-secondary);
-  overflow: hidden;
-}
-
-.tp-live-status-bar__progress-fill {
-  height: 100%;
-  border-radius: inherit;
-  background: var(--tp-text-primary);
-  transition: width 0.2s ease;
 }
 
 .tp-live-status-bar__grid {

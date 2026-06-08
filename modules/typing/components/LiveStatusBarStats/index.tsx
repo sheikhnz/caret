@@ -23,6 +23,7 @@ import type { LiveStatusSparklineStatId } from "@/modules/typing/analytics/spark
 import { useLiveStatusSparklines } from "@/modules/typing/hooks/use-live-status-sparklines";
 
 import { LiveStatusSparkline } from "./LiveStatusSparkline";
+import { Progress } from "@/ui";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
 import { useCustomTextStore } from "@/modules/typing/stores";
 import { useTestStore } from "@/modules/typing/stores/test-store";
@@ -99,47 +100,6 @@ const LiveStatusStatTile = ({
     </div>
   );
 };
-
-type LiveStatusProgressBarProps = {
-  label: string;
-  percent: number;
-};
-
-const LiveStatusProgressBar = ({
-  label,
-  percent,
-}: LiveStatusProgressBarProps) => (
-  <div className="tp-live-status-bar__progress">
-    <Flex
-      align="center"
-      className="tp-live-status-bar__progress-header"
-      justify="space-between"
-    >
-      <Typography.Text
-        className="tp-live-status-bar__progress-label"
-        type="secondary"
-      >
-        Progress
-      </Typography.Text>
-      <Typography.Text
-        className="tp-live-status-bar__progress-value"
-        type="secondary"
-      >
-        {label}
-      </Typography.Text>
-    </Flex>
-    <div
-      aria-hidden
-      className="tp-live-status-bar__progress-track"
-      role="presentation"
-    >
-      <div
-        className="tp-live-status-bar__progress-fill"
-        style={{ width: `${percent}%` }}
-      />
-    </div>
-  </div>
-);
 
 export const LiveStatusBarStats = () => {
   const {
@@ -288,9 +248,12 @@ export const LiveStatusBarStats = () => {
       </Flex>
 
       {progress !== null ? (
-        <LiveStatusProgressBar
+        <Progress
+          className="tp-live-status-bar__progress"
+          decorative
           label={progress.label}
           percent={progress.percent}
+          title="Progress"
         />
       ) : null}
 

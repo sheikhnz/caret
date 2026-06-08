@@ -1,0 +1,26 @@
+/* Shared progress bar — monochrome track/fill via palette tokens */
+
+.tp-progress__header {
+  margin-bottom: 6px;
+}
+
+.tp-progress__title,
+.tp-progress__label {
+  font-size: 0.8125rem;
+  line-height: 1.2;
+  color: var(--tp-text-muted);
+}
+
+.tp-progress__track {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--tp-color-fill-secondary);
+  overflow: hidden;
+}
+
+.tp-progress__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--tp-text-primary);
+  transition: width 0.2s ease;
+}
