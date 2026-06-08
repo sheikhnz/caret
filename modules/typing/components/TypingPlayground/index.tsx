@@ -17,6 +17,7 @@ import { Results } from "@/modules/typing/components/Results";
 import { TestConfig } from "@/modules/typing/components/TestConfig";
 import { TypingTest } from "@/modules/typing/components/TypingTest";
 import { TypingTestShortcuts } from "@/modules/typing/components/TypingTest/TypingTestShortcuts";
+import { useRegisterPlaygroundPresence } from "@/modules/typing/hooks/use-register-playground-presence";
 import { useTypingTestDisplayConfig } from "@/modules/typing/hooks/use-typing-test-display-config";
 import { PLAYGROUND_DIALOGS } from "@/modules/typing/constants/playground-dialogs";
 import type { TypingPlaygroundState } from "@/modules/typing/hooks/use-typing-playground";
@@ -35,6 +36,8 @@ export const TypingPlayground = ({
   playground,
   isolateOnFocus = false,
 }: TypingPlaygroundProps) => {
+  useRegisterPlaygroundPresence();
+
   const { phase, isTestFocused, typing, dialogs } = playground;
   const { restart, bailOut, focusInput } = typing;
   const { mode } = useTypingTestDisplayConfig();

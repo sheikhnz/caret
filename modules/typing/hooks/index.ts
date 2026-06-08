@@ -3,6 +3,7 @@ export * from "./use-caret-position";
 export * from "./use-chart-theme";
 export * from "./use-persisted-stores-hydrated";
 export * from "./use-playground-dialogs";
+export * from "./use-register-playground-presence";
 export * from "./use-playground-drawer-focus-restore";
 export * from "./use-playground-finger-map";
 export * from "./use-test-focus";

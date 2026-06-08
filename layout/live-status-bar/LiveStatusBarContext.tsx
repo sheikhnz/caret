@@ -14,6 +14,7 @@ import {
 
 import { setShowLiveStatus } from "@/modules/typing/config/live-status";
 import { useConfigStore } from "@/modules/typing/stores/config-store";
+import { usePlaygroundPresenceStore } from "@/modules/typing/stores/playground-presence-store";
 import { useTestStore } from "@/modules/typing/stores/test-store";
 
 type LiveStatusBarContextValue = {
@@ -35,6 +36,9 @@ type LiveStatusBarProviderProps = {
 export const LiveStatusBarProvider = ({ children }: LiveStatusBarProviderProps) => {
   const hasHydrated = useConfigStore((state) => state.hasHydrated);
   const showLiveStatus = useConfigStore((state) => state.config.showLiveStatus);
+  const isPlaygroundPresent = usePlaygroundPresenceStore(
+    (state) => state.isPresent,
+  );
   const phase = useTestStore((state) => state.phase);
 
   const setEnabled = useCallback((next: boolean) => {
@@ -42,7 +46,8 @@ export const LiveStatusBarProvider = ({ children }: LiveStatusBarProviderProps) 
   }, []);
 
   const enabled = hasHydrated && showLiveStatus;
-  const visible = enabled && phase !== "finished";
+  const visible =
+    enabled && isPlaygroundPresent && phase !== "finished";
 
   const value = useMemo(
     () => ({

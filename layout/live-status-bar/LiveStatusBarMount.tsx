@@ -36,6 +36,10 @@ const LiveStatusBarHostSync = () => {
     host.removeAttribute(TP_LIVE_STATUS_BAR_ATTR);
   }, [visible]);
 
+  if (!visible) {
+    return null;
+  }
+
   return <LiveStatusBarDrawer />;
 };
 

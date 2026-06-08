@@ -17,12 +17,12 @@ const LIVE_STATUS_BAR_DRAWER_LABEL = "Status panel";
 const LIVE_STATUS_BAR_DRAWER_CLASS = "tp-live-status-bar-drawer";
 
 export const LiveStatusBarDrawer = () => {
-  const { visible, setEnabled } = useLiveStatusBar();
+  const { setEnabled } = useLiveStatusBar();
 
   return (
     <Drawer
       id={LIVE_STATUS_BAR_PANEL_ID}
-      open={visible}
+      open
       onClose={() => setEnabled(false)}
       placement="right"
       getContainer={false}
@@ -31,7 +31,7 @@ export const LiveStatusBarDrawer = () => {
       keyboard={false}
       closable={false}
       size={LIVE_STATUS_BAR_WIDTH_PX}
-      destroyOnHidden={false}
+      destroyOnHidden
       focusable={{ trap: false }}
       rootClassName={LIVE_STATUS_BAR_DRAWER_CLASS}
       classNames={{ body: "tp-live-status-bar-drawer__body" }}
