@@ -17,6 +17,7 @@ export const useLiveStatusSparklines = (): Record<
 
   return useMemo(
     () => ({
+      wpm: typingHistory.wpm,
       raw: typingHistory.raw,
       accuracy: typingHistory.acc,
       burst: typingHistory.burst,

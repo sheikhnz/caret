@@ -98,6 +98,37 @@
   gap: 4px;
 }
 
+.tp-live-status-bar__tile--featured {
+  grid-column: 1 / -1;
+}
+
+.tp-live-status-bar__tile-content--featured {
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tp-live-status-bar__tile-value--featured {
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.tp-live-status-bar-live-panel--active .tp-live-status-bar__tile-value--featured {
+  animation: tp-live-status-bar-wpm-tick 0.16s ease;
+}
+
+@keyframes tp-live-status-bar-wpm-tick {
+  0% {
+    opacity: 0.72;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
 .tp-live-status-bar__tile-label {
   font-size: 0.6875rem;
   letter-spacing: 0.06em;
@@ -166,52 +197,13 @@
   text-transform: uppercase;
 }
 
-.tp-live-status-bar-live-hero {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  padding: 8px 0 4px;
-}
-
-.tp-live-status-bar-live-wpm {
-  display: block;
-  font-family: var(--tp-font-mono);
-  font-size: 2.5rem;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  line-height: 0.95;
-  color: var(--tp-text-primary);
-  transition: color 0.12s ease;
-}
-
-.tp-live-status-bar-live-panel--active .tp-live-status-bar-live-wpm {
-  animation: tp-live-status-bar-wpm-tick 0.16s ease;
-}
-
-@keyframes tp-live-status-bar-wpm-tick {
-  0% {
-    opacity: 0.72;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
-.tp-live-status-bar-live-wpm-label {
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
 @media (max-width: 1728px) {
   .tp-live-status-bar-live-panel {
     gap: 12px;
   }
 
-  .tp-live-status-bar-live-wpm {
-    font-size: 2rem;
+  .tp-live-status-bar__tile-value--featured {
+    font-size: 1.625rem;
   }
 
   .tp-live-status-bar__tile {

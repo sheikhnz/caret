@@ -27,7 +27,6 @@ export const LiveStatusBarDrawer = () => {
       push={false}
       keyboard={false}
       closable={false}
-      destroyOnHidden
       focusable={{ trap: false }}
       rootClassName={LIVE_STATUS_BAR_DRAWER_CLASS}
       classNames={{ body: "tp-live-status-bar-drawer__body" }}

@@ -55,6 +55,7 @@ type LiveStatusStatTileProps = {
   value: string;
   statId: LiveStatusSparklineStatId;
   sparklineSamples: number[];
+  featured?: boolean;
 };
 
 const LiveStatusStatTile = ({
@@ -62,23 +63,38 @@ const LiveStatusStatTile = ({
   value,
   statId,
   sparklineSamples,
+  featured = false,
 }: LiveStatusStatTileProps) => {
   return (
     <div
       className={joinClassNames(
         "tp-live-status-bar__tile",
         `tp-live-status-bar__tile--${statId}`,
+        featured && "tp-live-status-bar__tile--featured",
       )}
     >
       <LiveStatusSparkline samples={sparklineSamples} statId={statId} />
-      <div className="tp-live-status-bar__tile-content">
+      <div
+        className={joinClassNames(
+          "tp-live-status-bar__tile-content",
+          featured && "tp-live-status-bar__tile-content--featured",
+        )}
+      >
         <Typography.Text
           className="tp-live-status-bar__tile-label"
           type="secondary"
         >
           {label}
         </Typography.Text>
-        <span className="tp-live-status-bar__tile-value">{value}</span>
+        <span
+          className={joinClassNames(
+            "tp-live-status-bar__tile-value",
+            featured && "tp-live-status-bar__tile-value--featured",
+          )}
+          key={featured ? value : undefined}
+        >
+          {value}
+        </span>
       </div>
     </div>
   );
@@ -278,19 +294,14 @@ export const LiveStatusBarStats = () => {
         />
       ) : null}
 
-      <div className="tp-live-status-bar-live-hero">
-        <span className="tp-live-status-bar-live-wpm" key={wpmValue}>
-          {wpmValue}
-        </span>
-        <Typography.Text
-          className="tp-live-status-bar-live-wpm-label"
-          type="secondary"
-        >
-          WPM
-        </Typography.Text>
-      </div>
-
       <div className="tp-live-status-bar__grid">
+        <LiveStatusStatTile
+          featured
+          label="WPM"
+          sparklineSamples={sparklineHistory.wpm}
+          statId="wpm"
+          value={wpmValue}
+        />
         {LIVE_STATUS_BAR_GRID_STATS.map((stat) => (
           <LiveStatusStatTile
             key={stat.id}

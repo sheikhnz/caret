@@ -7,6 +7,7 @@ import type { LiveStats } from "@/modules/typing/stores/test-store";
 import type { LiveStatusBarStatId } from "./live-status-display";
 
 export const LIVE_STATUS_SPARKLINE_STAT_IDS = [
+  "wpm",
   "raw",
   "accuracy",
   "burst",
@@ -29,6 +30,8 @@ export const getLiveStatSparklineValue = ({
   stats: LiveStats;
 }): number => {
   switch (id) {
+    case "wpm":
+      return stats.wpm;
     case "raw":
       return stats.raw;
     case "accuracy":
@@ -120,6 +123,7 @@ export const createEmptySparklineHistory = (): Record<
   LiveStatusSparklineStatId,
   number[]
 > => ({
+  wpm: [],
   raw: [],
   accuracy: [],
   burst: [],
