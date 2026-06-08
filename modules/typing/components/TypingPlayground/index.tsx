@@ -7,7 +7,7 @@
 
 import { useCallback } from "react";
 
-import { TP_PG_FOCUS_ATTR } from "@/layout";
+import { TP_PG_FOCUS_ATTR, TP_TEST_FOCUS_ATTR } from "@/layout";
 import { joinClassNames } from "@/utils";
 import { useIsMobileDevice } from "@/hooks";
 import { FingerMapGuidance } from "@/modules/typing/components/FingerMap";
@@ -71,6 +71,7 @@ export const TypingPlayground = ({
 
   const isFocusIsolateActive =
     isolateOnFocus && isTestFocused && phase !== "finished";
+  const isTypingFocusActive = isTestFocused && phase !== "finished";
 
   if (isMobileDevice) return <MobileUnsupportedNotice />;
 
@@ -79,6 +80,7 @@ export const TypingPlayground = ({
       className="tp-playground-root"
       {...{
         [TP_PG_FOCUS_ATTR]: isFocusIsolateActive ? true : undefined,
+        [TP_TEST_FOCUS_ATTR]: isTypingFocusActive ? true : undefined,
       }}
     >
       <PlaygroundDrawers

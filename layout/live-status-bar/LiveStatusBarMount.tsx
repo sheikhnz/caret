@@ -18,7 +18,7 @@ import { useLiveStatusBar } from "./use-live-status-bar";
 const LIVE_STATUS_BAR_ENABLED_CLASS = "tp-page-shell--live-status-bar";
 
 const LiveStatusBarHostSync = () => {
-  const { enabled } = useLiveStatusBar();
+  const { visible } = useLiveStatusBar();
 
   useLayoutEffect(() => {
     const host = document.getElementById(LIVE_STATUS_BAR_HOST_ID);
@@ -26,15 +26,15 @@ const LiveStatusBarHostSync = () => {
       return;
     }
 
-    host.classList.toggle(LIVE_STATUS_BAR_ENABLED_CLASS, enabled);
+    host.classList.toggle(LIVE_STATUS_BAR_ENABLED_CLASS, visible);
 
-    if (enabled) {
+    if (visible) {
       host.setAttribute(TP_LIVE_STATUS_BAR_ATTR, "");
       return;
     }
 
     host.removeAttribute(TP_LIVE_STATUS_BAR_ATTR);
-  }, [enabled]);
+  }, [visible]);
 
   return <LiveStatusBarDrawer />;
 };

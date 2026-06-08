@@ -13,9 +13,13 @@ import {
 } from "react";
 
 import { useConfigStore } from "@/modules/typing/stores/config-store";
+import { useTestStore } from "@/modules/typing/stores/test-store";
 
 type LiveStatusBarContextValue = {
+  /** User preference from settings (persisted). */
   enabled: boolean;
+  /** Drawer open state — false while results are showing after a test. */
+  visible: boolean;
   setEnabled: (enabled: boolean) => void;
 };
 
@@ -33,6 +37,7 @@ export const LiveStatusBarProvider = ({ children }: LiveStatusBarProviderProps) 
     (state) => state.config.showLiveStatusBar,
   );
   const setConfig = useConfigStore((state) => state.setConfig);
+  const phase = useTestStore((state) => state.phase);
 
   const setEnabled = useCallback(
     (next: boolean) => {
@@ -42,13 +47,15 @@ export const LiveStatusBarProvider = ({ children }: LiveStatusBarProviderProps) 
   );
 
   const enabled = hasHydrated && showLiveStatusBar;
+  const visible = enabled && phase !== "finished";
 
   const value = useMemo(
     () => ({
       enabled,
+      visible,
       setEnabled,
     }),
-    [enabled, setEnabled],
+    [enabled, visible, setEnabled],
   );
 
   return (
