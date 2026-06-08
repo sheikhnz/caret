@@ -6,10 +6,7 @@
 
 import { Drawer } from "antd";
 
-import {
-  LIVE_STATUS_BAR_PANEL_ID,
-  LIVE_STATUS_BAR_WIDTH_PX,
-} from "./constants";
+import { LIVE_STATUS_BAR_PANEL_ID } from "./constants";
 import { LiveStatusBarSlotList } from "./slots/LiveStatusBarSlotList";
 import { useLiveStatusBar } from "./use-live-status-bar";
 
@@ -30,7 +27,6 @@ export const LiveStatusBarDrawer = () => {
       push={false}
       keyboard={false}
       closable={false}
-      size={LIVE_STATUS_BAR_WIDTH_PX}
       destroyOnHidden
       focusable={{ trap: false }}
       rootClassName={LIVE_STATUS_BAR_DRAWER_CLASS}

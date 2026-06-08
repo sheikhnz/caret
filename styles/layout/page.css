@@ -55,7 +55,6 @@
   flex-direction: column;
   min-height: 0;
   min-width: 0;
-  transition: margin-inline-end 0.3s ease;
 }
 
 /* Drawer host modifier — live status bar overlays without wrapping page content */
