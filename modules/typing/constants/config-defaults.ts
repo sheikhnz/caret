@@ -36,6 +36,10 @@ export const DEFAULT_CONFIG: TypingConfig = {
   playSoundOnClick: "1",
   playSoundOnError: "1",
   playTimeWarning: "off",
+  autoSleep: {
+    enabled: false,
+    seconds: 30,
+  },
 };
 
 export const WORD_COUNT_PRESETS = [10, 25, 50, 100, 200] as const;

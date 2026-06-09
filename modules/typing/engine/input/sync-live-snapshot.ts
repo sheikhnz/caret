@@ -6,6 +6,7 @@ import { calculateBurst } from "@/modules/typing/calculations/wpm";
 import * as TestInput from "@/modules/typing/engine/input/test-input";
 import * as TestState from "@/modules/typing/engine/runtime/test-state";
 import * as TestStats from "@/modules/typing/engine/runtime/test-stats";
+import { getTimerNow } from "@/modules/typing/engine/runtime/test-timer";
 import type { TestStoreSnapshot } from "@/modules/typing/engine/input/sync-store";
 import type { TestMode } from "@/modules/typing/types/config";
 
@@ -25,7 +26,7 @@ export const syncLiveSnapshot = (
   const acc = TestStats.getLiveAccuracy();
   const burst = calculateBurst(
     TestInput.currentInput.length,
-    (performance.now() - TestInput.currentBurstStart) / 1000,
+    (getTimerNow() - TestInput.currentBurstStart) / 1000,
   );
   const elapsed = input.elapsed ?? Math.floor(TestStats.calculateTestSeconds());
   const remaining =

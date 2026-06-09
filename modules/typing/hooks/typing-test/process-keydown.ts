@@ -21,6 +21,7 @@ import {
 } from "@/modules/typing/engine/input/sync-store";
 import { getTimedDurationSeconds } from "@/modules/typing/engine/generation/mode-helpers";
 import { shouldAppendWordsDuringTest } from "@/modules/typing/engine/generation/word-generator";
+import { recordAutoSleepActivity } from "@/modules/typing/engine/runtime/auto-sleep";
 import * as TestInput from "@/modules/typing/engine/input/test-input";
 import * as TestState from "@/modules/typing/engine/runtime/test-state";
 import * as TestStats from "@/modules/typing/engine/runtime/test-stats";
@@ -91,6 +92,9 @@ export const processKeyDown = (
 
   if (isBackspaceShortcut(keyboardEvent)) {
     if (store.phase === "finished") return;
+    if (config.autoSleep.enabled && store.phase === "active") {
+      recordAutoSleepActivity(now);
+    }
     onTypingKeyRef.current?.();
     const result = processBackspace(config, store.wordIndex);
     if (result === "blocked") return;
@@ -116,6 +120,10 @@ export const processKeyDown = (
 
   if (key === "Backspace" || key.length > 1) return;
   if (store.phase === "finished") return;
+
+  if (config.autoSleep.enabled && store.phase === "active") {
+    recordAutoSleepActivity(now);
+  }
 
   onTypingKeyRef.current?.();
 
@@ -149,6 +157,9 @@ export const processKeyDown = (
       onTick: onTimerTick,
       onFinish: () => finishTest(),
     });
+    if (config.autoSleep.enabled) {
+      recordAutoSleepActivity(now);
+    }
     inputEvent = processChar(key, {
       targetWords: wordsRef.current,
       config,

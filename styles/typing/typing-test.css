@@ -16,6 +16,10 @@
   cursor: pointer;
 }
 
+.tp-caret-tooltip-anchor {
+  opacity: 0;
+}
+
 /* Finger map / hands — guidance block below the words viewport (sibling of .tp-typing-test) */
 .tp-typing-test + .tp-typing-after-viewport {
   margin-top: 1.5rem;

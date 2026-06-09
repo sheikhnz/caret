@@ -41,6 +41,7 @@ type TestStore = {
   restartCount: number;
   incompleteTests: Array<{ acc: number; seconds: number }>;
   incompleteTestSeconds: number;
+  isSleeping: boolean;
 
   setPhase: (phase: TestPhase) => void;
   setWords: (words: string[], language: LanguageObject) => void;
@@ -57,6 +58,7 @@ type TestStore = {
   setTypingHistory: (history: TypingHistory) => void;
   setResult: (result: CompletedEvent) => void;
   setIsLoadingWords: (v: boolean) => void;
+  setIsSleeping: (isSleeping: boolean) => void;
   incrementRestartCount: () => void;
   pushIncompleteTest: (t: { acc: number; seconds: number }) => void;
   reset: () => void;
@@ -87,6 +89,7 @@ export const useTestStore = create<TestStore>()((set) => ({
   restartCount: 0,
   incompleteTests: [],
   incompleteTestSeconds: 0,
+  isSleeping: false,
 
   setPhase: (phase) => set({ phase }),
   setWords: (words, language) => set({ words, language }),
@@ -104,6 +107,7 @@ export const useTestStore = create<TestStore>()((set) => ({
   setTypingHistory: (typingHistory) => set({ typingHistory }),
   setResult: (result) => set({ result }),
   setIsLoadingWords: (isLoadingWords) => set({ isLoadingWords }),
+  setIsSleeping: (isSleeping) => set({ isSleeping }),
   incrementRestartCount: () =>
     set((state) => ({ restartCount: state.restartCount + 1 })),
   pushIncompleteTest: (t) =>
@@ -120,5 +124,6 @@ export const useTestStore = create<TestStore>()((set) => ({
       liveStats: INITIAL_LIVE_STATS,
       typingHistory: EMPTY_TYPING_HISTORY,
       result: null,
+      isSleeping: false,
     }),
 }));

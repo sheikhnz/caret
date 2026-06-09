@@ -19,6 +19,7 @@ export type PlaygroundFingerMapKeyboardState = {
   targetKey: string | null;
   activeFinger: FingerId | null;
   phase: TestPhase;
+  isSleeping: boolean;
 };
 
 /** @deprecated Use PlaygroundFingerMapKeyboardState */
@@ -29,6 +30,7 @@ export type PlaygroundFingerMapHandsState = {
   targetKey: string | null;
   highlight: HandHighlightState;
   phase: TestPhase;
+  isSleeping: boolean;
 };
 
 export type PlaygroundFingerMapGuidanceState = {
@@ -38,6 +40,7 @@ export type PlaygroundFingerMapGuidanceState = {
 
 type FingerMapStoreSlice = {
   phase: TestPhase;
+  isSleeping: boolean;
   words: string[];
   wordIndex: number;
   currentInput: string;
@@ -48,6 +51,7 @@ const DISABLED_KEYBOARD: PlaygroundFingerMapKeyboardState = {
   targetKey: null,
   activeFinger: null,
   phase: "idle",
+  isSleeping: false,
 };
 
 const DISABLED_HANDS: PlaygroundFingerMapHandsState = {
@@ -55,6 +59,7 @@ const DISABLED_HANDS: PlaygroundFingerMapHandsState = {
   targetKey: null,
   highlight: { leftFinger: null, rightFinger: null },
   phase: "idle",
+  isSleeping: false,
 };
 
 const DISABLED_GUIDANCE: PlaygroundFingerMapGuidanceState = {
@@ -66,6 +71,7 @@ const selectFingerMapSlice = (
   state: ReturnType<typeof useTestStore.getState>,
 ): FingerMapStoreSlice => ({
   phase: state.phase,
+  isSleeping: state.isSleeping,
   words: state.words,
   wordIndex: state.wordIndex,
   currentInput: state.currentInput,
@@ -79,6 +85,7 @@ const getFingerMapSlice = (): FingerMapStoreSlice => {
   if (
     cachedSlice &&
     cachedSlice.phase === next.phase &&
+    cachedSlice.isSleeping === next.isSleeping &&
     cachedSlice.words === next.words &&
     cachedSlice.wordIndex === next.wordIndex &&
     cachedSlice.currentInput === next.currentInput
@@ -108,6 +115,7 @@ const buildGuidanceState = (
           targetKey: derived.targetKey,
           activeFinger: derived.activeFinger,
           phase: derived.phase,
+          isSleeping: slice.isSleeping,
         }
       : DISABLED_KEYBOARD,
     hands: showHands
@@ -116,13 +124,14 @@ const buildGuidanceState = (
           targetKey: derived.targetKey,
           highlight: derived.highlight,
           phase: derived.phase,
+          isSleeping: slice.isSleeping,
         }
       : DISABLED_HANDS,
   };
 };
 
 /**
- * Subscribes once to `{ phase, words, wordIndex, currentInput }` when keyboard
+ * Subscribes once to `{ phase, isSleeping, words, wordIndex, currentInput }` when keyboard
  * and/or hands are enabled. Returns stable disabled stubs with no test-store
  * listeners when both are off.
  */

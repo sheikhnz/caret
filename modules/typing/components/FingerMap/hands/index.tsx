@@ -7,6 +7,7 @@ import { joinClassNames } from "@/utils";
 
 import type { PlaygroundFingerMapHandsState } from "@/modules/typing/hooks/use-playground-finger-map";
 
+import { isFingerMapDimmed } from "../is-finger-map-dimmed";
 import { DynamicHands } from "./DynamicHands";
 import { StaticHands } from "./StaticHands";
 
@@ -22,7 +23,11 @@ export const FingerMapHands = memo(
   ({ hands, isTestFocused }: FingerMapHandsProps) => {
     if (!hands.enabled) return null;
 
-    const dimmed = hands.phase === "finished" || !isTestFocused;
+    const dimmed = isFingerMapDimmed({
+      phase: hands.phase,
+      isSleeping: hands.isSleeping,
+      isTestFocused,
+    });
     const hasTarget = hands.targetKey !== null;
 
     return (

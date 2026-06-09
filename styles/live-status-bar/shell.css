@@ -32,15 +32,23 @@
 }
 
 /*
- * Match finger-map focus dim: bright while typing, faded when the test is not focused.
- * Only applies on pages that render the playground.
+ * One drawer dim — unfocused or auto-sleep (never stacked with panel opacity).
+ * Match finger-map focus dim on pages that render the playground.
  */
+.tp-page-shell[data-tp-live-status-bar]:has(.tp-playground-root):is(
+    :not(:has([data-tp-test-focused])),
+    :has([data-tp-test-sleeping])
+  )
+  .tp-live-status-bar-drawer.ant-drawer
+  .ant-drawer-content-wrapper {
+  opacity: 0.44;
+}
+
 .tp-page-shell[data-tp-live-status-bar]:has(.tp-playground-root):not(
     :has([data-tp-test-focused])
   )
   .tp-live-status-bar-drawer.ant-drawer
   .ant-drawer-content-wrapper {
-  opacity: 0.44;
   pointer-events: none;
 }
 

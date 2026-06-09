@@ -16,6 +16,7 @@ import { calculateWpmAndRaw } from "../../calculations/wpm";
 import * as TestInput from "../input/test-input";
 import type { FinalStats } from "../../types/result";
 import { isActive } from "./test-state";
+import { getTimerElapsed, hasTimerStarted } from "./test-timer";
 
 export let start = 0;
 export let end = 0;
@@ -34,8 +35,18 @@ export const setLastSecondNotRound = (): void => {
 };
 
 export const calculateTestSeconds = (now?: number): number => {
+  if (hasTimerStarted()) {
+    return getTimerElapsed();
+  }
+
   const endTime = now ?? (isActive() ? performance.now() : end);
   return (endTime - start) / 1000;
+};
+
+export const shiftStart = (deltaMs: number): void => {
+  if (start !== 0) {
+    start += deltaMs;
+  }
 };
 
 export const calculateFinalStats = (

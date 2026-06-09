@@ -11,6 +11,7 @@ import * as TestInput from "@/modules/typing/engine/input/test-input";
 import * as TestState from "@/modules/typing/engine/runtime/test-state";
 import * as TestStats from "@/modules/typing/engine/runtime/test-stats";
 import { clearTimer } from "@/modules/typing/engine/runtime/test-timer";
+import { resetAutoSleep } from "@/modules/typing/engine/runtime/auto-sleep";
 import { loadLanguage } from "@/modules/typing/services/language-loader";
 import { clearAllSounds } from "@/modules/typing/services/sound";
 import type { CustomTextSettings } from "@/modules/typing/types/custom-text";
@@ -75,6 +76,7 @@ export const runInitTest = async ({
     TestInput.resetInput();
     TestStats.resetStats();
     TestState.resetState();
+    resetAutoSleep();
 
     store.reset();
     store.setWords(words, language);
@@ -101,6 +103,7 @@ export const runRestartTest = async ({
   initTest: (withSameWords?: boolean) => Promise<void>;
 }): Promise<void> => {
   clearTimer(true);
+  resetAutoSleep();
   void clearAllSounds();
 
   // Time-mode restart mid-test: record partial attempt for the results screen.

@@ -30,6 +30,7 @@ import { useTestStore } from "@/modules/typing/stores/test-store";
 import { joinClassNames } from "@/utils";
 
 const LIVE_STATUS_LABEL = "Live";
+const LIVE_STATUS_PAUSED_LABEL = "Paused";
 const LIVE_STATUS_IDLE_HINT = "Start typing to see live stats";
 
 type LiveStatusStatRowProps = {
@@ -111,6 +112,7 @@ export const LiveStatusBarStats = () => {
     currentInput,
     language,
     isLoadingWords,
+    isSleeping,
   } = useTestStore(
     useShallow((state) => ({
       liveStats: state.liveStats,
@@ -121,6 +123,7 @@ export const LiveStatusBarStats = () => {
       currentInput: state.currentInput,
       language: state.language,
       isLoadingWords: state.isLoadingWords,
+      isSleeping: state.isSleeping,
     })),
   );
 
@@ -137,6 +140,8 @@ export const LiveStatusBarStats = () => {
   const sparklineHistory = useLiveStatusSparklines();
 
   const isActive = phase === "active";
+  const isLive = isActive && !isSleeping;
+  const statusLabel = isSleeping ? LIVE_STATUS_PAUSED_LABEL : LIVE_STATUS_LABEL;
   const charsTyped = useMemo(
     () => countLiveStatusCharsTyped({ inputHistory, currentInput }),
     [currentInput, inputHistory],
@@ -210,7 +215,11 @@ export const LiveStatusBarStats = () => {
 
   return (
     <div
-      className={`tp-live-status-bar-live-panel${isActive ? " tp-live-status-bar-live-panel--active" : ""}`}
+      className={joinClassNames(
+        "tp-live-status-bar-live-panel",
+        isLive && "tp-live-status-bar-live-panel--active",
+        isSleeping && "tp-live-status-bar-live-panel--sleeping",
+      )}
     >
       <Typography.Text
         className="tp-live-status-bar-live-context"
@@ -228,13 +237,17 @@ export const LiveStatusBarStats = () => {
         <Flex align="center" gap={8}>
           <span
             aria-hidden
-            className={`tp-live-status-bar-live-dot${isActive ? " tp-live-status-bar-live-dot--pulse" : ""}`}
+            className={joinClassNames(
+              "tp-live-status-bar-live-dot",
+              isLive && "tp-live-status-bar-live-dot--pulse",
+              isSleeping && "tp-live-status-bar-live-dot--sleeping",
+            )}
           />
           <Typography.Text
             className="tp-live-status-bar-live-label"
             type="secondary"
           >
-            {LIVE_STATUS_LABEL}
+            {statusLabel}
           </Typography.Text>
         </Flex>
         {showHeaderElapsed ? (

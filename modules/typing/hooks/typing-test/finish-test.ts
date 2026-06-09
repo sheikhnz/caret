@@ -14,6 +14,7 @@ import * as TestInput from "@/modules/typing/engine/input/test-input";
 import * as TestState from "@/modules/typing/engine/runtime/test-state";
 import * as TestStats from "@/modules/typing/engine/runtime/test-stats";
 import { clearTimer } from "@/modules/typing/engine/runtime/test-timer";
+import { resetAutoSleep } from "@/modules/typing/engine/runtime/auto-sleep";
 import type { CustomTextSettings } from "@/modules/typing/types/custom-text";
 
 import type { TestStoreState, TypingConfig } from "./types";
@@ -36,6 +37,8 @@ export const runFinishTest = ({
   if (!TestState.isActive()) return;
 
   clearTimer(true);
+  resetAutoSleep();
+  store.setIsSleeping(false);
   const now = performance.now();
   TestStats.setEnd(now);
   TestInput.forceKeyup(now);
