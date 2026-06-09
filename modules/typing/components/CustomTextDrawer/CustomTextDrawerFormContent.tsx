@@ -8,12 +8,13 @@ import { useCallback, useMemo, useState } from "react";
 
 import { Button, Flex, Space, Typography } from "antd";
 
-import { Button as UiButton, Drawer, Input, Textarea } from "@/ui";
+import { Button as UiButton, Drawer, Input, Label, Textarea } from "@/ui";
 
 import { getKeyboardShortcut } from "@/modules/typing/constants/keyboard-shortcuts";
 import type { CustomTextDrawerShortcutAction } from "@/modules/typing/constants/keyboard-shortcuts";
 import { ShortcutKeys } from "@/modules/typing/components/ShortcutKeys";
 import { useCustomTextDrawerShortcuts } from "@/modules/typing/hooks/keyboard-shortcuts";
+import { SettingsSection } from "@/modules/typing/components/SettingsDrawer/SettingsSection";
 
 import {
   buildSettingsFromForm,
@@ -25,9 +26,8 @@ import { useConfigStore } from "@/modules/typing/stores/config-store";
 import { useCustomTextStore } from "@/modules/typing/stores";
 import type { CustomTextSettings } from "@/modules/typing/types/custom-text";
 
-import { LimitFields } from "./LimitFields";
-import { ModeDelimiterFields } from "./ModeDelimiterFields";
-import { SavedTextsPanel } from "./SavedTextsPanel";
+import { CustomTextTestOptions } from "./CustomTextTestOptions";
+import { SavedLessonSelect } from "./SavedLessonSelect";
 
 type CustomTextDrawerFormContentProps = {
   open: boolean;
@@ -59,8 +59,8 @@ export const CustomTextDrawerFormContent = ({
     initialFormState.limitSection,
   );
   const [saveName, setSaveName] = useState("");
+  const [loadSelection, setLoadSelection] = useState<string | undefined>();
   const [error, setError] = useState<string | null>(null);
-  const [showSaved, setShowSaved] = useState(false);
 
   const savedNames = useMemo(
     () => Object.keys(savedTexts).sort(),
@@ -77,7 +77,6 @@ export const CustomTextDrawerFormContent = ({
       const saved = savedTexts[name];
       if (saved === undefined) return;
       setText(saved);
-      setShowSaved(false);
     },
     [savedTexts],
   );
@@ -130,29 +129,37 @@ export const CustomTextDrawerFormContent = ({
     text,
   ]);
 
-  const limitsDisabled = formMode === "simple";
+  const handlePipeDelimiterChange = useCallback((nextPipeDelimiter: boolean) => {
+    setPipeDelimiter(nextPipeDelimiter);
+    if (nextPipeDelimiter) {
+      setLimitWord("");
+    } else {
+      setLimitSection("");
+    }
+  }, []);
+
+  const handleLoadSavedSelect = useCallback(
+    (name: string) => {
+      setLoadSelection(undefined);
+      handleLoadSaved(name);
+    },
+    [handleLoadSaved],
+  );
+
+  const handleDeleteSaved = useCallback(
+    (name: string) => {
+      deleteText(name);
+      setLoadSelection(undefined);
+      setError(null);
+    },
+    [deleteText],
+  );
 
   const handleDrawerShortcut = useCallback(
     (action: CustomTextDrawerShortcutAction) => {
-      switch (action.type) {
-        case "start":
-          handleSubmit();
-          break;
-        case "save":
-          handleSave();
-          break;
-        case "toggleSavedPanel":
-          setShowSaved((prev) => !prev);
-          break;
-        case "setFormMode":
-          setFormMode(action.mode);
-          break;
-        case "setPipeDelimiter":
-          setPipeDelimiter(action.pipeDelimiter);
-          break;
-      }
+      if (action.type === "start") handleSubmit();
     },
-    [handleSave, handleSubmit],
+    [handleSubmit],
   );
 
   useCustomTextDrawerShortcuts({ open, onAction: handleDrawerShortcut });
@@ -163,7 +170,7 @@ export const CustomTextDrawerFormContent = ({
       onClose={onClose}
       title="Custom Text"
       titleId={CUSTOM_TEXT_DRAWER_TITLE_ID}
-      width={560}
+      width={448}
       footer={
         <UiButton variant="primary" size="md" block onClick={handleSubmit}>
           <Space size={8} align="center">
@@ -173,8 +180,10 @@ export const CustomTextDrawerFormContent = ({
         </UiButton>
       }
     >
-      <Flex vertical gap={16}>
-        <Flex vertical gap={8}>
+      <Flex vertical gap={24}>
+        <SettingsSection 
+        title="Text" 
+        >
           <Textarea
             id="custom-text"
             value={text}
@@ -182,31 +191,34 @@ export const CustomTextDrawerFormContent = ({
             placeholder="Paste or type custom text"
             rows={5}
           />
-          <Typography.Text type="secondary">
-            {parsedPreview.length} {pipeDelimiter ? "Sections" : "Words"}
+          <Typography.Text type="secondary" className="tp-section-note">
+            {parsedPreview.length} {pipeDelimiter ? "sections" : "words"} in
+            text
           </Typography.Text>
-        </Flex>
+        </SettingsSection>
 
-        <ModeDelimiterFields
+        <CustomTextTestOptions
           formMode={formMode}
           pipeDelimiter={pipeDelimiter}
-          onFormModeChange={setFormMode}
-          onPipeDelimiterChange={setPipeDelimiter}
-        />
-
-        <LimitFields
           limitWord={limitWord}
           limitTime={limitTime}
           limitSection={limitSection}
-          limitsDisabled={limitsDisabled}
-          pipeDelimiter={pipeDelimiter}
+          onFormModeChange={setFormMode}
+          onPipeDelimiterChange={handlePipeDelimiterChange}
           onLimitWordChange={setLimitWord}
           onLimitTimeChange={setLimitTime}
           onLimitSectionChange={setLimitSection}
         />
 
-        <Flex vertical gap={12}>
-          <Flex align="center" gap={12} wrap="wrap">
+        <SettingsSection
+          title="Saved lessons"
+          description="Store and reload custom text for later."
+        >
+          <Flex vertical gap={6}>
+            <Label htmlFor="save-name">Save as</Label>
+            <Typography.Text type="secondary">
+              Name the current text and save it to your library.
+            </Typography.Text>
             <Space.Compact block className="tp-save-compact">
               <Input
                 id="save-name"
@@ -215,32 +227,21 @@ export const CustomTextDrawerFormContent = ({
                 placeholder="Save as…"
                 aria-label="Save lesson as"
               />
-              <Button onClick={handleSave}>
-                <Space size={6} align="center">
-                  Save
-                  <ShortcutKeys
-                    shortcut={getKeyboardShortcut("customTextSave")}
-                  />
-                </Space>
-              </Button>
+              <Button onClick={handleSave}>Save</Button>
             </Space.Compact>
-            <Button type="link" onClick={() => setShowSaved((prev) => !prev)}>
-              <Space size={6} align="center">
-                Saved ({savedNames.length})
-                <ShortcutKeys
-                  shortcut={getKeyboardShortcut("customTextSavedPanel")}
-                />
-              </Space>
-            </Button>
           </Flex>
 
-          <SavedTextsPanel
-            savedNames={savedNames}
-            showSaved={showSaved}
-            onLoad={handleLoadSaved}
-            onDelete={deleteText}
-          />
-        </Flex>
+          {savedNames.length > 0 ? (
+            <SavedLessonSelect
+              savedNames={savedNames}
+              value={loadSelection}
+              onLoad={handleLoadSavedSelect}
+              onDelete={handleDeleteSaved}
+            />
+          ) : (
+            <Typography.Text type="secondary">No saved lessons yet</Typography.Text>
+          )}
+        </SettingsSection>
 
         {error !== null ? (
           <Typography.Text type="danger" role="alert">
