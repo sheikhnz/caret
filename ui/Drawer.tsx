@@ -1,5 +1,5 @@
 /**
- * Drawer — Ant Design panel with Escape-to-close (no backdrop close).
+ * Drawer — Ant Design panel; closes via overlay click or header close control.
  */
 
 "use client";
@@ -38,7 +38,7 @@ export const Drawer = ({
     placement="right"
     title={<span id={titleId}>{title}</span>}
     footer={footer}
-    mask={{ closable: false }}
+    mask={{ closable: true }}
     keyboard={false}
     className={className}
     closable={{ placement: "end" }}
