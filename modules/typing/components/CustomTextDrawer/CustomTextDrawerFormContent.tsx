@@ -129,14 +129,17 @@ export const CustomTextDrawerFormContent = ({
     text,
   ]);
 
-  const handlePipeDelimiterChange = useCallback((nextPipeDelimiter: boolean) => {
-    setPipeDelimiter(nextPipeDelimiter);
-    if (nextPipeDelimiter) {
-      setLimitWord("");
-    } else {
-      setLimitSection("");
-    }
-  }, []);
+  const handlePipeDelimiterChange = useCallback(
+    (nextPipeDelimiter: boolean) => {
+      setPipeDelimiter(nextPipeDelimiter);
+      if (nextPipeDelimiter) {
+        setLimitWord("");
+      } else {
+        setLimitSection("");
+      }
+    },
+    [],
+  );
 
   const handleLoadSavedSelect = useCallback(
     (name: string) => {
@@ -181,9 +184,7 @@ export const CustomTextDrawerFormContent = ({
       }
     >
       <Flex vertical gap={24}>
-        <SettingsSection 
-        title="Text" 
-        >
+        <SettingsSection title="Text">
           <Textarea
             id="custom-text"
             value={text}
@@ -239,7 +240,9 @@ export const CustomTextDrawerFormContent = ({
               onDelete={handleDeleteSaved}
             />
           ) : (
-            <Typography.Text type="secondary">No saved lessons yet</Typography.Text>
+            <Typography.Text type="secondary">
+              No saved lessons yet
+            </Typography.Text>
           )}
         </SettingsSection>
 

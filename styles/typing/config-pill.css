@@ -60,9 +60,7 @@
 .tp-config-pill-action.ant-segmented
   .ant-segmented-item:hover:not(.ant-segmented-item-disabled)::after,
 .tp-config-pill-action.ant-segmented
-  .ant-segmented-item-selected:hover:not(
-    .ant-segmented-item-disabled
-  )::after {
+  .ant-segmented-item-selected:hover:not(.ant-segmented-item-disabled)::after {
   opacity: 1;
   background-color: var(--tp-color-fill-secondary);
 }
