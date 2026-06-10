@@ -3,7 +3,6 @@
  */
 
 import type { TestMode } from "../types/config";
-import type { CustomTextFormMode } from "../custom-text/form-state";
 
 export type ShortcutHelpSectionId =
   | "playground"
@@ -96,55 +95,6 @@ export const KEYBOARD_SHORTCUTS = {
     keySeparator: "+",
     helpSection: "customText",
   },
-  customTextSave: {
-    id: "custom-text-save",
-    label: "Save lesson",
-    displayKeys: ["Ctrl", "S"],
-    keySeparator: "+",
-    helpSection: "customText",
-  },
-  customTextSavedPanel: {
-    id: "custom-text-saved-panel",
-    label: "Toggle saved texts",
-    displayKeys: ["S"],
-    helpSection: "customText",
-  },
-  customFormSimple: {
-    id: "custom-form-simple",
-    label: "Simple mode",
-    displayKeys: ["1"],
-    helpSection: "customText",
-  },
-  customFormRepeat: {
-    id: "custom-form-repeat",
-    label: "Repeat mode",
-    displayKeys: ["2"],
-    helpSection: "customText",
-  },
-  customFormShuffle: {
-    id: "custom-form-shuffle",
-    label: "Shuffle mode",
-    displayKeys: ["3"],
-    helpSection: "customText",
-  },
-  customFormRandom: {
-    id: "custom-form-random",
-    label: "Random mode",
-    displayKeys: ["4"],
-    helpSection: "customText",
-  },
-  customDelimiterSpace: {
-    id: "custom-delimiter-space",
-    label: "Space delimiter",
-    displayKeys: [","],
-    helpSection: "customText",
-  },
-  customDelimiterPipe: {
-    id: "custom-delimiter-pipe",
-    label: "Pipe delimiter",
-    displayKeys: ["."],
-    helpSection: "customText",
-  },
 } as const satisfies Record<string, ShortcutDefinition>;
 
 export type KeyboardShortcutId = keyof typeof KEYBOARD_SHORTCUTS;
@@ -159,14 +109,6 @@ export const getShortcutDisplayKey = (id: KeyboardShortcutId): string =>
 
 const hasPrimaryModifier = (event: KeyboardEvent): boolean =>
   event.metaKey || event.ctrlKey || event.altKey;
-
-const isPlainKey = (event: KeyboardEvent, key: string): boolean => {
-  if (hasPrimaryModifier(event)) return false;
-  if (event.shiftKey && key.length === 1 && key.toLowerCase() === key) {
-    return event.key.toLowerCase() === key;
-  }
-  return event.key === key || event.key.toLowerCase() === key.toLowerCase();
-};
 
 /** Restart test — Esc everywhere; Tab everywhere except Zen. */
 export const isRestartShortcut = (
@@ -254,42 +196,12 @@ export const isGlobalTypingCaptureKey = (
   );
 };
 
-export type CustomTextDrawerShortcutAction =
-  | { type: "start" }
-  | { type: "save" }
-  | { type: "toggleSavedPanel" }
-  | { type: "setFormMode"; mode: CustomTextFormMode }
-  | { type: "setPipeDelimiter"; pipeDelimiter: boolean };
-
-const FORM_MODE_BY_KEY: Record<string, CustomTextFormMode> = {
-  "1": "simple",
-  "2": "repeat",
-  "3": "shuffle",
-  "4": "random",
-};
+export type CustomTextDrawerShortcutAction = { type: "start" };
 
 export const resolveCustomTextDrawerShortcut = (
   event: KeyboardEvent,
 ): CustomTextDrawerShortcutAction | null => {
-  if (event.ctrlKey || event.metaKey) {
-    if (event.key === "Enter") return { type: "start" };
-    if (event.key.toLowerCase() === "s") return { type: "save" };
-    return null;
-  }
-
-  if (hasPrimaryModifier(event)) return null;
-
-  if (isPlainKey(event, "s")) return { type: "toggleSavedPanel" };
-
-  const formMode = FORM_MODE_BY_KEY[event.key];
-  if (formMode !== undefined) return { type: "setFormMode", mode: formMode };
-
-  if (isPlainKey(event, ",")) {
-    return { type: "setPipeDelimiter", pipeDelimiter: false };
-  }
-  if (isPlainKey(event, ".")) {
-    return { type: "setPipeDelimiter", pipeDelimiter: true };
-  }
-
+  if (!event.ctrlKey && !event.metaKey) return null;
+  if (event.key === "Enter") return { type: "start" };
   return null;
 };
