@@ -46,11 +46,25 @@
 .tp-config-pill-action.ant-segmented .ant-segmented-item-selected {
   color: var(--tp-color-text-description);
   background: transparent;
+  box-shadow: none;
+}
+
+/* Single-option action chip is always "selected" — mirror unselected chip hover */
+.tp-config-pill-action.ant-segmented
+  .ant-segmented-item:hover:not(.ant-segmented-item-disabled),
+.tp-config-pill-action.ant-segmented
+  .ant-segmented-item-selected:hover:not(.ant-segmented-item-disabled) {
+  color: var(--tp-color-text);
 }
 
 .tp-config-pill-action.ant-segmented
-  .ant-segmented-item:hover:not(.ant-segmented-item-disabled) {
-  color: var(--tp-color-text);
+  .ant-segmented-item:hover:not(.ant-segmented-item-disabled)::after,
+.tp-config-pill-action.ant-segmented
+  .ant-segmented-item-selected:hover:not(
+    .ant-segmented-item-disabled
+  )::after {
+  opacity: 1;
+  background-color: var(--tp-color-fill-secondary);
 }
 
 .tp-config-pill.ant-tag-checkable-group {
