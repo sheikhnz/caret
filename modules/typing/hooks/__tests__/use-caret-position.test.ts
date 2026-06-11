@@ -10,6 +10,7 @@ import { VirtualWordsDisplay } from "@/modules/typing/components/TypingTest/Virt
 import {
   createRenderedWords,
   createTypingRoot,
+  createWordTypingSlots,
   installTypingDisplayResizeObserver,
   mountTypingDisplay,
 } from "@/modules/typing/components/TypingTest/__tests__/typing-display-test-helpers";
@@ -45,6 +46,8 @@ describe("useCaretPosition", () => {
 
     const activeWordIndex = 7;
     const charIndex = 3;
+    const currentInput = WORDS[activeWordIndex]?.slice(0, charIndex) ?? "";
+    const inputHistory = WORDS.slice(0, activeWordIndex);
     const viewport = document.createElement("div");
     viewport.className = "tp-typing-viewport";
     viewport.style.position = "relative";
@@ -53,19 +56,22 @@ describe("useCaretPosition", () => {
     viewport.style.fontSize = "2rem";
     mountNode.appendChild(viewport);
 
-    const root = mountTypingDisplay({
+    const root = await mountTypingDisplay({
       node: viewport,
       tree: createElement(VirtualWordsDisplay, {
-        words: WORDS,
+        slots: createWordTypingSlots({
+          words: WORDS,
+          wordIndex: activeWordIndex,
+          currentInput,
+          inputHistory,
+        }),
         renderedWords: createRenderedWords({
           words: WORDS,
           wordIndex: activeWordIndex,
-          currentInput: WORDS[activeWordIndex]?.slice(0, charIndex) ?? "",
-          inputHistory: WORDS.slice(0, activeWordIndex),
+          currentInput,
+          inputHistory,
         }),
         wordIndex: activeWordIndex,
-        currentInput: WORDS[activeWordIndex]?.slice(0, charIndex) ?? "",
-        inputHistory: WORDS.slice(0, activeWordIndex),
       }),
     });
 

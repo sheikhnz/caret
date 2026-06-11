@@ -4,6 +4,8 @@ import { act, type ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { vi } from "vitest";
 
+import { getWordTypingSlots } from "@/modules/typing/utils/word-typing-slots";
+
 export const TYPING_DISPLAY_TEST_WIDTH_PX = 640;
 
 let resizeObserverCallback: ResizeObserverCallback | null = null;
@@ -29,34 +31,44 @@ export const installTypingDisplayResizeObserver = (): void => {
   }) as unknown as typeof ResizeObserver;
 };
 
-export const setTypingDisplayContainerWidth = ({
+export const setTypingDisplayContainerWidth = async ({
   element,
   widthPx,
 }: {
   element: HTMLElement;
   widthPx: number;
-}): void => {
+}): Promise<void> => {
   Object.defineProperty(element, "clientWidth", {
     configurable: true,
     value: widthPx,
   });
 
-  act(() => {
+  await act(async () => {
     resizeObserverCallback?.([], {} as ResizeObserver);
+    await flushTypingDisplayAnimationFrames();
   });
 };
 
-export const mountTypingDisplay = ({
+export const flushTypingDisplayAnimationFrames = async (): Promise<void> => {
+  await act(async () => {
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => resolve());
+    });
+  });
+};
+
+export const mountTypingDisplay = async ({
   node,
   tree,
 }: {
   node: HTMLElement;
   tree: ReactNode;
-}): Root => {
+}): Promise<Root> => {
   document.documentElement.style.fontSize = "16px";
   const root = createRoot(node);
-  act(() => {
+  await act(async () => {
     root.render(tree);
+    await flushTypingDisplayAnimationFrames();
   });
   return root;
 };
@@ -70,8 +82,6 @@ export const createTypingRoot = (): HTMLDivElement => {
 export const createRenderedWords = ({
   words,
   wordIndex,
-  currentInput,
-  inputHistory,
 }: {
   words: string[];
   wordIndex: number;
@@ -87,4 +97,25 @@ export const createRenderedWords = ({
     isActive: index === wordIndex,
     isCompleted: index < wordIndex,
   }));
+
+export const createWordTypingSlots = ({
+  words,
+  wordIndex,
+  currentInput,
+  inputHistory,
+  isZenMode = false,
+}: {
+  words: string[];
+  wordIndex: number;
+  currentInput: string;
+  inputHistory: string[];
+  isZenMode?: boolean;
+}) =>
+  getWordTypingSlots({
+    words,
+    wordIndex,
+    currentInput,
+    inputHistory,
+    isZenMode,
+  });
 

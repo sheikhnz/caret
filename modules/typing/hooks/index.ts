@@ -10,4 +10,5 @@ export * from "./use-test-focus";
 export * from "./use-typing-playground";
 export * from "./use-typing-test";
 export * from "./use-typing-test-view";
+export * from "./use-word-typing-slots";
 export * from "./use-words-renderer";

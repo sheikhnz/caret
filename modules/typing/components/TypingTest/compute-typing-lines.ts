@@ -1,7 +1,8 @@
 import {
   buildWordLines,
+  canIncrementallyRebuildStandardLinesOnWordAdvance,
   canIncrementallyRebuildZenLines,
-  findActiveLineIndex,
+  getIncrementalRebuildStartWordIndex,
   rebuildWordLinesFromWordIndex,
   type MeasureWordWidth,
   type WordLine,
@@ -44,28 +45,35 @@ export const computeTypingLines = ({
   wordIndex,
   slotCount,
 }: ComputeTypingLinesParams): TypingLinesCacheState => {
-  const useIncrementalRebuild =
+  const incrementalParams = {
+    isZenMode,
+    previousLines: previousCache.lines,
+    previousPackingKey: previousCache.packingKey,
+    nextPackingKey: packingLayoutTextsKey,
+    previousWordIndex: previousCache.wordIndex,
+    nextWordIndex: wordIndex,
+    previousWordCount: previousCache.wordCount,
+    nextWordCount: slotCount,
+  };
+
+  const useZenIncrementalRebuild =
     previousCache.containerWidthPx === containerWidthPx &&
-    canIncrementallyRebuildZenLines({
-      isZenMode,
-      previousLines: previousCache.lines,
-      previousPackingKey: previousCache.packingKey,
-      nextPackingKey: packingLayoutTextsKey,
-      previousWordIndex: previousCache.wordIndex,
-      nextWordIndex: wordIndex,
-      previousWordCount: previousCache.wordCount,
-      nextWordCount: slotCount,
-    });
+    canIncrementallyRebuildZenLines(incrementalParams);
+
+  const useStandardAdvanceIncrementalRebuild =
+    previousCache.containerWidthPx === containerWidthPx &&
+    canIncrementallyRebuildStandardLinesOnWordAdvance(incrementalParams);
 
   let nextLines: WordLine[];
 
-  if (useIncrementalRebuild) {
-    const previousActiveLineIndex = findActiveLineIndex(
-      previousCache.lines,
-      wordIndex,
-    );
-    const startWordIndex =
-      previousCache.lines[previousActiveLineIndex]?.wordIndices[0] ?? wordIndex;
+  if (useZenIncrementalRebuild || useStandardAdvanceIncrementalRebuild) {
+    const anchorWordIndex = useStandardAdvanceIncrementalRebuild
+      ? previousCache.wordIndex
+      : wordIndex;
+    const startWordIndex = getIncrementalRebuildStartWordIndex({
+      previousLines: previousCache.lines,
+      anchorWordIndex,
+    });
     const prefixLines = previousCache.lines.filter((line) =>
       line.wordIndices.every((index) => index < startWordIndex),
     );

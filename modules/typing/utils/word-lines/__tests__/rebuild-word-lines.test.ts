@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { buildWordLines } from "../build-word-lines";
 import {
+  canIncrementallyRebuildStandardLinesOnWordAdvance,
   canIncrementallyRebuildZenLines,
   rebuildWordLinesFromWordIndex,
 } from "../rebuild-word-lines";
@@ -38,6 +39,59 @@ describe("canIncrementallyRebuildZenLines", () => {
         nextWordIndex: 3,
         previousWordCount: 3,
         nextWordCount: 4,
+      }),
+    ).toBe(false);
+  });
+});
+
+describe("canIncrementallyRebuildStandardLinesOnWordAdvance", () => {
+  const previousLines = [
+    { lineIndex: 0, wordIndices: [0, 1] },
+    { lineIndex: 1, wordIndices: [2, 3] },
+    { lineIndex: 2, wordIndices: [4] },
+  ];
+
+  it("allows incremental rebuild when the word index advances by one", () => {
+    expect(
+      canIncrementallyRebuildStandardLinesOnWordAdvance({
+        isZenMode: false,
+        previousLines,
+        previousPackingKey: "a",
+        nextPackingKey: "b",
+        previousWordIndex: 2,
+        nextWordIndex: 3,
+        previousWordCount: 5,
+        nextWordCount: 5,
+      }),
+    ).toBe(true);
+  });
+
+  it("rejects incremental rebuild in zen mode", () => {
+    expect(
+      canIncrementallyRebuildStandardLinesOnWordAdvance({
+        isZenMode: true,
+        previousLines,
+        previousPackingKey: "a",
+        nextPackingKey: "b",
+        previousWordIndex: 2,
+        nextWordIndex: 3,
+        previousWordCount: 5,
+        nextWordCount: 5,
+      }),
+    ).toBe(false);
+  });
+
+  it("rejects incremental rebuild when the word index skips ahead", () => {
+    expect(
+      canIncrementallyRebuildStandardLinesOnWordAdvance({
+        isZenMode: false,
+        previousLines,
+        previousPackingKey: "a",
+        nextPackingKey: "b",
+        previousWordIndex: 2,
+        nextWordIndex: 4,
+        previousWordCount: 5,
+        nextWordCount: 5,
       }),
     ).toBe(false);
   });

@@ -9,7 +9,9 @@ export {
 } from "./build-layout-texts-for-packing";
 export { buildWordLines } from "./build-word-lines";
 export {
+  canIncrementallyRebuildStandardLinesOnWordAdvance,
   canIncrementallyRebuildZenLines,
+  getIncrementalRebuildStartWordIndex,
   rebuildWordLinesFromWordIndex,
 } from "./rebuild-word-lines";
 export { createMeasureWordWidth } from "./create-measure-word-width";

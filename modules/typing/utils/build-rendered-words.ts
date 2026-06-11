@@ -9,32 +9,21 @@ import {
 } from "@/modules/typing/calculations/char-display";
 import type { CharStatus, RenderedChar, RenderedWord } from "@/modules/typing/types/engine";
 
-import { getWordTypingSlots } from "./word-typing-slots";
+import type { WordTypingSlot } from "./word-typing-slots";
 
 export type BuildRenderedWordsParams = {
-  words: string[];
-  wordIndex: number;
+  slots: WordTypingSlot[];
   currentInput: string;
-  inputHistory: string[];
   blindMode: boolean;
   isZenMode?: boolean;
 };
 
 export const buildRenderedWords = ({
-  words,
-  wordIndex,
+  slots,
   currentInput,
-  inputHistory,
   blindMode,
   isZenMode = false,
 }: BuildRenderedWordsParams): RenderedWord[] => {
-  const slots = getWordTypingSlots({
-    words,
-    wordIndex,
-    currentInput,
-    inputHistory,
-    isZenMode,
-  });
 
   if (isZenMode) {
     return slots.map(

@@ -10,38 +10,33 @@
 import { useLayoutEffect, useMemo, useState } from "react";
 
 import type { RenderedWord } from "../types/engine";
+import type { WordTypingSlot } from "../utils/word-typing-slots";
 import { buildRenderedWords } from "../utils/build-rendered-words";
 
 import { preserveUnchangedRenderedWords } from "./preserve-rendered-words";
 
 type UseWordsRendererArgs = {
-  words: string[];
-  wordIndex: number;
+  slots: WordTypingSlot[];
   currentInput: string;
-  inputHistory: string[];
   blindMode: boolean;
   isZenMode?: boolean;
 };
 
 export const useWordsRenderer = ({
-  words,
-  wordIndex,
+  slots,
   currentInput,
-  inputHistory,
   blindMode,
   isZenMode = false,
 }: UseWordsRendererArgs): RenderedWord[] => {
   const built = useMemo(
     () =>
       buildRenderedWords({
-        words,
-        wordIndex,
+        slots,
         currentInput,
-        inputHistory,
         blindMode,
         isZenMode,
       }),
-    [words, wordIndex, currentInput, inputHistory, blindMode, isZenMode],
+    [slots, currentInput, blindMode, isZenMode],
   );
 
   const [stableWords, setStableWords] = useState<RenderedWord[] | null>(null);

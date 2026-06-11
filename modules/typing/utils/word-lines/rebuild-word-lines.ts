@@ -1,5 +1,6 @@
 import { buildWordLines, getLineWidthPx, rebalanceOverflowingLines } from "./build-word-lines";
 import { LINE_PACKING_SAFETY_PX } from "./constants";
+import { findActiveLineIndex } from "./find-active-line-index";
 import type { MeasureWordWidth, WordLine } from "./types";
 
 type RebuildWordLinesFromWordIndexParams = {
@@ -100,6 +101,31 @@ export const rebuildWordLinesFromWordIndex = ({
   });
 };
 
+type IncrementalRebuildParams = {
+  previousLines: WordLine[];
+  previousPackingKey: string;
+  nextPackingKey: string;
+  previousWordIndex: number;
+  nextWordIndex: number;
+  previousWordCount: number;
+  nextWordCount: number;
+};
+
+export const getIncrementalRebuildStartWordIndex = ({
+  previousLines,
+  anchorWordIndex,
+}: {
+  previousLines: WordLine[];
+  anchorWordIndex: number;
+}): number => {
+  const previousActiveLineIndex = findActiveLineIndex(
+    previousLines,
+    anchorWordIndex,
+  );
+
+  return previousLines[previousActiveLineIndex]?.wordIndices[0] ?? anchorWordIndex;
+};
+
 export const canIncrementallyRebuildZenLines = ({
   isZenMode,
   previousLines,
@@ -109,16 +135,7 @@ export const canIncrementallyRebuildZenLines = ({
   nextWordIndex,
   previousWordCount,
   nextWordCount,
-}: {
-  isZenMode: boolean;
-  previousLines: WordLine[];
-  previousPackingKey: string;
-  nextPackingKey: string;
-  previousWordIndex: number;
-  nextWordIndex: number;
-  previousWordCount: number;
-  nextWordCount: number;
-}): boolean => {
+}: IncrementalRebuildParams & { isZenMode: boolean }): boolean => {
   if (!isZenMode || previousLines.length === 0) {
     return false;
   }
@@ -136,4 +153,30 @@ export const canIncrementallyRebuildZenLines = ({
   }
 
   return nextWordCount === previousWordCount || nextWordCount === previousWordCount + 1;
+};
+
+/** Standard mode: completed word layout width may change when advancing to the next word. */
+export const canIncrementallyRebuildStandardLinesOnWordAdvance = ({
+  isZenMode,
+  previousLines,
+  previousPackingKey,
+  nextPackingKey,
+  previousWordIndex,
+  nextWordIndex,
+  previousWordCount,
+  nextWordCount,
+}: IncrementalRebuildParams & { isZenMode: boolean }): boolean => {
+  if (isZenMode || previousLines.length === 0) {
+    return false;
+  }
+
+  if (previousPackingKey === nextPackingKey) {
+    return false;
+  }
+
+  if (nextWordIndex !== previousWordIndex + 1) {
+    return false;
+  }
+
+  return nextWordCount === previousWordCount;
 };

@@ -9,6 +9,8 @@ import {
 } from "react";
 
 import type { RenderedWord } from "@/modules/typing/types/engine";
+import type { WordTypingSlot } from "@/modules/typing/utils/word-typing-slots";
+import type { WordLine } from "@/modules/typing/utils/word-lines";
 
 import {
   TYPING_CONTAINER_HEIGHT_PX,
@@ -24,51 +26,90 @@ import {
 import { WordsLine } from "./WordsLine";
 
 type VirtualWordsDisplayProps = {
-  words: string[];
+  slots: WordTypingSlot[];
   renderedWords: RenderedWord[];
   wordIndex: number;
-  currentInput: string;
-  inputHistory: string[];
   isZenMode?: boolean;
   layoutEpoch?: number;
   /** Scroll-transform container — caret measures against this (same layer as words). */
   innerRef?: RefObject<HTMLDivElement | null>;
   caret?: ReactNode;
-  /** Fires when the inner scroll layer mounts with lines (caret container ref is live). */
+  /** Fires once when the inner scroll layer first mounts (caret container ref is live). */
   onInnerReady?: () => void;
+  /** Fires when scroll offset or the visible line window changes (caret remeasure). */
+  onCaretLayoutChange?: (layoutKey: string) => void;
+};
+
+type VirtualWindow = {
+  scrollOffsetPx: number;
+  totalHeightPx: number;
+  visibleLines: WordLine[];
+};
+
+const EMPTY_VIRTUAL_WINDOW: VirtualWindow = {
+  scrollOffsetPx: 0,
+  totalHeightPx: 0,
+  visibleLines: [],
+};
+
+const buildVisibleLines = ({
+  lines,
+  start,
+  end,
+}: {
+  lines: WordLine[];
+  start: number;
+  end: number;
+}): WordLine[] => {
+  const visibleLines: WordLine[] = [];
+
+  for (let lineIndex = start; lineIndex <= end; lineIndex++) {
+    const line = lines[lineIndex];
+    if (line) {
+      visibleLines.push(line);
+    }
+  }
+
+  return visibleLines;
+};
+
+const buildCaretLayoutKey = ({
+  scrollOffsetPx,
+  visibleLines,
+}: {
+  scrollOffsetPx: number;
+  visibleLines: WordLine[];
+}): string => {
+  const start = visibleLines[0]?.lineIndex ?? 0;
+  const end = visibleLines.at(-1)?.lineIndex ?? start;
+
+  return `${scrollOffsetPx}:${start}-${end}`;
 };
 
 export const VirtualWordsDisplay = ({
-  words,
+  slots,
   renderedWords,
   wordIndex,
-  currentInput,
-  inputHistory,
   isZenMode = false,
   layoutEpoch = 0,
   innerRef,
   caret = null,
   onInnerReady,
+  onCaretLayoutChange,
 }: VirtualWordsDisplayProps) => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const wasInnerMountedRef = useRef(false);
   const { lines, activeLineIndex, isLayoutReady } = useTypingLines({
-    words,
+    slots,
     wordIndex,
-    currentInput,
-    inputHistory,
     isZenMode,
     measureRef: scrollRef,
     layoutEpoch,
   });
 
-  const virtualWindow = useMemo(() => {
+  const virtualWindow = useMemo((): VirtualWindow => {
     if (!isLayoutReady || lines.length === 0) {
-      return {
-        scrollOffsetPx: 0,
-        start: 0,
-        end: -1,
-        totalHeightPx: 0,
-      };
+      return EMPTY_VIRTUAL_WINDOW;
     }
 
     const scrollOffsetPx = resolveLineScrollOffset({
@@ -82,21 +123,45 @@ export const VirtualWordsDisplay = ({
 
     return {
       scrollOffsetPx,
-      start,
-      end,
       totalHeightPx: getVirtualListTotalHeight(lines.length),
+      visibleLines: buildVisibleLines({ lines, start, end }),
     };
-  }, [activeLineIndex, isLayoutReady, lines.length]);
+  }, [activeLineIndex, isLayoutReady, lines]);
 
   const isInnerMounted = isLayoutReady && lines.length > 0;
 
+  const caretLayoutKey = useMemo(
+    () =>
+      isInnerMounted
+        ? buildCaretLayoutKey({
+            scrollOffsetPx: virtualWindow.scrollOffsetPx,
+            visibleLines: virtualWindow.visibleLines,
+          })
+        : "",
+    [isInnerMounted, virtualWindow.scrollOffsetPx, virtualWindow.visibleLines],
+  );
+
   useLayoutEffect(() => {
     if (!isInnerMounted) {
+      wasInnerMountedRef.current = false;
       return;
     }
 
+    if (wasInnerMountedRef.current) {
+      return;
+    }
+
+    wasInnerMountedRef.current = true;
     onInnerReady?.();
-  }, [isInnerMounted, onInnerReady, virtualWindow.scrollOffsetPx, virtualWindow.start]);
+  }, [isInnerMounted, onInnerReady]);
+
+  useLayoutEffect(() => {
+    if (!isInnerMounted || !caretLayoutKey) {
+      return;
+    }
+
+    onCaretLayoutChange?.(caretLayoutKey);
+  }, [caretLayoutKey, isInnerMounted, onCaretLayoutChange]);
 
   return (
     <div
@@ -115,34 +180,22 @@ export const VirtualWordsDisplay = ({
             transition: TYPING_LINE_SCROLL_TRANSITION,
           }}
         >
-          {Array.from(
-            {
-              length: Math.max(0, virtualWindow.end - virtualWindow.start + 1),
-            },
-            (_, offset) => virtualWindow.start + offset,
-          ).map((lineIndex) => {
-            const line = lines[lineIndex];
-            if (!line) {
-              return null;
-            }
-
-            return (
-              <div
-                key={line.lineIndex}
-                data-line-index={line.lineIndex}
-                className="tp-typing-virtual-row"
-                style={{
-                  height: TYPING_ROW_HEIGHT_PX,
-                  transform: `translateY(${lineIndex * TYPING_ROW_HEIGHT_PX}px)`,
-                }}
-              >
-                <WordsLine
-                  wordIndices={line.wordIndices}
-                  renderedWords={renderedWords}
-                />
-              </div>
-            );
-          })}
+          {virtualWindow.visibleLines.map((line) => (
+            <div
+              key={line.lineIndex}
+              data-line-index={line.lineIndex}
+              className="tp-typing-virtual-row"
+              style={{
+                height: TYPING_ROW_HEIGHT_PX,
+                transform: `translateY(${line.lineIndex * TYPING_ROW_HEIGHT_PX}px)`,
+              }}
+            >
+              <WordsLine
+                wordIndices={line.wordIndices}
+                renderedWords={renderedWords}
+              />
+            </div>
+          ))}
           {caret}
         </div>
       ) : null}

@@ -67,4 +67,47 @@ describe("computeTypingLines", () => {
     expect(next.containerWidthPx).toBe(40);
     expect(next.lines).not.toEqual(previous.lines);
   });
+
+  it("rebuilds incrementally in standard mode when the word index advances", () => {
+    const measureWordWidth = (text: string) => text.length * 10;
+    const beforeAdvance = ["aa", "bb", "cccc", "dd", "ee"];
+    const containerWidthPx = 50;
+
+    const beforeCache = computeTypingLines({
+      previousCache: EMPTY_TYPING_LINES_CACHE,
+      layoutTexts: beforeAdvance,
+      packingLayoutTextsKey: beforeAdvance.join("\u001f"),
+      containerWidthPx,
+      measureWordWidth,
+      isZenMode: false,
+      wordIndex: 2,
+      slotCount: beforeAdvance.length,
+    });
+
+    const afterAdvance = ["aa", "bb", "ccc", "dd", "ee"];
+    const fullAfterAdvance = computeTypingLines({
+      previousCache: EMPTY_TYPING_LINES_CACHE,
+      layoutTexts: afterAdvance,
+      packingLayoutTextsKey: afterAdvance.join("\u001f"),
+      containerWidthPx,
+      measureWordWidth,
+      isZenMode: false,
+      wordIndex: 3,
+      slotCount: afterAdvance.length,
+    });
+
+    const incrementalAfterAdvance = computeTypingLines({
+      previousCache: beforeCache,
+      layoutTexts: afterAdvance,
+      packingLayoutTextsKey: afterAdvance.join("\u001f"),
+      containerWidthPx,
+      measureWordWidth,
+      isZenMode: false,
+      wordIndex: 3,
+      slotCount: afterAdvance.length,
+    });
+
+    expect(incrementalAfterAdvance.lines).toEqual(fullAfterAdvance.lines);
+    expect(incrementalAfterAdvance.wordIndex).toBe(3);
+  });
 });

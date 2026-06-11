@@ -14,14 +14,25 @@ import {
 
 export type { CaretPosition } from "./resolve-caret-position";
 
-export const useCaretPosition = (
-  scrollWrapperRef: React.RefObject<HTMLElement | null>,
-  wordIndex: number,
-  charIndex: number,
-  isActive: boolean,
-  /** Bumps when the scroll container mounts or remounts (ref attach is not reactive). */
+type UseCaretPositionParams = {
+  scrollWrapperRef: React.RefObject<HTMLElement | null>;
+  wordIndex: number;
+  charIndex: number;
+  isActive: boolean;
+  /** Scroll offset + visible line window from VirtualWordsDisplay. */
+  layoutKey?: string;
+  /** Bumps when the inner scroll layer first mounts (ref attach is not reactive). */
+  remeasureKey?: number;
+};
+
+export const useCaretPosition = ({
+  scrollWrapperRef,
+  wordIndex,
+  charIndex,
+  isActive,
+  layoutKey = "",
   remeasureKey = 0,
-): CaretPosition => {
+}: UseCaretPositionParams): CaretPosition => {
   const [position, setPosition] = useState<CaretPosition>(EMPTY_CARET_POSITION);
 
   const update = useCallback(() => {
@@ -45,34 +56,30 @@ export const useCaretPosition = (
       return;
     }
 
-    const scheduleUpdate = (): void => {
-      update();
-      requestAnimationFrame(update);
-    };
-
-    scheduleUpdate();
-
-    const mutationObserver = new MutationObserver(scheduleUpdate);
-    mutationObserver.observe(container, {
-      childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: ["data-word-index", "data-char-index", "class", "style"],
-    });
+    update();
+    const frame = requestAnimationFrame(update);
 
     const onTransitionEnd = (event: TransitionEvent): void => {
       if (event.propertyName === "transform") {
-        scheduleUpdate();
+        update();
       }
     };
 
     container.addEventListener("transitionend", onTransitionEnd);
 
     return () => {
-      mutationObserver.disconnect();
+      cancelAnimationFrame(frame);
       container.removeEventListener("transitionend", onTransitionEnd);
     };
-  }, [scrollWrapperRef, update, isActive, wordIndex, charIndex, remeasureKey]);
+  }, [
+    scrollWrapperRef,
+    update,
+    isActive,
+    wordIndex,
+    charIndex,
+    layoutKey,
+    remeasureKey,
+  ]);
 
   return position;
 };

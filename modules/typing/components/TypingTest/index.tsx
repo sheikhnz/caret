@@ -10,6 +10,7 @@ import type { UseTypingTestReturn } from "@/modules/typing/hooks/use-typing-test
 import { useTypingTestDisplayConfig } from "@/modules/typing/hooks/use-typing-test-display-config";
 import { useTypingTestView } from "@/modules/typing/hooks/use-typing-test-view";
 import { useCaretPosition } from "@/modules/typing/hooks/use-caret-position";
+import { useWordTypingSlots } from "@/modules/typing/hooks/use-word-typing-slots";
 import { useWordsRenderer } from "@/modules/typing/hooks/use-words-renderer";
 import { SkeletonLoader, SKELETON_IDS } from "@/ui";
 
@@ -35,17 +36,27 @@ export const TypingTest = ({
   const { inputRef, wordsContainerRef, handleKeyDown, focusInput } = typing;
   const virtualInnerRef = useRef<HTMLDivElement | null>(null);
   const [caretRemeasureKey, setCaretRemeasureKey] = useState(0);
+  const [caretLayoutKey, setCaretLayoutKey] = useState("");
 
   const handleVirtualInnerReady = useCallback(() => {
     setCaretRemeasureKey((key) => key + 1);
   }, []);
 
+  const handleCaretLayoutChange = useCallback((layoutKey: string) => {
+    setCaretLayoutKey(layoutKey);
+  }, []);
+
   const isZenMode = mode === "zen";
-  const renderedWords = useWordsRenderer({
+  const slots = useWordTypingSlots({
     words: store.words,
     wordIndex: store.wordIndex,
     currentInput: store.currentInput,
     inputHistory: store.inputHistory,
+    isZenMode,
+  });
+  const renderedWords = useWordsRenderer({
+    slots,
+    currentInput: store.currentInput,
     blindMode,
     isZenMode,
   });
@@ -55,13 +66,14 @@ export const TypingTest = ({
     (store.words.length > 0 || isZenMode) &&
     store.phase !== "finished";
 
-  const caretPosition = useCaretPosition(
-    virtualInnerRef,
-    store.wordIndex,
-    store.currentInput.length,
-    showCaret,
-    caretRemeasureKey,
-  );
+  const caretPosition = useCaretPosition({
+    scrollWrapperRef: virtualInnerRef,
+    wordIndex: store.wordIndex,
+    charIndex: store.currentInput.length,
+    isActive: showCaret,
+    layoutKey: caretLayoutKey,
+    remeasureKey: caretRemeasureKey,
+  });
 
   const handleContainerClick = useCallback(() => {
     focusInput();
@@ -87,15 +99,14 @@ export const TypingTest = ({
           ) : (
             <>
               <VirtualWordsDisplay
-                words={store.words}
+                slots={slots}
                 renderedWords={renderedWords}
                 wordIndex={store.wordIndex}
-                currentInput={store.currentInput}
-                inputHistory={store.inputHistory}
                 isZenMode={isZenMode}
                 layoutEpoch={store.restartCount}
                 innerRef={virtualInnerRef}
                 onInnerReady={handleVirtualInnerReady}
+                onCaretLayoutChange={handleCaretLayoutChange}
                 caret={
                   <Caret
                     position={caretPosition}

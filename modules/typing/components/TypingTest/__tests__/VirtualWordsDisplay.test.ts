@@ -11,6 +11,7 @@ import { VirtualWordsDisplay } from "../VirtualWordsDisplay";
 import {
   createRenderedWords,
   createTypingRoot,
+  createWordTypingSlots,
   installTypingDisplayResizeObserver,
   mountTypingDisplay,
   setTypingDisplayContainerWidth,
@@ -27,24 +28,29 @@ describe("VirtualWordsDisplay", () => {
     mountNode = null;
   });
 
-  it("mounts only the visible line window when many lines exist", () => {
+  it("mounts only the visible line window when many lines exist", async () => {
     installTypingDisplayResizeObserver();
     mountNode = createTypingRoot();
 
     const activeWordIndex = 40;
-    const root = mountTypingDisplay({
+    const currentInput = "";
+    const inputHistory = MANY_WORDS.slice(0, activeWordIndex);
+    const root = await mountTypingDisplay({
       node: mountNode,
       tree: createElement(VirtualWordsDisplay, {
-        words: MANY_WORDS,
+        slots: createWordTypingSlots({
+          words: MANY_WORDS,
+          wordIndex: activeWordIndex,
+          currentInput,
+          inputHistory,
+        }),
         renderedWords: createRenderedWords({
           words: MANY_WORDS,
           wordIndex: activeWordIndex,
-          currentInput: "",
-          inputHistory: MANY_WORDS.slice(0, activeWordIndex),
+          currentInput,
+          inputHistory,
         }),
         wordIndex: activeWordIndex,
-        currentInput: "",
-        inputHistory: MANY_WORDS.slice(0, activeWordIndex),
       }),
     });
 
@@ -96,24 +102,29 @@ describe("VirtualWordsDisplay", () => {
     root.unmount();
   });
 
-  it("keeps the active word mounted after the container narrows and line count shrinks", () => {
+  it("keeps the active word mounted after the container narrows and line count shrinks", async () => {
     installTypingDisplayResizeObserver();
     mountNode = createTypingRoot();
 
     const activeWordIndex = 55;
-    const root = mountTypingDisplay({
+    const currentInput = "word55";
+    const inputHistory = MANY_WORDS.slice(0, activeWordIndex);
+    const root = await mountTypingDisplay({
       node: mountNode,
       tree: createElement(VirtualWordsDisplay, {
-        words: MANY_WORDS,
+        slots: createWordTypingSlots({
+          words: MANY_WORDS,
+          wordIndex: activeWordIndex,
+          currentInput,
+          inputHistory,
+        }),
         renderedWords: createRenderedWords({
           words: MANY_WORDS,
           wordIndex: activeWordIndex,
-          currentInput: "word55",
-          inputHistory: MANY_WORDS.slice(0, activeWordIndex),
+          currentInput,
+          inputHistory,
         }),
         wordIndex: activeWordIndex,
-        currentInput: "word55",
-        inputHistory: MANY_WORDS.slice(0, activeWordIndex),
       }),
     });
 
@@ -127,7 +138,7 @@ describe("VirtualWordsDisplay", () => {
     ].length;
     expect(wideLineCount).toBeGreaterThan(0);
 
-    setTypingDisplayContainerWidth({
+    await setTypingDisplayContainerWidth({
       element: scrollElement!,
       widthPx: Math.floor(TYPING_DISPLAY_TEST_WIDTH_PX / 2),
     });
@@ -145,24 +156,28 @@ describe("VirtualWordsDisplay", () => {
     root.unmount();
   });
 
-  it("notifies when the inner scroll layer is ready for caret measurement", () => {
+  it("notifies when the inner scroll layer is ready for caret measurement", async () => {
     installTypingDisplayResizeObserver();
     mountNode = createTypingRoot();
     const onInnerReady = vi.fn();
 
-    const root = mountTypingDisplay({
+    const words = ["one", "two", "three"];
+    const root = await mountTypingDisplay({
       node: mountNode,
       tree: createElement(VirtualWordsDisplay, {
-        words: ["one", "two", "three"],
+        slots: createWordTypingSlots({
+          words,
+          wordIndex: 0,
+          currentInput: "",
+          inputHistory: [],
+        }),
         renderedWords: createRenderedWords({
-          words: ["one", "two", "three"],
+          words,
           wordIndex: 0,
           currentInput: "",
           inputHistory: [],
         }),
         wordIndex: 0,
-        currentInput: "",
-        inputHistory: [],
         onInnerReady,
       }),
     });

@@ -3,11 +3,11 @@
 import { useLayoutEffect, useMemo, useState } from "react";
 
 import { TYPING_FONT_SIZE_REM } from "@/modules/typing/constants/typing-layout";
-import { getWordTypingSlots } from "@/modules/typing/utils/word-typing-slots";
+import type { WordTypingSlot } from "@/modules/typing/utils/word-typing-slots";
 import {
+  buildLayoutTextsForPacking,
   createMeasureWordWidth,
   findActiveLineIndex,
-  getPackingLayoutTextsKey,
   LAYOUT_TEXTS_KEY_SEP,
   type WordLine,
 } from "@/modules/typing/utils/word-lines";
@@ -19,10 +19,8 @@ import {
 } from "./compute-typing-lines";
 
 type UseTypingLinesParams = {
-  words: string[];
+  slots: WordTypingSlot[];
   wordIndex: number;
-  currentInput: string;
-  inputHistory: string[];
   isZenMode?: boolean;
   measureRef: React.RefObject<HTMLElement | null>;
   layoutEpoch?: number;
@@ -43,10 +41,8 @@ const getRootFontSizePx = (): number => {
 };
 
 export const useTypingLines = ({
-  words,
+  slots,
   wordIndex,
-  currentInput,
-  inputHistory,
   isZenMode = false,
   measureRef,
   layoutEpoch = 0,
@@ -65,6 +61,8 @@ export const useTypingLines = ({
     if (!measureElement) {
       return;
     }
+
+    let rafId: number | null = null;
 
     const updateLayout = (): void => {
       const width = measureElement.clientWidth;
@@ -85,36 +83,44 @@ export const useTypingLines = ({
       }
     };
 
+    const scheduleLayoutUpdate = (): void => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        updateLayout();
+      });
+    };
+
     updateLayout();
 
-    const resizeObserver = new ResizeObserver(updateLayout);
+    const resizeObserver = new ResizeObserver(scheduleLayoutUpdate);
     resizeObserver.observe(measureElement);
+    updateLayout();
 
     return () => {
       resizeObserver.disconnect();
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
     };
-  }, [layoutEpoch, measureRef, words.length]);
+  }, [layoutEpoch, measureRef, slots.length]);
 
   const measureWordWidth = useMemo(
     () => createMeasureWordWidth({ fontSizePx, fontFamily }),
     [fontFamily, fontSizePx],
   );
 
-  const slots = useMemo(
-    () =>
-      getWordTypingSlots({
-        words,
-        wordIndex,
-        currentInput,
-        inputHistory,
-        isZenMode,
-      }),
-    [words, wordIndex, currentInput, inputHistory, isZenMode],
+  const layoutTexts = useMemo(
+    () => buildLayoutTextsForPacking({ slots }),
+    [slots],
   );
 
   const packingLayoutTextsKey = useMemo(
-    () => getPackingLayoutTextsKey({ slots, isZenMode }),
-    [slots, isZenMode],
+    () => layoutTexts.join(LAYOUT_TEXTS_KEY_SEP),
+    [layoutTexts],
   );
 
   const isLayoutReady = containerWidthPx > 0;
@@ -123,8 +129,6 @@ export const useTypingLines = ({
     if (!isLayoutReady) {
       return;
     }
-
-    const layoutTexts = packingLayoutTextsKey.split(LAYOUT_TEXTS_KEY_SEP);
 
     // Ref-during-render is compiler-blocked; functional state update reads prior lines here.
     // eslint-disable-next-line react-hooks/set-state-in-effect -- derive lines before paint
@@ -145,6 +149,7 @@ export const useTypingLines = ({
     isLayoutReady,
     isZenMode,
     layoutEpoch,
+    layoutTexts,
     measureWordWidth,
     packingLayoutTextsKey,
     slots.length,
