@@ -15,8 +15,7 @@ import { SkeletonLoader, SKELETON_IDS } from "@/ui";
 
 import { Caret } from "./Caret";
 import { TypingTestLiveStats } from "./TypingTestLiveStats";
-import { useWordScroll } from "./use-word-scroll";
-import { WordsDisplay } from "./WordsDisplay";
+import { VirtualWordsDisplay } from "./VirtualWordsDisplay";
 
 type TypingTestProps = {
   typing: UseTypingTestReturn;
@@ -45,22 +44,13 @@ export const TypingTest = ({
     isZenMode,
   });
 
-  const { scrollWrapperRef, scrollOffset } = useWordScroll({
-    words: store.words,
-    wordIndex: store.wordIndex,
-    currentInputLength: store.currentInput.length,
-    renderedWordsLength: renderedWords.length,
-    isLoadingWords: store.isPreparingWords,
-    isZenMode,
-  });
-
   const showCaret =
     !store.isPreparingWords &&
     (store.words.length > 0 || isZenMode) &&
     store.phase !== "finished";
 
   const caretPosition = useCaretPosition(
-    scrollWrapperRef,
+    wordsContainerRef,
     store.wordIndex,
     store.currentInput.length,
     showCaret,
@@ -88,12 +78,16 @@ export const TypingTest = ({
               label="Loading words"
             />
           ) : (
-            <div
-              ref={scrollWrapperRef}
-              className="tp-typing-scroll"
-              style={{ transform: `translateY(-${scrollOffset}px)` }}
-            >
-              <WordsDisplay renderedWords={renderedWords} />
+            <>
+              <VirtualWordsDisplay
+                words={store.words}
+                renderedWords={renderedWords}
+                wordIndex={store.wordIndex}
+                currentInput={store.currentInput}
+                inputHistory={store.inputHistory}
+                isZenMode={isZenMode}
+                layoutEpoch={store.restartCount}
+              />
               <Caret
                 position={caretPosition}
                 style={caretStyle}
@@ -101,7 +95,7 @@ export const TypingTest = ({
                 blink={!isTestFocused}
                 visible={showCaret}
               />
-            </div>
+            </>
           )}
         </div>
       </div>

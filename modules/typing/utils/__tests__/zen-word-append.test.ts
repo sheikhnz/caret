@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { isZenWordAppend } from "../word-scroll";
+import { isZenWordAppend } from "../zen-word-append";
 
 describe("isZenWordAppend", () => {
   it("detects zen mode word list growth without replacing earlier words", () => {

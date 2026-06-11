@@ -2,7 +2,7 @@
  * Layout config for the typing-test words skeleton.
  * Keep container height aligned with TypingTest scroll-constants (48px × 3 rows).
  *
- * Word widths are a single list — they flow in one flex-wrap row like WordsDisplay.
+ * Word widths are a single list — they flow in one flex-wrap row in the skeleton.
  */
 
 export const TYPING_TEST_WORDS_SKELETON_ID = "typing-test-words" as const;
