@@ -5,8 +5,17 @@ import {
   TYPING_SCROLL_ANCHOR_ROW,
 } from "@/modules/typing/constants/typing-layout";
 
+/**
+ * The number of extra lines to render above and below the visible viewport.
+ * This prevents blank flashes during fast scrolling and ensures the caret
+ * can safely transition off-screen.
+ */
 export const VIRTUAL_LINE_OVERSCAN = 2;
 
+/**
+ * Computes the target scroll offset so that the active line sits at the
+ * anchored row position (typically the 2nd or 3rd row down).
+ */
 export const getLineScrollOffset = (activeLineIndex: number): number => {
   const anchorOffsetPx = TYPING_SCROLL_ANCHOR_ROW * TYPING_ROW_HEIGHT_PX;
   return Math.max(0, activeLineIndex * TYPING_ROW_HEIGHT_PX - anchorOffsetPx);
@@ -44,6 +53,10 @@ export const resolveLineScrollOffset = ({
     lineCount,
   });
 
+/**
+ * Determines which lines should be mounted in the DOM based on the current
+ * scroll offset, container height, and overscan buffer.
+ */
 export const getVisibleLineIndices = ({
   lineCount,
   scrollOffsetPx,

@@ -111,6 +111,11 @@ type IncrementalRebuildParams = {
   nextWordCount: number;
 };
 
+/**
+ * Finds the safest word index to start an incremental rebuild from.
+ * To avoid text shifting incorrectly on the active line, we always rebuild
+ * starting from the very first word of the line containing the anchor word.
+ */
 export const getIncrementalRebuildStartWordIndex = ({
   previousLines,
   anchorWordIndex,
@@ -126,6 +131,11 @@ export const getIncrementalRebuildStartWordIndex = ({
   return previousLines[previousActiveLineIndex]?.wordIndices[0] ?? anchorWordIndex;
 };
 
+/**
+ * Determines if Zen mode can use a fast incremental line repack instead of a full rebuild.
+ * Safe to do when the only change is the current word getting longer (active keystroke)
+ * or a new word being appended (spacebar).
+ */
 export const canIncrementallyRebuildZenLines = ({
   isZenMode,
   previousLines,
@@ -155,7 +165,11 @@ export const canIncrementallyRebuildZenLines = ({
   return nextWordCount === previousWordCount || nextWordCount === previousWordCount + 1;
 };
 
-/** Standard mode: completed word layout width may change when advancing to the next word. */
+/** 
+ * Standard mode: determines if we can incrementally repack lines when advancing to the next word.
+ * When the user completes a word, its final layout width may shrink or grow based on errors.
+ * We can incrementally rebuild from the completed word onward without touching prior lines.
+ */
 export const canIncrementallyRebuildStandardLinesOnWordAdvance = ({
   isZenMode,
   previousLines,

@@ -55,6 +55,12 @@ const isTypingLinesCacheValid = ({
   previousCache.wordIndex === wordIndex &&
   previousCache.wordCount === slotCount;
 
+/**
+ * The line packing engine. Takes the raw layout text for all words and packs
+ * them into lines based on container width. Uses `isTypingLinesCacheValid` to
+ * bail out early if nothing changed, or chooses between a fast incremental
+ * repack vs a full canvas remeasure based on what changed.
+ */
 export const computeTypingLines = ({
   previousCache,
   layoutTexts,

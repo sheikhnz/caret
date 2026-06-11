@@ -22,6 +22,12 @@ export const getLineWidthPx = ({
     0,
   );
 
+/**
+ * Resolves edge cases where canvas width measurement is slightly narrower than
+ * actual DOM layout width. If a line overflows the container after initial packing,
+ * this function repeatedly shifts the last word of overflowing lines to the next
+ * line until all lines fit within maxLineWidthPx.
+ */
 export const rebalanceOverflowingLines = ({
   lines,
   layoutTexts,
@@ -77,6 +83,11 @@ export const rebalanceOverflowingLines = ({
     }));
 };
 
+/**
+ * Packs a flat array of layout texts into rows (lines) based on their canvas
+ * pixel width. Emulates CSS `flex-wrap` but purely in JS, allowing the app
+ * to know exactly which line a word belongs to without mounting it in the DOM.
+ */
 export const buildWordLines = ({
   layoutTexts,
   containerWidthPx,

@@ -40,6 +40,13 @@ const getRootFontSizePx = (): number => {
   return parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
 };
 
+/**
+ * The core orchestrator for virtual line math. 
+ * This hook observes the container width via ResizeObserver and drives the
+ * canvas-based line packing engine (`computeTypingLines`) whenever the width
+ * or the input text changes. It returns the exact lines and active line index
+ * needed by `VirtualWordsDisplay` to compute the visible window.
+ */
 export const useTypingLines = ({
   slots,
   wordIndex,

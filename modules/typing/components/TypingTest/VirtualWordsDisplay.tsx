@@ -40,9 +40,16 @@ type VirtualWordsDisplayProps = {
   caret?: ReactNode;
 };
 
+/**
+ * Represents the currently visible slice of the word list.
+ * By computing this, we avoid rendering all words in the DOM at once.
+ */
 type VirtualWindow = {
+  /** The CSS translateY value applied to the inner scrolling container */
   scrollOffsetPx: number;
+  /** The total height of the container if all lines were rendered */
   totalHeightPx: number;
+  /** The subset of lines actually mounted in the DOM */
   visibleLines: WordLine[];
 };
 
@@ -73,6 +80,11 @@ const buildVisibleLines = ({
   return visibleLines;
 };
 
+/**
+ * Generates a stable React key for the caret layout.
+ * The caret must remeasure its DOM position whenever the virtual window shifts
+ * or scrolls, otherwise it will point to stale coordinates.
+ */
 export const buildCaretLayoutKey = ({
   scrollOffsetPx,
   visibleLines,
@@ -100,6 +112,12 @@ const injectCaretPosition = ({
   return cloneElement(caret as ReactElement<CaretProps>, { position });
 };
 
+/**
+ * VirtualWordsDisplay renders a flex-wrap word list using virtual scrolling.
+ * Instead of mounting 200+ words in the DOM and relying on CSS `flex-wrap`,
+ * it uses canvas `measureText` to pre-calculate line wrapping in JS.
+ * It then only mounts the ~7 lines currently visible in the viewport.
+ */
 export const VirtualWordsDisplay = ({
   slots,
   renderedWords,
