@@ -6,6 +6,37 @@ import {
 } from "../compute-typing-lines";
 
 describe("computeTypingLines", () => {
+  it("returns the same cache reference when nothing has changed", () => {
+    const measureWordWidth = (text: string) => text.length * 10;
+    const layoutTexts = ["one", "two", "three"];
+    const key = layoutTexts.join("\u001f");
+    const containerWidthPx = 200;
+
+    const cache = computeTypingLines({
+      previousCache: EMPTY_TYPING_LINES_CACHE,
+      layoutTexts,
+      packingLayoutTextsKey: key,
+      containerWidthPx,
+      measureWordWidth,
+      isZenMode: false,
+      wordIndex: 1,
+      slotCount: layoutTexts.length,
+    });
+
+    const unchanged = computeTypingLines({
+      previousCache: cache,
+      layoutTexts,
+      packingLayoutTextsKey: key,
+      containerWidthPx,
+      measureWordWidth,
+      isZenMode: false,
+      wordIndex: 1,
+      slotCount: layoutTexts.length,
+    });
+
+    expect(unchanged).toBe(cache);
+  });
+
   it("rebuilds incrementally for zen when only the packing key grows", () => {
     const measureWordWidth = (text: string) => text.length * 10;
     const layoutTexts = ["aa", "bb", "cccccccc", "dd", "ee"];

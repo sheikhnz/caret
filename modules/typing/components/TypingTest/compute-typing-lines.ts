@@ -35,6 +35,26 @@ type ComputeTypingLinesParams = {
   slotCount: number;
 };
 
+/**
+ * Returns true when all layout inputs match the cached state, meaning lines
+ * cannot have changed. Callers should return `previousCache` unchanged so
+ * React's functional-setState Object.is check bails out and skips a re-render.
+ */
+const isTypingLinesCacheValid = ({
+  previousCache,
+  packingLayoutTextsKey,
+  containerWidthPx,
+  wordIndex,
+  slotCount,
+}: Pick<
+  ComputeTypingLinesParams,
+  "previousCache" | "packingLayoutTextsKey" | "containerWidthPx" | "wordIndex" | "slotCount"
+>): boolean =>
+  previousCache.packingKey === packingLayoutTextsKey &&
+  previousCache.containerWidthPx === containerWidthPx &&
+  previousCache.wordIndex === wordIndex &&
+  previousCache.wordCount === slotCount;
+
 export const computeTypingLines = ({
   previousCache,
   layoutTexts,
@@ -45,6 +65,10 @@ export const computeTypingLines = ({
   wordIndex,
   slotCount,
 }: ComputeTypingLinesParams): TypingLinesCacheState => {
+  if (isTypingLinesCacheValid({ previousCache, packingLayoutTextsKey, containerWidthPx, wordIndex, slotCount })) {
+    return previousCache;
+  }
+
   const incrementalParams = {
     isZenMode,
     previousLines: previousCache.lines,

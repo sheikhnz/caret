@@ -12,7 +12,7 @@ import { createMeasureWordWidth } from "../create-measure-word-width";
 import {
   measureWordWidthFromDom,
   packWordsWithDomFlexWrap,
-} from "../dom-pack-words";
+} from "./dom-pack-words";
 import type { WordLine } from "../types";
 
 const ROOT_FONT_SIZE_PX = 16;

@@ -98,7 +98,6 @@ export const useTypingLines = ({
 
     const resizeObserver = new ResizeObserver(scheduleLayoutUpdate);
     resizeObserver.observe(measureElement);
-    updateLayout();
 
     return () => {
       resizeObserver.disconnect();
@@ -113,15 +112,10 @@ export const useTypingLines = ({
     [fontFamily, fontSizePx],
   );
 
-  const layoutTexts = useMemo(
-    () => buildLayoutTextsForPacking({ slots }),
-    [slots],
-  );
-
-  const packingLayoutTextsKey = useMemo(
-    () => layoutTexts.join(LAYOUT_TEXTS_KEY_SEP),
-    [layoutTexts],
-  );
+  const { layoutTexts, packingLayoutTextsKey } = useMemo(() => {
+    const texts = buildLayoutTextsForPacking({ slots });
+    return { layoutTexts: texts, packingLayoutTextsKey: texts.join(LAYOUT_TEXTS_KEY_SEP) };
+  }, [slots]);
 
   const isLayoutReady = containerWidthPx > 0;
 
