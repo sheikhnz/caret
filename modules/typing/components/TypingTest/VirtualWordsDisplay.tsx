@@ -1,13 +1,20 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import {
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  type ReactNode,
+  type RefObject,
+} from "react";
 
 import type { RenderedWord } from "@/modules/typing/types/engine";
 
 import {
   TYPING_CONTAINER_HEIGHT_PX,
+  TYPING_LINE_SCROLL_TRANSITION,
   TYPING_ROW_HEIGHT_PX,
-} from "./scroll-constants";
+} from "@/modules/typing/constants/typing-layout";
 import { useTypingLines } from "./use-typing-lines";
 import {
   getVirtualListTotalHeight,
@@ -24,6 +31,11 @@ type VirtualWordsDisplayProps = {
   inputHistory: string[];
   isZenMode?: boolean;
   layoutEpoch?: number;
+  /** Scroll-transform container — caret measures against this (same layer as words). */
+  innerRef?: RefObject<HTMLDivElement | null>;
+  caret?: ReactNode;
+  /** Fires when the inner scroll layer mounts with lines (caret container ref is live). */
+  onInnerReady?: () => void;
 };
 
 export const VirtualWordsDisplay = ({
@@ -34,6 +46,9 @@ export const VirtualWordsDisplay = ({
   inputHistory,
   isZenMode = false,
   layoutEpoch = 0,
+  innerRef,
+  caret = null,
+  onInnerReady,
 }: VirtualWordsDisplayProps) => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const { lines, activeLineIndex, isLayoutReady } = useTypingLines({
@@ -73,19 +88,31 @@ export const VirtualWordsDisplay = ({
     };
   }, [activeLineIndex, isLayoutReady, lines.length]);
 
+  const isInnerMounted = isLayoutReady && lines.length > 0;
+
+  useLayoutEffect(() => {
+    if (!isInnerMounted) {
+      return;
+    }
+
+    onInnerReady?.();
+  }, [isInnerMounted, onInnerReady, virtualWindow.scrollOffsetPx, virtualWindow.start]);
+
   return (
     <div
       ref={scrollRef}
       className="tp-typing-virtual-scroll"
       style={{ height: TYPING_CONTAINER_HEIGHT_PX }}
     >
-      {isLayoutReady && lines.length > 0 ? (
+      {isInnerMounted ? (
         <div
+          ref={innerRef}
           className="tp-typing-virtual-inner"
           style={{
             height: virtualWindow.totalHeightPx,
             position: "relative",
             transform: `translateY(-${virtualWindow.scrollOffsetPx}px)`,
+            transition: TYPING_LINE_SCROLL_TRANSITION,
           }}
         >
           {Array.from(
@@ -116,6 +143,7 @@ export const VirtualWordsDisplay = ({
               </div>
             );
           })}
+          {caret}
         </div>
       ) : null}
     </div>

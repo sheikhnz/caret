@@ -4,7 +4,7 @@
 
 "use client";
 
-import { useCallback, type ReactNode } from "react";
+import { useCallback, useRef, useState, type ReactNode } from "react";
 
 import type { UseTypingTestReturn } from "@/modules/typing/hooks/use-typing-test";
 import { useTypingTestDisplayConfig } from "@/modules/typing/hooks/use-typing-test-display-config";
@@ -33,6 +33,12 @@ export const TypingTest = ({
   const { mode, blindMode, caretStyle, smoothCaret } =
     useTypingTestDisplayConfig();
   const { inputRef, wordsContainerRef, handleKeyDown, focusInput } = typing;
+  const virtualInnerRef = useRef<HTMLDivElement | null>(null);
+  const [caretRemeasureKey, setCaretRemeasureKey] = useState(0);
+
+  const handleVirtualInnerReady = useCallback(() => {
+    setCaretRemeasureKey((key) => key + 1);
+  }, []);
 
   const isZenMode = mode === "zen";
   const renderedWords = useWordsRenderer({
@@ -50,10 +56,11 @@ export const TypingTest = ({
     store.phase !== "finished";
 
   const caretPosition = useCaretPosition(
-    wordsContainerRef,
+    virtualInnerRef,
     store.wordIndex,
     store.currentInput.length,
     showCaret,
+    caretRemeasureKey,
   );
 
   const handleContainerClick = useCallback(() => {
@@ -87,13 +94,17 @@ export const TypingTest = ({
                 inputHistory={store.inputHistory}
                 isZenMode={isZenMode}
                 layoutEpoch={store.restartCount}
-              />
-              <Caret
-                position={caretPosition}
-                style={caretStyle}
-                smooth={smoothCaret}
-                blink={!isTestFocused}
-                visible={showCaret}
+                innerRef={virtualInnerRef}
+                onInnerReady={handleVirtualInnerReady}
+                caret={
+                  <Caret
+                    position={caretPosition}
+                    style={caretStyle}
+                    smooth={smoothCaret}
+                    blink={!isTestFocused}
+                    visible={showCaret}
+                  />
+                }
               />
             </>
           )}

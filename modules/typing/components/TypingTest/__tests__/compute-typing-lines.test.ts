@@ -1,0 +1,70 @@
+import { describe, expect, it } from "vitest";
+
+import {
+  computeTypingLines,
+  EMPTY_TYPING_LINES_CACHE,
+} from "../compute-typing-lines";
+
+describe("computeTypingLines", () => {
+  it("rebuilds incrementally for zen when only the packing key grows", () => {
+    const measureWordWidth = (text: string) => text.length * 10;
+    const layoutTexts = ["aa", "bb", "cccccccc", "dd", "ee"];
+    const containerWidthPx = 50;
+
+    const full = computeTypingLines({
+      previousCache: EMPTY_TYPING_LINES_CACHE,
+      layoutTexts,
+      packingLayoutTextsKey: layoutTexts.join("\u001f"),
+      containerWidthPx,
+      measureWordWidth,
+      isZenMode: true,
+      wordIndex: 2,
+      slotCount: layoutTexts.length,
+    });
+
+    const incremental = computeTypingLines({
+      previousCache: full,
+      layoutTexts: [...layoutTexts.slice(0, 2), "cccccccccc", "dd", "ee"],
+      packingLayoutTextsKey: [...layoutTexts.slice(0, 2), "cccccccccc", "dd", "ee"].join(
+        "\u001f",
+      ),
+      containerWidthPx,
+      measureWordWidth,
+      isZenMode: true,
+      wordIndex: 2,
+      slotCount: layoutTexts.length,
+    });
+
+    expect(incremental.lines.length).toBeGreaterThan(0);
+    expect(incremental.packingKey).not.toBe(full.packingKey);
+  });
+
+  it("forces a full rebuild when the container width changes", () => {
+    const measureWordWidth = (text: string) => text.length * 10;
+    const layoutTexts = ["one", "two", "three"];
+    const previous = computeTypingLines({
+      previousCache: EMPTY_TYPING_LINES_CACHE,
+      layoutTexts,
+      packingLayoutTextsKey: layoutTexts.join("\u001f"),
+      containerWidthPx: 80,
+      measureWordWidth,
+      isZenMode: true,
+      wordIndex: 1,
+      slotCount: layoutTexts.length,
+    });
+
+    const next = computeTypingLines({
+      previousCache: previous,
+      layoutTexts,
+      packingLayoutTextsKey: layoutTexts.join("\u001f"),
+      containerWidthPx: 40,
+      measureWordWidth,
+      isZenMode: true,
+      wordIndex: 1,
+      slotCount: layoutTexts.length,
+    });
+
+    expect(next.containerWidthPx).toBe(40);
+    expect(next.lines).not.toEqual(previous.lines);
+  });
+});

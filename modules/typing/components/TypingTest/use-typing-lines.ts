@@ -2,16 +2,21 @@
 
 import { useLayoutEffect, useMemo, useState } from "react";
 
+import { TYPING_FONT_SIZE_REM } from "@/modules/typing/constants/typing-layout";
+import { getWordTypingSlots } from "@/modules/typing/utils/word-typing-slots";
 import {
-  buildWordLines,
   createMeasureWordWidth,
   findActiveLineIndex,
-  getLayoutTextsKey,
+  getPackingLayoutTextsKey,
   LAYOUT_TEXTS_KEY_SEP,
   type WordLine,
 } from "@/modules/typing/utils/word-lines";
 
-import { TYPING_FONT_SIZE_REM } from "./scroll-constants";
+import {
+  computeTypingLines,
+  EMPTY_TYPING_LINES_CACHE,
+  type TypingLinesCacheState,
+} from "./compute-typing-lines";
 
 type UseTypingLinesParams = {
   words: string[];
@@ -51,6 +56,9 @@ export const useTypingLines = ({
     getRootFontSizePx() * TYPING_FONT_SIZE_REM,
   );
   const [fontFamily, setFontFamily] = useState<string | undefined>(undefined);
+  const [linesState, setLinesState] = useState<TypingLinesCacheState>(
+    EMPTY_TYPING_LINES_CACHE,
+  );
 
   useLayoutEffect(() => {
     const measureElement = measureRef.current;
@@ -92,38 +100,65 @@ export const useTypingLines = ({
     [fontFamily, fontSizePx],
   );
 
-  const layoutTextsKey = useMemo(
+  const slots = useMemo(
     () =>
-      getLayoutTextsKey({
+      getWordTypingSlots({
         words,
         wordIndex,
         currentInput,
         inputHistory,
         isZenMode,
       }),
-    [currentInput, inputHistory, isZenMode, wordIndex, words],
+    [words, wordIndex, currentInput, inputHistory, isZenMode],
+  );
+
+  const packingLayoutTextsKey = useMemo(
+    () => getPackingLayoutTextsKey({ slots, isZenMode }),
+    [slots, isZenMode],
   );
 
   const isLayoutReady = containerWidthPx > 0;
 
-  const lines = useMemo(() => {
+  useLayoutEffect(() => {
     if (!isLayoutReady) {
-      return [];
+      return;
     }
 
-    const layoutTexts = layoutTextsKey.split(LAYOUT_TEXTS_KEY_SEP);
+    const layoutTexts = packingLayoutTextsKey.split(LAYOUT_TEXTS_KEY_SEP);
 
-    return buildWordLines({
-      layoutTexts,
-      containerWidthPx,
-      measureWordWidth,
-    });
-  }, [containerWidthPx, isLayoutReady, layoutTextsKey, measureWordWidth]);
+    // Ref-during-render is compiler-blocked; functional state update reads prior lines here.
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- derive lines before paint
+    setLinesState((previousCache) =>
+      computeTypingLines({
+        previousCache,
+        layoutTexts,
+        packingLayoutTextsKey,
+        containerWidthPx,
+        measureWordWidth,
+        isZenMode,
+        wordIndex,
+        slotCount: slots.length,
+      }),
+    );
+  }, [
+    containerWidthPx,
+    isLayoutReady,
+    isZenMode,
+    layoutEpoch,
+    measureWordWidth,
+    packingLayoutTextsKey,
+    slots.length,
+    wordIndex,
+  ]);
 
   const activeLineIndex = useMemo(
-    () => findActiveLineIndex(lines, wordIndex),
-    [lines, wordIndex],
+    () => findActiveLineIndex(linesState.lines, wordIndex),
+    [linesState.lines, wordIndex],
   );
 
-  return { lines, activeLineIndex, isLayoutReady };
+  return {
+    lines: isLayoutReady ? linesState.lines : [],
+    activeLineIndex,
+    isLayoutReady,
+  };
 };

@@ -3,7 +3,7 @@ import { TYPING_ROW_HEIGHT_PX } from "@/modules/typing/utils/word-lines";
 import {
   TYPING_CONTAINER_HEIGHT_PX,
   TYPING_SCROLL_ANCHOR_ROW,
-} from "./scroll-constants";
+} from "@/modules/typing/constants/typing-layout";
 
 export const VIRTUAL_LINE_OVERSCAN = 2;
 

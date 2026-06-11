@@ -1,79 +1,78 @@
 /**
  * Caret position calculation hook.
- * Source: frontend/src/ts/elements/caret.ts getTargetPositionAndWidth
  */
 
 "use client";
 
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useState } from "react";
 
-export type CaretPosition = {
-  top: number;
-  left: number;
-  height: number;
-};
+import {
+  EMPTY_CARET_POSITION,
+  resolveCaretPosition,
+  type CaretPosition,
+} from "./resolve-caret-position";
 
-const EMPTY: CaretPosition = { top: 0, left: 0, height: 0 };
+export type { CaretPosition } from "./resolve-caret-position";
 
 export const useCaretPosition = (
   scrollWrapperRef: React.RefObject<HTMLElement | null>,
   wordIndex: number,
   charIndex: number,
   isActive: boolean,
+  /** Bumps when the scroll container mounts or remounts (ref attach is not reactive). */
+  remeasureKey = 0,
 ): CaretPosition => {
-  const [position, setPosition] = useState<CaretPosition>(EMPTY);
-  const measuredRef = useRef(false);
+  const [position, setPosition] = useState<CaretPosition>(EMPTY_CARET_POSITION);
 
   const update = useCallback(() => {
     const container = scrollWrapperRef.current;
-    if (!container) return;
-
-    const wordEl = container.querySelector<HTMLElement>(
-      `[data-word-index="${wordIndex}"]`,
-    );
-    if (!wordEl) return;
-
-    const charEls = wordEl.querySelectorAll<HTMLElement>("[data-char-index]");
-    const containerRect = container.getBoundingClientRect();
-    const fontSize = parseFloat(getComputedStyle(container).fontSize) || 32;
-    const caretHalfWidth = fontSize * 0.05;
-    const caretHeight = fontSize * 1.2;
-
-    const setFromRect = (targetRect: DOMRect, placeAfter: boolean): void => {
-      const left =
-        (placeAfter ? targetRect.right : targetRect.left) -
-        containerRect.left -
-        caretHalfWidth;
-      const top =
-        targetRect.top -
-        containerRect.top +
-        (targetRect.height - caretHeight) / 2;
-
-      setPosition({ top, left, height: targetRect.height });
-      measuredRef.current = true;
-    };
-
-    if (charEls.length === 0) {
-      const wordRect = wordEl.getBoundingClientRect();
-      setFromRect(wordRect, false);
+    if (!container) {
       return;
     }
 
-    const targetIndex =
-      charIndex >= charEls.length ? charEls.length - 1 : charIndex;
-    const charEl = charEls[targetIndex]!;
-    const charRect = charEl.getBoundingClientRect();
-    const placeAfter = charIndex >= charEls.length;
-
-    setFromRect(charRect, placeAfter);
+    setPosition(
+      resolveCaretPosition({
+        container,
+        wordIndex,
+        charIndex,
+      }),
+    );
   }, [scrollWrapperRef, wordIndex, charIndex]);
 
   useLayoutEffect(() => {
-    measuredRef.current = false;
-    update();
-    const id = requestAnimationFrame(update);
-    return () => cancelAnimationFrame(id);
-  }, [update, isActive, wordIndex, charIndex]);
+    const container = scrollWrapperRef.current;
+    if (!container || !isActive) {
+      return;
+    }
+
+    const scheduleUpdate = (): void => {
+      update();
+      requestAnimationFrame(update);
+    };
+
+    scheduleUpdate();
+
+    const mutationObserver = new MutationObserver(scheduleUpdate);
+    mutationObserver.observe(container, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["data-word-index", "data-char-index", "class", "style"],
+    });
+
+    const onTransitionEnd = (event: TransitionEvent): void => {
+      if (event.propertyName === "transform") {
+        scheduleUpdate();
+      }
+    };
+
+    container.addEventListener("transitionend", onTransitionEnd);
+
+    return () => {
+      mutationObserver.disconnect();
+      container.removeEventListener("transitionend", onTransitionEnd);
+    };
+  }, [scrollWrapperRef, update, isActive, wordIndex, charIndex, remeasureKey]);
 
   return position;
 };

@@ -3,7 +3,7 @@
   font-family: var(--tp-font-mono);
 }
 
-/* Keep in sync with modules/typing/components/TypingTest/scroll-constants.ts */
+/* Keep in sync with modules/typing/constants/typing-layout.ts */
 .tp-typing-root {
   width: 100%;
   font-size: 2rem;

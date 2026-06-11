@@ -7,7 +7,7 @@ type BuildWordLinesParams = {
   measureWordWidth: MeasureWordWidth;
 };
 
-const getLineWidthPx = ({
+export const getLineWidthPx = ({
   wordIndices,
   layoutTexts,
   measureWordWidth,
@@ -22,7 +22,7 @@ const getLineWidthPx = ({
     0,
   );
 
-const rebalanceOverflowingLines = ({
+export const rebalanceOverflowingLines = ({
   lines,
   layoutTexts,
   containerWidthPx,
