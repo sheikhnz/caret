@@ -1,14 +1,16 @@
 "use client";
 
 import {
-  useLayoutEffect,
+  cloneElement,
+  isValidElement,
   useMemo,
   useRef,
+  type ReactElement,
   type ReactNode,
-  type RefObject,
 } from "react";
 
 import type { RenderedWord } from "@/modules/typing/types/engine";
+import { useCaretPosition } from "@/modules/typing/hooks/use-caret-position";
 import type { WordTypingSlot } from "@/modules/typing/utils/word-typing-slots";
 import type { WordLine } from "@/modules/typing/utils/word-lines";
 
@@ -23,21 +25,19 @@ import {
   getVisibleLineIndices,
   resolveLineScrollOffset,
 } from "./virtual-line-window";
+import type { CaretProps } from "./Caret/types";
 import { WordsLine } from "./WordsLine";
 
 type VirtualWordsDisplayProps = {
   slots: WordTypingSlot[];
   renderedWords: RenderedWord[];
   wordIndex: number;
+  charIndex: number;
+  showCaret: boolean;
   isZenMode?: boolean;
   layoutEpoch?: number;
-  /** Scroll-transform container — caret measures against this (same layer as words). */
-  innerRef?: RefObject<HTMLDivElement | null>;
+  /** Rendered inside the scroll layer; position is injected after measurement. */
   caret?: ReactNode;
-  /** Fires once when the inner scroll layer first mounts (caret container ref is live). */
-  onInnerReady?: () => void;
-  /** Fires when scroll offset or the visible line window changes (caret remeasure). */
-  onCaretLayoutChange?: (layoutKey: string) => void;
 };
 
 type VirtualWindow = {
@@ -73,7 +73,7 @@ const buildVisibleLines = ({
   return visibleLines;
 };
 
-const buildCaretLayoutKey = ({
+export const buildCaretLayoutKey = ({
   scrollOffsetPx,
   visibleLines,
 }: {
@@ -86,19 +86,32 @@ const buildCaretLayoutKey = ({
   return `${scrollOffsetPx}:${start}-${end}`;
 };
 
+const injectCaretPosition = ({
+  caret,
+  position,
+}: {
+  caret: ReactNode;
+  position: CaretProps["position"];
+}): ReactNode => {
+  if (!caret || !isValidElement<CaretProps>(caret)) {
+    return caret;
+  }
+
+  return cloneElement(caret as ReactElement<CaretProps>, { position });
+};
+
 export const VirtualWordsDisplay = ({
   slots,
   renderedWords,
   wordIndex,
+  charIndex,
+  showCaret,
   isZenMode = false,
   layoutEpoch = 0,
-  innerRef,
   caret = null,
-  onInnerReady,
-  onCaretLayoutChange,
 }: VirtualWordsDisplayProps) => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
-  const wasInnerMountedRef = useRef(false);
+  const innerRef = useRef<HTMLDivElement | null>(null);
   const { lines, activeLineIndex, isLayoutReady } = useTypingLines({
     slots,
     wordIndex,
@@ -141,27 +154,18 @@ export const VirtualWordsDisplay = ({
     [isInnerMounted, virtualWindow.scrollOffsetPx, virtualWindow.visibleLines],
   );
 
-  useLayoutEffect(() => {
-    if (!isInnerMounted) {
-      wasInnerMountedRef.current = false;
-      return;
-    }
+  const caretPosition = useCaretPosition({
+    scrollWrapperRef: innerRef,
+    wordIndex,
+    charIndex,
+    isActive: showCaret,
+    layoutKey: caretLayoutKey,
+  });
 
-    if (wasInnerMountedRef.current) {
-      return;
-    }
-
-    wasInnerMountedRef.current = true;
-    onInnerReady?.();
-  }, [isInnerMounted, onInnerReady]);
-
-  useLayoutEffect(() => {
-    if (!isInnerMounted || !caretLayoutKey) {
-      return;
-    }
-
-    onCaretLayoutChange?.(caretLayoutKey);
-  }, [caretLayoutKey, isInnerMounted, onCaretLayoutChange]);
+  const renderedCaret = injectCaretPosition({
+    caret,
+    position: caretPosition,
+  });
 
   return (
     <div
@@ -196,7 +200,7 @@ export const VirtualWordsDisplay = ({
               />
             </div>
           ))}
-          {caret}
+          {renderedCaret}
         </div>
       ) : null}
     </div>

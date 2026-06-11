@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 
 import { createElement } from "react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 
 import {
   getVisibleLineIndices,
@@ -9,9 +9,8 @@ import {
 } from "../virtual-line-window";
 import { VirtualWordsDisplay } from "../VirtualWordsDisplay";
 import {
-  createRenderedWords,
   createTypingRoot,
-  createWordTypingSlots,
+  createVirtualWordsDisplayProps,
   installTypingDisplayResizeObserver,
   mountTypingDisplay,
   setTypingDisplayContainerWidth,
@@ -37,21 +36,15 @@ describe("VirtualWordsDisplay", () => {
     const inputHistory = MANY_WORDS.slice(0, activeWordIndex);
     const root = await mountTypingDisplay({
       node: mountNode,
-      tree: createElement(VirtualWordsDisplay, {
-        slots: createWordTypingSlots({
+      tree: createElement(
+        VirtualWordsDisplay,
+        createVirtualWordsDisplayProps({
           words: MANY_WORDS,
           wordIndex: activeWordIndex,
           currentInput,
           inputHistory,
         }),
-        renderedWords: createRenderedWords({
-          words: MANY_WORDS,
-          wordIndex: activeWordIndex,
-          currentInput,
-          inputHistory,
-        }),
-        wordIndex: activeWordIndex,
-      }),
+      ),
     });
 
     const scrollElement = mountNode.querySelector(".tp-typing-virtual-scroll");
@@ -111,21 +104,15 @@ describe("VirtualWordsDisplay", () => {
     const inputHistory = MANY_WORDS.slice(0, activeWordIndex);
     const root = await mountTypingDisplay({
       node: mountNode,
-      tree: createElement(VirtualWordsDisplay, {
-        slots: createWordTypingSlots({
+      tree: createElement(
+        VirtualWordsDisplay,
+        createVirtualWordsDisplayProps({
           words: MANY_WORDS,
           wordIndex: activeWordIndex,
           currentInput,
           inputHistory,
         }),
-        renderedWords: createRenderedWords({
-          words: MANY_WORDS,
-          wordIndex: activeWordIndex,
-          currentInput,
-          inputHistory,
-        }),
-        wordIndex: activeWordIndex,
-      }),
+      ),
     });
 
     const scrollElement = mountNode.querySelector(
@@ -156,33 +143,24 @@ describe("VirtualWordsDisplay", () => {
     root.unmount();
   });
 
-  it("notifies when the inner scroll layer is ready for caret measurement", async () => {
+  it("renders the inner scroll layer when ready", async () => {
     installTypingDisplayResizeObserver();
     mountNode = createTypingRoot();
-    const onInnerReady = vi.fn();
 
     const words = ["one", "two", "three"];
     const root = await mountTypingDisplay({
       node: mountNode,
-      tree: createElement(VirtualWordsDisplay, {
-        slots: createWordTypingSlots({
+      tree: createElement(
+        VirtualWordsDisplay,
+        createVirtualWordsDisplayProps({
           words,
           wordIndex: 0,
           currentInput: "",
           inputHistory: [],
         }),
-        renderedWords: createRenderedWords({
-          words,
-          wordIndex: 0,
-          currentInput: "",
-          inputHistory: [],
-        }),
-        wordIndex: 0,
-        onInnerReady,
-      }),
+      ),
     });
 
-    expect(onInnerReady).toHaveBeenCalled();
     expect(mountNode.querySelector(".tp-typing-virtual-inner")).not.toBeNull();
 
     root.unmount();

@@ -8,9 +8,8 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import { VirtualWordsDisplay } from "@/modules/typing/components/TypingTest/VirtualWordsDisplay";
 import {
-  createRenderedWords,
   createTypingRoot,
-  createWordTypingSlots,
+  createVirtualWordsDisplayProps,
   installTypingDisplayResizeObserver,
   mountTypingDisplay,
 } from "@/modules/typing/components/TypingTest/__tests__/typing-display-test-helpers";
@@ -58,21 +57,15 @@ describe("useCaretPosition", () => {
 
     const root = await mountTypingDisplay({
       node: viewport,
-      tree: createElement(VirtualWordsDisplay, {
-        slots: createWordTypingSlots({
+      tree: createElement(
+        VirtualWordsDisplay,
+        createVirtualWordsDisplayProps({
           words: WORDS,
           wordIndex: activeWordIndex,
           currentInput,
           inputHistory,
         }),
-        renderedWords: createRenderedWords({
-          words: WORDS,
-          wordIndex: activeWordIndex,
-          currentInput,
-          inputHistory,
-        }),
-        wordIndex: activeWordIndex,
-      }),
+      ),
     });
 
     await act(async () => {
@@ -128,8 +121,11 @@ describe("useCaretPosition", () => {
       return originalGetBoundingClientRect.call(this);
     };
 
+    const inner = viewport.querySelector(".tp-typing-virtual-inner");
+    expect(inner).not.toBeNull();
+
     const position = resolveCaretPosition({
-      container: viewport,
+      container: inner as HTMLElement,
       wordIndex: activeWordIndex,
       charIndex,
     });

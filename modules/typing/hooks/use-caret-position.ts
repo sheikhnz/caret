@@ -12,17 +12,21 @@ import {
   type CaretPosition,
 } from "./resolve-caret-position";
 
-export type { CaretPosition } from "./resolve-caret-position";
+export {
+  EMPTY_CARET_POSITION,
+  type CaretPosition,
+} from "./resolve-caret-position";
 
 type UseCaretPositionParams = {
   scrollWrapperRef: React.RefObject<HTMLElement | null>;
   wordIndex: number;
   charIndex: number;
   isActive: boolean;
-  /** Scroll offset + visible line window from VirtualWordsDisplay. */
+  /**
+   * Scroll offset + visible line window from VirtualWordsDisplay.
+   * Empty until the inner layer is mounted; then updates on scroll/window changes.
+   */
   layoutKey?: string;
-  /** Bumps when the inner scroll layer first mounts (ref attach is not reactive). */
-  remeasureKey?: number;
 };
 
 export const useCaretPosition = ({
@@ -31,7 +35,6 @@ export const useCaretPosition = ({
   charIndex,
   isActive,
   layoutKey = "",
-  remeasureKey = 0,
 }: UseCaretPositionParams): CaretPosition => {
   const [position, setPosition] = useState<CaretPosition>(EMPTY_CARET_POSITION);
 
@@ -52,7 +55,7 @@ export const useCaretPosition = ({
 
   useLayoutEffect(() => {
     const container = scrollWrapperRef.current;
-    if (!container || !isActive) {
+    if (!container || !isActive || !layoutKey) {
       return;
     }
 
@@ -71,15 +74,7 @@ export const useCaretPosition = ({
       cancelAnimationFrame(frame);
       container.removeEventListener("transitionend", onTransitionEnd);
     };
-  }, [
-    scrollWrapperRef,
-    update,
-    isActive,
-    wordIndex,
-    charIndex,
-    layoutKey,
-    remeasureKey,
-  ]);
+  }, [scrollWrapperRef, update, isActive, wordIndex, charIndex, layoutKey]);
 
   return position;
 };

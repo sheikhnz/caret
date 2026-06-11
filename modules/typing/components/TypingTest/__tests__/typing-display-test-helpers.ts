@@ -119,3 +119,36 @@ export const createWordTypingSlots = ({
     isZenMode,
   });
 
+export const createVirtualWordsDisplayProps = ({
+  words,
+  wordIndex,
+  currentInput,
+  inputHistory,
+  isZenMode = false,
+  showCaret = true,
+}: {
+  words: string[];
+  wordIndex: number;
+  currentInput: string;
+  inputHistory: string[];
+  isZenMode?: boolean;
+  showCaret?: boolean;
+}) => ({
+  slots: createWordTypingSlots({
+    words,
+    wordIndex,
+    currentInput,
+    inputHistory,
+    isZenMode,
+  }),
+  renderedWords: createRenderedWords({
+    words,
+    wordIndex,
+    currentInput,
+    inputHistory,
+  }),
+  wordIndex,
+  charIndex: currentInput.length,
+  showCaret,
+});
+
