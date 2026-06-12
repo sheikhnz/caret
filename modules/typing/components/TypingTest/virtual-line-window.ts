@@ -80,9 +80,11 @@ export const getVisibleLineIndices = ({
   const visibleLineCount = Math.ceil(
     TYPING_CONTAINER_HEIGHT_PX / TYPING_ROW_HEIGHT_PX,
   );
+
+  // -1 converts the count to the last visible index, then we add overscan
   const end = Math.min(
     lineCount - 1,
-    firstVisibleLine + visibleLineCount + VIRTUAL_LINE_OVERSCAN,
+    firstVisibleLine + visibleLineCount - 1 + VIRTUAL_LINE_OVERSCAN,
   );
 
   return { start, end: Math.max(start, end) };

@@ -20,7 +20,7 @@ describe("virtual-line-window", () => {
         lineCount: 20,
         scrollOffsetPx: 96,
       }),
-    ).toEqual({ start: 0, end: 7 });
+    ).toEqual({ start: 0, end: 6 });
   });
 
   it("computes total virtual list height from line count", () => {
