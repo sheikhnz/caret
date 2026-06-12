@@ -48,7 +48,11 @@ const isTypingLinesCacheValid = ({
   slotCount,
 }: Pick<
   ComputeTypingLinesParams,
-  "previousCache" | "packingLayoutTextsKey" | "containerWidthPx" | "wordIndex" | "slotCount"
+  | "previousCache"
+  | "packingLayoutTextsKey"
+  | "containerWidthPx"
+  | "wordIndex"
+  | "slotCount"
 >): boolean =>
   previousCache.packingKey === packingLayoutTextsKey &&
   previousCache.containerWidthPx === containerWidthPx &&
@@ -71,7 +75,15 @@ export const computeTypingLines = ({
   wordIndex,
   slotCount,
 }: ComputeTypingLinesParams): TypingLinesCacheState => {
-  if (isTypingLinesCacheValid({ previousCache, packingLayoutTextsKey, containerWidthPx, wordIndex, slotCount })) {
+  if (
+    isTypingLinesCacheValid({
+      previousCache,
+      packingLayoutTextsKey,
+      containerWidthPx,
+      wordIndex,
+      slotCount,
+    })
+  ) {
     return previousCache;
   }
 

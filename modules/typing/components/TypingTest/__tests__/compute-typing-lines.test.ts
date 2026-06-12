@@ -56,9 +56,12 @@ describe("computeTypingLines", () => {
     const incremental = computeTypingLines({
       previousCache: full,
       layoutTexts: [...layoutTexts.slice(0, 2), "cccccccccc", "dd", "ee"],
-      packingLayoutTextsKey: [...layoutTexts.slice(0, 2), "cccccccccc", "dd", "ee"].join(
-        "\u001f",
-      ),
+      packingLayoutTextsKey: [
+        ...layoutTexts.slice(0, 2),
+        "cccccccccc",
+        "dd",
+        "ee",
+      ].join("\u001f"),
       containerWidthPx,
       measureWordWidth,
       isZenMode: true,

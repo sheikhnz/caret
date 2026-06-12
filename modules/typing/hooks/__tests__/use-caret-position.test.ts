@@ -1,7 +1,8 @@
 // @vitest-environment happy-dom
 
-(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT =
-  true;
+(
+  globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }
+).IS_REACT_ACT_ENVIRONMENT = true;
 
 import { act, createElement } from "react";
 import { afterEach, describe, expect, it } from "vitest";

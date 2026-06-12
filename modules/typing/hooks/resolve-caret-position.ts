@@ -39,7 +39,10 @@ export const resolveCaretPosition = ({
   const caretHalfWidth = fontSize * 0.05;
   const caretHeight = fontSize * 1.2;
 
-  const toPosition = (targetRect: DOMRect, placeAfter: boolean): CaretPosition => {
+  const toPosition = (
+    targetRect: DOMRect,
+    placeAfter: boolean,
+  ): CaretPosition => {
     const left =
       (placeAfter ? targetRect.right : targetRect.left) -
       containerRect.left -

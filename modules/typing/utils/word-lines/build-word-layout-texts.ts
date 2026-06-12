@@ -16,8 +16,7 @@ export type BuildWordLayoutTextsParams = {
  */
 export const buildWordLayoutTexts = (
   params: BuildWordLayoutTextsParams,
-): string[] =>
-  getWordTypingSlots(params).map((slot) => slot.layoutText);
+): string[] => getWordTypingSlots(params).map((slot) => slot.layoutText);
 
 export const getLayoutTextsKey = (params: BuildWordLayoutTextsParams): string =>
   buildWordLayoutTexts(params).join(LAYOUT_TEXTS_KEY_SEP);

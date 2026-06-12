@@ -151,4 +151,3 @@ export const createVirtualWordsDisplayProps = ({
   charIndex: currentInput.length,
   showCaret,
 });
-

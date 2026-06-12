@@ -1,4 +1,8 @@
-import { buildWordLines, getLineWidthPx, rebalanceOverflowingLines } from "./build-word-lines";
+import {
+  buildWordLines,
+  getLineWidthPx,
+  rebalanceOverflowingLines,
+} from "./build-word-lines";
 import { LINE_PACKING_SAFETY_PX } from "./constants";
 import { findActiveLineIndex } from "./find-active-line-index";
 import type { MeasureWordWidth, WordLine } from "./types";
@@ -22,7 +26,11 @@ export const rebuildWordLinesFromWordIndex = ({
   prefixLines,
   startWordIndex,
 }: RebuildWordLinesFromWordIndexParams): WordLine[] => {
-  if (startWordIndex <= 0 || layoutTexts.length === 0 || containerWidthPx <= 0) {
+  if (
+    startWordIndex <= 0 ||
+    layoutTexts.length === 0 ||
+    containerWidthPx <= 0
+  ) {
     return buildWordLines({
       layoutTexts,
       containerWidthPx,
@@ -128,7 +136,9 @@ export const getIncrementalRebuildStartWordIndex = ({
     anchorWordIndex,
   );
 
-  return previousLines[previousActiveLineIndex]?.wordIndices[0] ?? anchorWordIndex;
+  return (
+    previousLines[previousActiveLineIndex]?.wordIndices[0] ?? anchorWordIndex
+  );
 };
 
 /**
@@ -162,10 +172,13 @@ export const canIncrementallyRebuildZenLines = ({
     return false;
   }
 
-  return nextWordCount === previousWordCount || nextWordCount === previousWordCount + 1;
+  return (
+    nextWordCount === previousWordCount ||
+    nextWordCount === previousWordCount + 1
+  );
 };
 
-/** 
+/**
  * Standard mode: determines if we can incrementally repack lines when advancing to the next word.
  * When the user completes a word, its final layout width may shrink or grow based on errors.
  * We can incrementally rebuild from the completed word onward without touching prior lines.

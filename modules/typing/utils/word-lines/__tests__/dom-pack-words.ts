@@ -3,7 +3,7 @@
  * Mirrors the pre-virtualization WordsDisplay flow (.tp-words-display).
  */
 
-import type { WordLine } from "./types";
+import { WordLine } from "../types";
 
 type PackWordsWithDomFlexWrapParams = {
   layoutTexts: string[];

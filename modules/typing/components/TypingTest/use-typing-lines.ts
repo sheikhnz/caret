@@ -41,7 +41,7 @@ const getRootFontSizePx = (): number => {
 };
 
 /**
- * The core orchestrator for virtual line math. 
+ * The core orchestrator for virtual line math.
  * This hook observes the container width via ResizeObserver and drives the
  * canvas-based line packing engine (`computeTypingLines`) whenever the width
  * or the input text changes. It returns the exact lines and active line index
@@ -121,7 +121,10 @@ export const useTypingLines = ({
 
   const { layoutTexts, packingLayoutTextsKey } = useMemo(() => {
     const texts = buildLayoutTextsForPacking({ slots });
-    return { layoutTexts: texts, packingLayoutTextsKey: texts.join(LAYOUT_TEXTS_KEY_SEP) };
+    return {
+      layoutTexts: texts,
+      packingLayoutTextsKey: texts.join(LAYOUT_TEXTS_KEY_SEP),
+    };
   }, [slots]);
 
   const isLayoutReady = containerWidthPx > 0;

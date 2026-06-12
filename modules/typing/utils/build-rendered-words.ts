@@ -7,7 +7,11 @@ import {
   getCharStatus,
   shouldMaskCharInBlindMode,
 } from "@/modules/typing/calculations/char-display";
-import type { CharStatus, RenderedChar, RenderedWord } from "@/modules/typing/types/engine";
+import type {
+  CharStatus,
+  RenderedChar,
+  RenderedWord,
+} from "@/modules/typing/types/engine";
 
 import type { WordTypingSlot } from "./word-typing-slots";
 
@@ -24,7 +28,6 @@ export const buildRenderedWords = ({
   blindMode,
   isZenMode = false,
 }: BuildRenderedWordsParams): RenderedWord[] => {
-
   if (isZenMode) {
     return slots.map(
       ({ targetWord, typedText, isActive, isCompleted }): RenderedWord => ({

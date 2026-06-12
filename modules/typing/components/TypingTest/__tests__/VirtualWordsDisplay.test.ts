@@ -120,9 +120,8 @@ describe("VirtualWordsDisplay", () => {
     ) as HTMLDivElement | null;
     expect(scrollElement).not.toBeNull();
 
-    const wideLineCount = [
-      ...mountNode.querySelectorAll("[data-line-index]"),
-    ].length;
+    const wideLineCount = [...mountNode.querySelectorAll("[data-line-index]")]
+      .length;
     expect(wideLineCount).toBeGreaterThan(0);
 
     await setTypingDisplayContainerWidth({
@@ -130,9 +129,8 @@ describe("VirtualWordsDisplay", () => {
       widthPx: Math.floor(TYPING_DISPLAY_TEST_WIDTH_PX / 2),
     });
 
-    const narrowLineCount = [
-      ...mountNode.querySelectorAll("[data-line-index]"),
-    ].length;
+    const narrowLineCount = [...mountNode.querySelectorAll("[data-line-index]")]
+      .length;
 
     expect(narrowLineCount).toBeGreaterThan(0);
     expect(narrowLineCount).toBeLessThanOrEqual(10);
