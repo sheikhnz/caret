@@ -1,4 +1,0 @@
-export const TYPING_FONT_SIZE_REM = 2;
-export const TYPING_ROW_HEIGHT_PX = 48;
-export const TYPING_CONTAINER_HEIGHT_PX = TYPING_ROW_HEIGHT_PX * 3;
-export const TYPING_SCROLL_ANCHOR_ROW = 1;

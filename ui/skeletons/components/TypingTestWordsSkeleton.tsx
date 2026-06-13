@@ -1,5 +1,5 @@
 /**
- * Typing test word area placeholder — one flex-wrap flow like WordsDisplay.
+ * Typing test word area placeholder — flex-wrap flow approximating the live viewport.
  * Palette-based bars for SSR-safe first paint on `/` (see ui/skeletons/README.md).
  */
 

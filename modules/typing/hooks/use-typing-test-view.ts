@@ -18,6 +18,7 @@ export const useTypingTestView = () => {
       currentInput: state.currentInput,
       inputHistory: state.inputHistory,
       isLoadingWords: state.isLoadingWords,
+      restartCount: state.restartCount,
     })),
   );
 

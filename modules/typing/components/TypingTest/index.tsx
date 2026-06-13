@@ -9,14 +9,14 @@ import { useCallback, type ReactNode } from "react";
 import type { UseTypingTestReturn } from "@/modules/typing/hooks/use-typing-test";
 import { useTypingTestDisplayConfig } from "@/modules/typing/hooks/use-typing-test-display-config";
 import { useTypingTestView } from "@/modules/typing/hooks/use-typing-test-view";
-import { useCaretPosition } from "@/modules/typing/hooks/use-caret-position";
+import { EMPTY_CARET_POSITION } from "@/modules/typing/hooks/use-caret-position";
+import { useWordTypingSlots } from "@/modules/typing/hooks/use-word-typing-slots";
 import { useWordsRenderer } from "@/modules/typing/hooks/use-words-renderer";
 import { SkeletonLoader, SKELETON_IDS } from "@/ui";
 
 import { Caret } from "./Caret";
 import { TypingTestLiveStats } from "./TypingTestLiveStats";
-import { useWordScroll } from "./use-word-scroll";
-import { WordsDisplay } from "./WordsDisplay";
+import { VirtualWordsDisplay } from "./VirtualWordsDisplay";
 
 type TypingTestProps = {
   typing: UseTypingTestReturn;
@@ -36,21 +36,17 @@ export const TypingTest = ({
   const { inputRef, wordsContainerRef, handleKeyDown, focusInput } = typing;
 
   const isZenMode = mode === "zen";
-  const renderedWords = useWordsRenderer({
+  const slots = useWordTypingSlots({
     words: store.words,
     wordIndex: store.wordIndex,
     currentInput: store.currentInput,
     inputHistory: store.inputHistory,
-    blindMode,
     isZenMode,
   });
-
-  const { scrollWrapperRef, scrollOffset } = useWordScroll({
-    words: store.words,
-    wordIndex: store.wordIndex,
-    currentInputLength: store.currentInput.length,
-    renderedWordsLength: renderedWords.length,
-    isLoadingWords: store.isPreparingWords,
+  const renderedWords = useWordsRenderer({
+    slots,
+    currentInput: store.currentInput,
+    blindMode,
     isZenMode,
   });
 
@@ -58,13 +54,6 @@ export const TypingTest = ({
     !store.isPreparingWords &&
     (store.words.length > 0 || isZenMode) &&
     store.phase !== "finished";
-
-  const caretPosition = useCaretPosition(
-    scrollWrapperRef,
-    store.wordIndex,
-    store.currentInput.length,
-    showCaret,
-  );
 
   const handleContainerClick = useCallback(() => {
     focusInput();
@@ -88,20 +77,24 @@ export const TypingTest = ({
               label="Loading words"
             />
           ) : (
-            <div
-              ref={scrollWrapperRef}
-              className="tp-typing-scroll"
-              style={{ transform: `translateY(-${scrollOffset}px)` }}
-            >
-              <WordsDisplay renderedWords={renderedWords} />
-              <Caret
-                position={caretPosition}
-                style={caretStyle}
-                smooth={smoothCaret}
-                blink={!isTestFocused}
-                visible={showCaret}
-              />
-            </div>
+            <VirtualWordsDisplay
+              slots={slots}
+              renderedWords={renderedWords}
+              wordIndex={store.wordIndex}
+              charIndex={store.currentInput.length}
+              showCaret={showCaret}
+              isZenMode={isZenMode}
+              layoutEpoch={store.restartCount}
+              caret={
+                <Caret
+                  position={EMPTY_CARET_POSITION}
+                  style={caretStyle}
+                  smooth={smoothCaret}
+                  blink={!isTestFocused}
+                  visible={showCaret}
+                />
+              }
+            />
           )}
         </div>
       </div>

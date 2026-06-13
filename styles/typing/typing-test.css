@@ -3,7 +3,7 @@
   font-family: var(--tp-font-mono);
 }
 
-/* Keep in sync with modules/typing/components/TypingTest/scroll-constants.ts */
+/* Keep in sync with modules/typing/constants/typing-layout.ts */
 .tp-typing-root {
   width: 100%;
   font-size: 2rem;
@@ -42,9 +42,32 @@
   margin-top: 1.25rem;
 }
 
-.tp-typing-scroll {
-  position: relative;
-  transition: transform 0.125s ease;
+.tp-typing-virtual-scroll {
+  overflow: hidden;
+  width: 100%;
+}
+
+.tp-typing-virtual-inner {
+  width: 100%;
+}
+
+.tp-typing-virtual-row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.tp-words-line {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  height: 48px;
+  min-width: 100%;
+}
+
+.tp-words-line .tp-word {
+  flex-shrink: 0;
 }
 
 .tp-words-display {
